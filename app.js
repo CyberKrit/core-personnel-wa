@@ -5,6 +5,9 @@ const path = require('path');
 const mongoose = require('mongoose');
 const moment = require('moment');
 
+const config = require('./config/config');
+const stripe = require('stripe')(config.stripeSecretkey);
+
 // custom import
 const Client = require('./route/client');
 
@@ -33,12 +36,39 @@ app.use(function(req, res, next) {
 Client(app);
 
 // admin
-app.get('/dashboard', (req, res) => res.render('dashboard'));
-app.get('/dashboard/**', (req, res) => res.render('dashboard'));
+// app.get('/dashboard', (req, res) => res.render('dashboard'));
+// app.get('/dashboard/**', (req, res) => res.render('dashboard'));
 
 // website
-app.get('/login', (req, res) => res.render('login'));
+app.get('/login', (req, res) => res.render('login', { stripePublishablekey: config.stripePublishablekey }));
 app.get('/signup', (req, res) => res.render('signup'));
+app.post('/dashboard', (req, res) => {
+
+	const amount = 2400;
+
+	stripe.customers.create({
+	  email: req.body.stripeEmail
+	})
+	.then(function(customer){
+	  return stripe.customers.createSource(customer.id, {
+	    source: req.body.stripeToken
+	  });
+	})
+	.then(function(source) {
+	  return stripe.charges.create({
+	    amount,
+	    currency: 'usd',
+	    customer: source.customer
+	  });
+	})
+	.then(function(charge) {
+	  res.render('signup');
+	})
+	.catch(function(err) {
+	  res.status(422).send({ error: err.message });
+	});
+
+});
 app.get('/', (req, res) => res.render('index'));
 app.get('**', (req, res) => res.redirect('/'));
 
