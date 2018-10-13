@@ -1,0 +1,183 @@
+/*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */button,hr,input{overflow:visible}progress,sub,sup{vertical-align:baseline}[type=checkbox],[type=radio],legend{box-sizing:border-box;padding:0}html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,select{text-transform:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:ButtonText dotted 1px}fieldset{padding:.35em .75em .625em}legend{color:inherit;display:table;max-width:100%;white-space:normal}textarea{overflow:auto}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}[hidden],template{display:none}html{height:100%;font-family:sans-serif;font-size: 62.5%;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}*,:after,:before{-webkit-box-sizing:inherit;-moz-box-sizing:inherit;box-sizing:inherit}body{padding:0;margin:0;font-weight:400;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+body {
+	height: 100%;
+	font-size: 1.6rem;
+	line-height: 1.4;
+	font-family: 'Lato', sans-serif;
+	font-weight: 400;
+	color: #535353;
+}
+ul,
+ol {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+p {
+	margin: 0 0 1.6rem;
+}
+img {
+	display: block;
+	max-width: 100%;
+	max-height: 100%;
+}
+
+/* clearfix */
+
+.body-inner-wrapper:before,
+.app-sidebar:before {
+	content: ' ';
+	display: table;
+}
+.body-inner-wrapper:after,
+.app-sidebar:after {
+	content: ' ';
+	display: table;
+	clear: both;
+}
+
+
+/* aside */
+
+.app-sidebar {
+	position: relative;
+	z-index: 1;
+	padding: 4.8rem 1.6rem;
+	text-align: center;
+	background: #ddd url(aside-backdrop.jpg) no-repeat center center;
+	background-size: cover;
+}
+.app-sidebar .app-sidebar-overlay {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 2;
+	background-color: rgba(255, 255, 255, .75);
+	-webkit-box-shadow: inset 0 0 7rem rgba(200, 200, 200, .5);
+	-moz-box-shadow: inset 0 0 7rem rgba(200, 200, 200, .5);
+	box-shadow: inset 0 0 7rem rgba(200, 200, 200, .95);
+}
+.app-sidebar .inner-wrapper {
+	position: relative;
+	z-index: 5;
+}
+.app-sidebar .description {
+	padding-bottom: 2.4rem;
+	margin-top: 4.2rem;
+	margin-bottom: 3rem;
+	border-bottom: .1rem solid #6e6d6d;
+}
+.app-sidebar .app-home-link {
+	display: block;
+	max-width: 92%;
+	margin: 0 auto;
+}
+.app-sidebar p {
+	margin: 0;
+	font-size: 1.8rem;
+	line-height: 1.4;
+}
+
+@media screen and (min-width: 600px) {
+
+	.app-sidebar {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		float: left;
+		width: 40%;
+	}
+	.app-sidebar .inner-wrapper {
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		-moz-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
+	.app-sidebar .description {
+		margin-top: 2.2rem;
+	}
+	.app-sidebar p {
+		font-size: 1.5rem;
+	}
+
+}
+
+@media screen and (min-width: 740px) {
+
+	.app-sidebar {
+		width: 40%;
+	}
+	.app-sidebar .description {
+		margin-top: 2.7rem;
+	}
+	.app-sidebar p {
+		font-size: 1.7rem;
+	}
+
+}
+
+@media screen and (min-width: 890px) {
+
+	.app-sidebar {
+		width: 40%;
+	}
+	.app-sidebar .description {
+		margin-top: 3rem;
+	}
+	.app-sidebar p {
+		font-size: 1.9rem;
+	}
+
+}
+
+@media screen and (min-width: 1100px) {
+
+	.app-sidebar {
+		width: 30%;
+	}
+	.app-sidebar .description {
+		margin-top: 3.4rem;
+	}
+	.app-sidebar p {
+		font-size: 2rem;
+		line-height: 1.3;
+	}
+
+}
+
+@media screen and (min-width: 1400px) {
+
+	.app-sidebar {
+		padding-right: 2.4rem;
+		padding-left: 2.4rem;
+	}
+	.app-sidebar p {
+		font-size: 2.1rem;
+	}
+
+}
+
+/*
+ * app-social-tray
+ */
+
+.app-social-tray ul {
+	font-size: 0;
+}
+.app-social-tray li {
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 .2rem;
+}
+.app-social-tray a {
+	display: block;
+	width: 3.8rem;
+	height: 3.8rem;
+	-webkit-border-radius: 100%;
+	-moz-border-radius: 100%;
+	border-radius: 100%;
+}

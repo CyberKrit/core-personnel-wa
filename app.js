@@ -41,7 +41,7 @@ Client(app);
 
 // website
 app.get('/login', (req, res) => res.render('login', { stripePublishablekey: config.stripePublishablekey }));
-app.get('/signup', (req, res) => res.render('signup'));
+app.get('/signup', (req, res) => res.render('pages/signup'));
 app.post('/dashboard', (req, res) => {
 
 	const amount = 2400;
