@@ -16,10 +16,10 @@ app.set('view engine', 'ejs');
 mongoose.Promise = global.Promise;
 
 // connection to mongodb 
-mongoose.connect('mongodb://samratdey:yellowmonk87@ds231133.mlab.com:31133/generic');
-mongoose.connection
-	.once('open', () => console.log('mongoose is good to go!'))
-	.on('error', (error) => console.warn(error));
+// mongoose.connect('mongodb://samratdey:yellowmonk87@ds231133.mlab.com:31133/generic');
+// mongoose.connection
+// 	.once('open', () => console.log('mongoose is good to go!'))
+// 	.on('error', (error) => console.warn(error));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
