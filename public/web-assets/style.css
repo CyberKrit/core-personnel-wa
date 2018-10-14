@@ -230,7 +230,7 @@ textarea::placeholder {
 .section-input {
 	position: relative;
 	z-index: 2;
-	padding: 10rem 1.6rem 7.8rem;
+	padding: 4rem 1.6rem 4.8rem;
 	background: #ddd url(backdrop-section-input.jpg) no-repeat center bottom;
 	background-size: cover;
 }
@@ -246,12 +246,12 @@ textarea::placeholder {
 .section-input .inner-wrapper {
 	position: relative;
 	z-index: 5;
-	width: 70%;
+	width: 100%;
 	max-width: 50rem;
 	margin: 0 auto;
 }
 .section-input-title {
-	margin: 0 0 5rem;
+	margin: 0 0 3.6rem;
 	font-size: 2.9rem;
 	line-height: 1.1;
 	font-weight: 400;
@@ -259,6 +259,31 @@ textarea::placeholder {
 }
 .section-input-title strong {
 	font-weight: 700;
+}
+
+@media screen and (min-width: 820px) {
+
+	.section-input-title {
+		margin-bottom: 4rem;
+	}
+
+}
+
+@media screen and (min-width: 920px) {
+
+	.section-input-title {
+		margin-bottom: 5rem;
+	}
+
+}
+
+@media screen and (min-width: 960px) {
+
+	.section-input {
+		padding-top: 10rem;
+		padding-bottom: 7.8rem;
+	}
+
 }
 
 /* form */
@@ -284,12 +309,38 @@ textarea::placeholder {
 	color: #fff;
 	border: .1rem solid #a1a1a1;
 	outline: 0;
-	-webkit-border-radius: .2rem;
-	-moz-border-radius: .2rem;
-	border-radius: .2rem;
 }
 .module-form input:focus {
 	border-color: #fff;
+}
+.module-form .input-status {
+	padding: 0;
+	font-size: 1.4rem;
+	line-height: 1.3;
+	font-weight: 400;
+	background-color: rgba(255, 0, 0, .5);
+	color: #fff;
+}
+.module-form .input-status li {
+	position: relative;
+	display: none;
+	padding: .8rem 2.1rem;
+	margin-top: .5rem;
+	margin-bottom: .5rem;
+	border: .1rem solid rgba(255, 0, 0, .5);
+}
+.module-form .input-status li:before {
+	content: ' ';
+	position: absolute;
+	top: 1.4rem;
+	left: 1rem;
+	display: block;
+	width: .4rem;
+	height: .4rem;
+	background-color: #fff;
+	-webkit-border-radius: 100%;
+	-moz-border-radius: 100%;
+	border-radius: 100%;
 }
 .module-form .action-wrapper {
 	text-align: right;
@@ -370,17 +421,16 @@ textarea::placeholder {
  */
 
 .section-input-compliment {
-	position: absolute;
-	top: 1.6rem;
-	right: 0;
-	left: 0;
+	position: relative;
 	z-index: 3;
 	width: 100%;
 	max-width: 50rem;
+	padding-top: 3.2rem;
 	margin: 0 auto;
-	text-align: right;
+	text-align: center;
 }
 .section-input-compliment p {
+	margin: 0;
 	font-size: 1.5rem;
 	line-height: 1.2;
 	font-weight: 400;
@@ -391,6 +441,20 @@ textarea::placeholder {
 }
 .section-input-compliment p a:hover {
 	color: #8dc63f;
+}
+
+@media screen and (min-width: 960px) {
+
+	.section-input-compliment {
+		position: absolute;
+		top: 1.6rem;
+		right: 0;
+		left: 0;
+		z-index: 3;
+		padding-top: 0;
+		text-align: right;
+	}
+
 }
 
 /*
@@ -414,7 +478,6 @@ textarea::placeholder {
 .form-bread-crumb li {
 	position: relative;
 	float: left;
-	display: block;
 	padding-right: 2.3rem;
 	padding-bottom: 1rem;
 	padding-left: 2.3rem;
@@ -438,7 +501,7 @@ textarea::placeholder {
 .form-bread-crumb li a {
 	display: block;
 	height: 2.6rem;
-	font-size: 1.6rem;
+	font-size: 1.4rem;
 	line-height: 2.6rem;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -468,6 +531,14 @@ textarea::placeholder {
 		width: 60%;
 		min-height: 100%;
 		margin-left: 40%;
+	}
+
+}
+
+@media screen and (min-width: 680px) {
+
+	.form-bread-crumb li a {
+		font-size: 1.6rem;
 	}
 
 }
