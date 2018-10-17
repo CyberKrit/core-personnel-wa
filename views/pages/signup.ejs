@@ -13,50 +13,55 @@
 					<header class="section-input-header">
 						<h1 class="section-input-title">Register With <strong>CorePersonnel&nbsp;WA</strong></h1>
 					</header>
-					<div class="module-form">
+					<div class="form-outer-wrapper">
 						<div class="form-bread-crumb">
 							<ul>
 								<li class="active"><a>Primary Details</a></li>
 								<li><a>Payment Details</a></li>
 							</ul>
 						</div>
-						<form id="form-signup" name="signup_form">
-							<div class="input-wrapper">
-								<label for="field_company">Company Name</label>
-								<input type="text" id="field_company" name="field_company" placeholder="Registered Company Name">
-								<div class="input-status">
-									<ul>
-										<li class="required">This field is required</li>
-									</ul>
-								</div>
+						<div class="form-outer">
+							<div class="module-form">
+								<form id="form-signup" name="signup_form" novalidate>
+									<div class="input-wrapper">
+										<label for="field_company">Company Name</label>
+										<input type="text" id="field_company" name="field_company" placeholder="Registered Company Name">
+										<div class="input-status">
+											<ul>
+												<li class="required">This field is required</li>
+											</ul>
+										</div>
+									</div>
+									<div class="input-wrapper">
+										<label for="field_email">Email Address</label>
+										<input type="email" id="field_email" name="field_email" placeholder="Enter your email address">
+										<div class="input-status">
+											<ul>
+												<li class="required">This field is required</li>
+												<li class="validation">This email is not valid</li>
+											</ul>
+										</div>
+									</div>
+									<div class="input-wrapper">
+										<label for="field_pwd">Password</label>
+										<input type="password" id="field_pwd" name="field_pwd" placeholder="Minimum 8 characters long">
+										<div class="input-status">
+											<ul>
+												<li class="required">This field is required</li>
+												<li class="minlength">Your password should be at least 8 characters long</li>
+											</ul>
+										</div>
+									</div>
+									<div class="action-wrapper">
+										<button type="button" class="form-action-button">
+											<span class="active">Next Step <i class="arrow-right"></i></span>
+											<span class="processing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg></span>
+										</button>
+									</div>
+								</form>
 							</div>
-							<div class="input-wrapper">
-								<label for="field_email">Email Address</label>
-								<input type="email" id="field_email" name="field_email" placeholder="Enter your email address">
-								<div class="input-status">
-									<ul>
-										<li class="required">This field is required</li>
-										<li class="validation">This email is not valid</li>
-									</ul>
-								</div>
-							</div>
-							<div class="input-wrapper">
-								<label for="field_pwd">Password</label>
-								<input type="password" id="field_pwd" name="field_pwd" placeholder="Enter your password">
-								<div class="input-status">
-									<ul>
-										<li class="required">This field is required</li>
-										<li class="minlength">Your password should be at least 8 characters long</li>
-									</ul>
-								</div>
-							</div>
-							<div class="action-wrapper">
-								<button type="button" class="form-action-button">
-									<span class="active">Next Step <i class="arrow-right"></i></span>
-									<span class="processing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg></span>
-								</button>
-							</div>
-						</form>
+							<%- include('../partials/form-stripe'); %>
+						</div>
 					</div>
 				</div>
 				<div class="section-input-compliment">
