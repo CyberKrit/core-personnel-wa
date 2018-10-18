@@ -12,6 +12,7 @@
 				pwd: null,
 				emailRegx: null,
 				// subscription
+				subsList: null,
 				subPopup: null,
 				selectedSubscriptionIndex: null,
 				defaultPrice: null,
@@ -28,8 +29,6 @@
 				this.validation();
 				this.stepOne(this.config.emailRegx);
 				this.goBack();
-				this.subscriptionPopup(this.config.subPopup);
-				this.selectAnItem();
 			},
 
 			validation: function() {
@@ -192,8 +191,20 @@
 										url: '/api/subscription',
 										success: function(data, sattus, xhr) {
 											if( data.status === true ) {
-												signup.paymentForm(data.resData);
-											}
+												// saving data to set subscription input
+												var buildSubObj = [];
+												$.each(data.resData, function(index, val) {
+													buildSubObj.push({
+														// first letter of name to uppercase
+														name: val.name.charAt(0).toUpperCase() + val.name.slice(1),
+														price: val.price,
+														currency: val.currency,
+														duration: val.duration
+													});
+												});
+												signup.config.subsList = buildSubObj;
+												// calling relevant function
+												signup.paymentForm(data.resData);											}
 										},
 										error: function(jqXhr, textStatus, errorMessage) {
 												console.log(jqXhr);
@@ -281,15 +292,8 @@
 								duration = parseInt(item.duration),
 								currency = '';
 
-						if( item.currency.toLowerCase() === 'usd' ) {
-							currency = '&#36;';
-						} else if( item.currency.toLowerCase() === 'euro' ) {
-							currency = '&euro;';
-						} else if( item.currency.toLowerCase() === 'pound' ) {
-							currency = '&pound;';
-						} else {
-							currency = '&#36;';
-						}
+						// currency symbol
+						currency = signup.currencyConversion(item.currency);
 
 						// limit
 						if( limit === 0 ) {
@@ -299,17 +303,14 @@
 						}
 
 						// duration
-						if( duration === 0 ) {
-							duration = 'year';
-						} else if( duration === 1 ) {
-							duration = 'month';
-						}  else if( typeof duration !== 'number' ) {
-							duration = signup.config.defaultDuration + ' months';;
-						} else {
-							duration = duration + ' months';
-						}
+						duration = signup.durationConversion(duration);
 
 						$('<li><i class="pictorial"></i><div class="list-inner-content"><div class="name">' + name + '</div><div class="limit">' + limit + '</div><div class="plan">' + currency + price + '/<em>' + duration + '</em></div></div></li>').appendTo($subParent);
+
+						// initiate popup
+						signup.subscriptionPopup(signup.config.subPopup);
+						signup.selectAnItem();
+
 					});
 
 				} // end of condition
@@ -374,6 +375,15 @@
 				$(target).find('.btn-save').on('click', function(e) {
 					e.preventDefault();
 					$(target).fadeOut(300);
+
+					// set value for input field
+					var getIndex = $('.select-subs-plan-list').find('li.active').index() || 0,
+							getItem = signup.config.subsList[getIndex];
+
+					var getCurrencyMark = signup.currencyConversion(getItem.currency);
+					var getDuration = signup.durationConversion(getItem.duration);
+					$('#field_subscription').val(getItem.name + ' - ' + getCurrencyMark + getItem.price + '/' + getDuration);
+
 					$('.select-subs-plan-list').find('li').removeClass('active');
 				});
 
@@ -392,6 +402,35 @@
 				});
 
 			}, // end::selectAnItem
+
+			currencyConversion: function(value) {
+				value = value.toLowerCase();
+				var currency = '$';
+
+				if( value === 'euro' ) {
+					currency = '€';
+				} else if( value === 'pound' ) {
+					currency = '£';
+				}
+
+				return currency;
+			}, // end::currencyConversion
+
+			durationConversion: function(duration) {
+				var getDuration;
+
+				if( duration === 0 ) {
+					getDuration = 'year';
+				} else if( duration === 1 ) {
+					getDuration = 'month';
+				}  else if( typeof duration !== 'number' ) {
+					getDuration = this.config.defaultDuration + ' months';;
+				} else {
+					getDuration = duration + ' months';
+				}
+
+				return getDuration;
+			} // end::durationConversion
 
 		};
 
