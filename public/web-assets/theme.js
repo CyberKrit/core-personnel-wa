@@ -314,7 +314,11 @@
 					});
 
 				} // end of condition
+				
+				// set value for input field
+				this.setSubInput(this.config.selectedSubscriptionIndex);
 
+				$('.select-subs-plan-list').find('li').removeClass('active');
 
 				// reset primary form
 				// because primary form is no longer visible
@@ -377,12 +381,8 @@
 					$(target).fadeOut(300);
 
 					// set value for input field
-					var getIndex = $('.select-subs-plan-list').find('li.active').index() || 0,
-							getItem = signup.config.subsList[getIndex];
-
-					var getCurrencyMark = signup.currencyConversion(getItem.currency);
-					var getDuration = signup.durationConversion(getItem.duration);
-					$('#field_subscription').val(getItem.name + ' - ' + getCurrencyMark + getItem.price + '/' + getDuration);
+					var getIndex = $('.select-subs-plan-list').find('li.active').index() || 0;
+					signup.setSubInput(getIndex);
 
 					$('.select-subs-plan-list').find('li').removeClass('active');
 				});
@@ -419,7 +419,7 @@
 			durationConversion: function(duration) {
 				var getDuration;
 
-				if( duration === 0 ) {
+				if( duration === 12 ) {
 					getDuration = 'year';
 				} else if( duration === 1 ) {
 					getDuration = 'month';
@@ -430,14 +430,29 @@
 				}
 
 				return getDuration;
-			} // end::durationConversion
+			}, // end::durationConversion
+
+			setSubInput: function(input) {
+
+				if( typeof input !== 'number' ) return;
+
+				var getIndex = input || 0,
+						getItem = this.config.subsList[getIndex];
+
+				var getCurrencyMark = this.currencyConversion(getItem.currency);
+				var getDuration = this.durationConversion(getItem.duration);
+				$('#field_subscription').val(getItem.name + ' - ' + getCurrencyMark + getItem.price + '/' + getDuration);
+
+				$('.payment-form-wrapper').find('.inline-price').addClass('active').html(getCurrencyMark + getItem.price);
+
+			} // end::setSubInput
 
 		};
 
 		signup.init({
 			emailRegx: emailRegx, // regex for email validation
 			subPopup: '#popup-subscription-signup', // target popup #id
-			selectedSubscriptionIndex: 1, // select first subscription plan by default
+			//selectedSubscriptionIndex: 3, // select first subscription plan by default
 			defaultPrice: 10,
 			defaultLimit: 10,
 			defaultDuration: 1,
