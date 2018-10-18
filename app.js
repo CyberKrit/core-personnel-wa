@@ -8,16 +8,17 @@ const moment = require('moment');
 const config = require('./config/config');
 const stripe = require('stripe')(config.stripeSecretkey);
 
-// custom import
+// import route
 const Client = require('./route/client');
 const AbandonedSubs = require('./route/abandoned-subscription');
+const Subscription = require('./route/subscription');
 
 app.use('/', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 mongoose.Promise = global.Promise;
 
 // connection to mongodb 
-mongoose.connect('mongodb://samratdey:yellowmonk87@ds231133.mlab.com:31133/generic');
+mongoose.connect(config.mongodbURL, { useCreateIndex: true, useNewUrlParser: true, reconnectTries: Number.MAX_VALUE, reconnectInterval: 1000 });
 mongoose.connection
 	.once('open', () => console.log('mongoose is good to go!'))
 	.on('error', (error) => console.warn(error));
@@ -36,6 +37,7 @@ app.use(function(req, res, next) {
 
 Client(app);
 AbandonedSubs(app);
+Subscription(app);
 
 // admin
 // app.get('/dashboard', (req, res) => res.render('dashboard'));

@@ -11,8 +11,14 @@
 				email: null,
 				pwd: null,
 				emailRegx: null,
+				// subscription
 				subPopup: null,
-				selectedSubscriptionIndex: null
+				selectedSubscriptionIndex: null,
+				defaultPrice: null,
+				defaultLimit: null,
+				defaultDuration: null,
+				defaultCurrency: null,
+				defaultName: null
 			},
 
 			init: function(option) {
@@ -179,16 +185,29 @@
 							success: function(data, status, xhr) {
 								if( data.status === true ) {
 									signup.config._id = data.clientId;
-									signup.paymentForm();
+									// fetch subscription plans
+									$.ajax({
+										method: 'GET',
+										dataType: 'json',
+										url: '/api/subscription',
+										success: function(data, sattus, xhr) {
+											if( data.status === true ) {
+												signup.paymentForm(data.resData);
+											}
+										},
+										error: function(jqXhr, textStatus, errorMessage) {
+												console.log(jqXhr);
+										}
+									}); // end of ajax call
 								}
 							},
 							error: function(jqXhr, textStatus, errorMessage) {
 								console.log(jqXhr);
 							}
-						});
+						}); // end of ajax call
 					}
 
-				});
+				}); // end of click event
 
 			}, // end::stepOne
 
@@ -248,7 +267,53 @@
 
 			}, // end::stepOnePwd
 
-			paymentForm: function() {
+			paymentForm: function(resData) {
+
+				var $subParent = $('.select-subs-plan-list');
+				
+				if( !$subParent.find('li').length ) {
+					// populate subscription tariff
+					var $subParent = $('.select-subs-plan-list');
+					$.each(resData, function(index, item) {
+						var name = item.name || signup.config.defaultName,
+								limit = parseInt(item.limit),
+								price = parseInt(item.price) || signup.config.defaultPrice,
+								duration = parseInt(item.duration),
+								currency = '';
+
+						if( item.currency.toLowerCase() === 'usd' ) {
+							currency = '&#36;';
+						} else if( item.currency.toLowerCase() === 'euro' ) {
+							currency = '&euro;';
+						} else if( item.currency.toLowerCase() === 'pound' ) {
+							currency = '&pound;';
+						} else {
+							currency = '&#36;';
+						}
+
+						// limit
+						if( limit === 0 ) {
+							limit = 'unlimited';
+						} else if( !limit ) {
+							limit = signup.config.defaultLimit;
+						}
+
+						// duration
+						if( duration === 0 ) {
+							duration = 'year';
+						} else if( duration === 1 ) {
+							duration = 'month';
+						}  else if( typeof duration !== 'number' ) {
+							duration = signup.config.defaultDuration + ' months';;
+						} else {
+							duration = duration + ' months';
+						}
+
+						$('<li><i class="pictorial"></i><div class="list-inner-content"><div class="name">' + name + '</div><div class="limit">' + limit + '</div><div class="plan">' + currency + price + '/<em>' + duration + '</em></div></div></li>').appendTo($subParent);
+					});
+
+				} // end of condition
+
 
 				// reset primary form
 				// because primary form is no longer visible
@@ -333,7 +398,12 @@
 		signup.init({
 			emailRegx: emailRegx, // regex for email validation
 			subPopup: '#popup-subscription-signup', // target popup #id
-			selectedSubscriptionIndex: 0 // select first subscription plan by default
+			selectedSubscriptionIndex: 1, // select first subscription plan by default
+			defaultPrice: 10,
+			defaultLimit: 10,
+			defaultDuration: 1,
+			defaultCurrency: 'usd',
+			defaultName: 'Unspecified'
 		});
 
 	});
