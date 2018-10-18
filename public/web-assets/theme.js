@@ -10,7 +10,9 @@
 				company: null,
 				email: null,
 				pwd: null,
-				emailRegx: null
+				emailRegx: null,
+				subPopup: null,
+				selectedSubscriptionIndex: null
 			},
 
 			init: function(option) {
@@ -20,6 +22,8 @@
 				this.validation();
 				this.stepOne(this.config.emailRegx);
 				this.goBack();
+				this.subscriptionPopup(this.config.subPopup);
+				this.selectAnItem();
 			},
 
 			validation: function() {
@@ -282,11 +286,55 @@
 					$('.form-bread-crumb').find('li').removeClass('active').siblings('li').eq(0).addClass('active');
 				});
 
-			}
+			}, // end::goBack
+
+			subscriptionPopup: function(target) {
+
+				$('.input-sub-outer').on('click', function(e) {
+					e.preventDefault();
+
+					// display popup
+					$(target).fadeIn(300);
+
+					// highlight previous selected item
+					var $trgtItem = $('.select-subs-plan-list');
+
+					if( typeof signup.config.selectedSubscriptionIndex === 'number') {
+						$trgtItem.find('li').eq(signup.config.selectedSubscriptionIndex).addClass('active'); // highlight earlier selected plan
+					}
+
+				});
+
+				// save and close popup
+				$(target).find('.btn-save').on('click', function(e) {
+					e.preventDefault();
+					$(target).fadeOut(300);
+					$('.select-subs-plan-list').find('li').removeClass('active');
+				});
+
+			}, // end::subscriptionPopup
+
+			selectAnItem: function() {
+
+				$('.select-subs-plan-list').on('click', 'li', function(e) {
+					var $getPlan = $(e.target).closest('li');
+					signup.config.selectedSubscriptionIndex = $getPlan.index();
+
+					// store data
+					$('.select-subs-plan-list').attr('data-selected', signup.config.selectedSubscriptionIndex);
+					// highlight
+					$getPlan.addClass('active').siblings('li').removeClass('active');
+				});
+
+			}, // end::selectAnItem
 
 		};
 
-		signup.init({emailRegx: emailRegx});
+		signup.init({
+			emailRegx: emailRegx, // regex for email validation
+			subPopup: '#popup-subscription-signup', // target popup #id
+			selectedSubscriptionIndex: 0 // select first subscription plan by default
+		});
 
 	});
 }(jQuery));
