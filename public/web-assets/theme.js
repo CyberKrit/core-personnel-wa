@@ -6,12 +6,14 @@
 		var signup = {
 
 			config: {
+				preparedToSendData: false,
 				_id: null,
 				company: null,
 				email: null,
 				pwd: null,
 				emailRegx: null,
 				// subscription
+				selectedSubId: null,
 				subsList: null,
 				subPopup: null,
 				selectedSubscriptionIndex: null,
@@ -19,7 +21,9 @@
 				defaultLimit: null,
 				defaultDuration: null,
 				defaultCurrency: null,
-				defaultName: null
+				defaultName: null,
+				// stripe
+				stripeApiKey: null
 			},
 
 			init: function(option) {
@@ -196,6 +200,7 @@
 												$.each(data.resData, function(index, val) {
 													buildSubObj.push({
 														// first letter of name to uppercase
+														_id: val._id,
 														name: val.name.charAt(0).toUpperCase() + val.name.slice(1),
 														price: val.price,
 														currency: val.currency,
@@ -204,7 +209,8 @@
 												});
 												signup.config.subsList = buildSubObj;
 												// calling relevant function
-												signup.paymentForm(data.resData);											}
+												signup.paymentForm(data.resData);											
+											}
 										},
 										error: function(jqXhr, textStatus, errorMessage) {
 												console.log(jqXhr);
@@ -280,6 +286,9 @@
 
 			paymentForm: function(resData) {
 
+				// initiate stripe
+				this.stripeconfig(this.config.stripeApiKey);
+
 				var $subParent = $('.select-subs-plan-list');
 				
 				if( !$subParent.find('li').length ) {
@@ -314,9 +323,11 @@
 					});
 
 				} // end of condition
-				
+
 				// set value for input field
-				this.setSubInput(this.config.selectedSubscriptionIndex);
+				if( this.config.selectedSubscriptionIndex >= 0) {
+					this.setSubInput(this.config.selectedSubscriptionIndex);
+				}
 
 				$('.select-subs-plan-list').find('li').removeClass('active');
 
@@ -346,14 +357,14 @@
 				$('.payment-form-wrapper').find('.btn-go-back').on('click', function(e) {
 					e.preventDefault();
 
-					// hide payment form
-					$('.payment-form-wrapper').css({ display: 'none' });
+						// hide payment form
+						$('.payment-form-wrapper').css({ display: 'none' });
 
-					// show primary form
-					$('.module-form').css({ display: 'block' });
+						// show primary form
+						$('.module-form').css({ display: 'block' });
 
-					// reflect changes to bread-crumb
-					$('.form-bread-crumb').find('li').removeClass('active').siblings('li').eq(0).addClass('active');
+						// reflect changes to bread-crumb
+						$('.form-bread-crumb').find('li').removeClass('active').siblings('li').eq(0).addClass('active');
 				});
 
 			}, // end::goBack
@@ -370,7 +381,8 @@
 					var $trgtItem = $('.select-subs-plan-list');
 
 					if( typeof signup.config.selectedSubscriptionIndex === 'number') {
-						$trgtItem.find('li').eq(signup.config.selectedSubscriptionIndex).addClass('active'); // highlight earlier selected plan
+						// highlight earlier selected plan
+						$trgtItem.find('li').eq(signup.config.selectedSubscriptionIndex).addClass('active'); 
 					}
 
 				});
@@ -381,8 +393,10 @@
 					$(target).fadeOut(300);
 
 					// set value for input field
-					var getIndex = $('.select-subs-plan-list').find('li.active').index() || 0;
-					signup.setSubInput(getIndex);
+					var getIndex = $('.select-subs-plan-list').find('li.active').index();
+					if( typeof getIndex === 'number' && getIndex >= 0 ) {
+						signup.setSubInput(getIndex);
+					}
 
 					$('.select-subs-plan-list').find('li').removeClass('active');
 				});
@@ -436,16 +450,152 @@
 
 				if( typeof input !== 'number' ) return;
 
-				var getIndex = input || 0,
-						getItem = this.config.subsList[getIndex];
+				if( input >= 0 ) {
+					var getIndex = input || 0,
+							getItem = this.config.subsList[getIndex];
 
-				var getCurrencyMark = this.currencyConversion(getItem.currency);
-				var getDuration = this.durationConversion(getItem.duration);
-				$('#field_subscription').val(getItem.name + ' - ' + getCurrencyMark + getItem.price + '/' + getDuration);
+					var getCurrencyMark = this.currencyConversion(getItem.currency);
+					var getDuration = this.durationConversion(getItem.duration);
+					$('#field_subscription').val(getItem.name + ' - ' + getCurrencyMark + getItem.price + '/' + getDuration);
 
-				$('.payment-form-wrapper').find('.inline-price').addClass('active').html(getCurrencyMark + getItem.price);
+					$('.payment-form-wrapper').find('.inline-price').addClass('active').html(getCurrencyMark + getItem.price);
 
-			} // end::setSubInput
+					// hide validation failed message
+					$('#field_subscription').closest('.input-sub-outer').next('.input-status').find('.required').slideUp(300);
+
+					this.config.selectedSubId = getItem._id;
+				}
+
+			}, // end::setSubInput
+
+			stripeconfig: function(stripeApiKey) {
+				// Create a Stripe client.
+				var stripe = Stripe(stripeApiKey);
+
+				// Create an instance of Elements.
+				var elements = stripe.elements();
+
+				// Custom styling can be passed to options when creating an Element.
+				// (Note that this demo uses a wider set of styles than the guide below.)
+				var style = {
+				  base: {
+				    fontFamily: '"Lato", sans-serif',
+				    fontSize: '16px',
+				    lineHeight: '18px',
+				    fontWeight: 400,
+				    color: '#fff',
+				    fontSmoothing: 'antialiased',
+				    iconColor: '#a1a1a1',
+				    '::placeholder': {
+				      color: '#a1a1a1'
+				    }
+				  },
+				  invalid: {
+				    color: '#f00',
+				    iconColor: '#f00'
+				  }
+				};
+
+				// Create an instance of the card Element.
+				var card = elements.create('card', {style: style});
+
+				// Add an instance of the card Element into the `card-element` <div>.
+				card.mount('#card-element');
+
+				// Handle real-time validation errors from the card Element.
+				card.addEventListener('change', function(event) {
+				  var displayError = document.getElementById('card-errors');
+				  if (event.error) {
+				    displayError.textContent = event.error.message;
+				  } else {
+				    displayError.textContent = '';
+				  }
+				});
+
+				// Handle form submission.
+				var form = document.getElementById('payment-form');
+				form.addEventListener('submit', function(event) {
+				  event.preventDefault();
+
+				  stripe.createToken(card).then(function(result) {
+				    if (result.error) {
+				      // Inform the user if there was an error.
+				      var errorElement = document.getElementById('card-errors');
+				      errorElement.textContent = result.error.message;
+				    } else {
+				      // Send the token to your server.
+				      signup.stripeTokenHandler(result.token);
+				    }
+				  });
+				});
+
+			}, // end::stripeconfig
+
+			stripeTokenHandler: function(data) {
+				this.config.preparedToSendData = true;
+
+				var $subInputField = $('#field_subscription');
+
+				if( !$subInputField.val() ) {
+					this.enablePaymentForm();
+					// show error
+					$subInputField.closest('.input-sub-outer').next('.input-status').find('.required').slideDown(300);
+				} else {
+					this.disablePaymentForm();
+					// hide error
+					$subInputField.closest('.input-sub-outer').next('.input-status').find('.required').slideUp(300);
+
+					// save data
+					var buildReq = {
+						company: signup.config.company,
+						email: signup.config.email,
+						pwd: signup.config.pwd,
+						stripeToken: data.id,
+						subscriptionId: signup.config.selectedSubId
+					};
+
+				  $.ajax({
+				    method: 'POST',
+				    dataType: 'json',
+				    url: '/api/user',
+				    data: buildReq,
+				    success: function(data, status, xhr) {
+				      console.log(data);
+				    },
+				    error: function(jqXhr, textStatus, errorMessage) {
+				      signup.enablePaymentForm();
+				    }
+				  });
+
+				} // end if
+
+			}, // stripeTokenHandler
+
+			disablePaymentForm: function() {
+
+				// disable subscription list select box
+				$('.input-sub-outer').off('click');
+				// enable button
+				$('#submit-signup-data').prop('disabled', true);
+				// show go-back button
+				$('a.btn-go-back').fadeOut(300);
+				// disable card input
+				$('#card-element').css({ 'pointer-events': 'none' });
+
+			}, // disablePaymentForm
+
+			enablePaymentForm: function() {
+
+				// enable subscription list select box
+				this.subscriptionPopup();
+				// disable button
+				$('#submit-signup-data').removeAttr('disabled');
+				// hide go-back button
+				$('a.btn-go-back').fadeIn(300);
+				// enable card input
+				$('#card-element').css({ 'pointer-events': 'auto' });
+
+			} // enablePaymentForm
 
 		};
 
@@ -457,7 +607,9 @@
 			defaultLimit: 10,
 			defaultDuration: 1,
 			defaultCurrency: 'usd',
-			defaultName: 'Unspecified'
+			defaultName: 'Unspecified',
+			// stripe
+			stripeApiKey: 'pk_test_Okgc1K7VMvnqESGK5uMdmMCf'
 		});
 
 	});

@@ -9,7 +9,7 @@ const config = require('./config/config');
 const stripe = require('stripe')(config.stripeSecretkey);
 
 // import route
-const Client = require('./route/client');
+const User = require('./route/user');
 const AbandonedSubs = require('./route/abandoned-subscription');
 const Subscription = require('./route/subscription');
 
@@ -35,7 +35,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-Client(app);
+User(app);
 AbandonedSubs(app);
 Subscription(app);
 
@@ -49,7 +49,7 @@ app.get('/signup', (req, res) => res.render('pages/signup'));
 app.post('/dashboard', (req, res) => {
 
 	console.log(req.body);
-	const amount = 129800;
+	const amount = 132;
 
 	stripe.charges.create({
     amount,

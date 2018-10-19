@@ -342,7 +342,7 @@ select:-webkit-autofill {
 	background-color: rgba(255, 0, 0, .5);
 	border: .1rem solid rgba(255, 0, 0, .5);
 }
-.module-form .input-status li:before,,
+.module-form .input-status li:before,
 .subscription-plan .input-status li:before {
 	content: ' ';
 	position: absolute;
@@ -842,6 +842,30 @@ select:-webkit-autofill {
 	height: 5rem;
 	background: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTAgNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGg1MHY1MEgweiIvPjxwYXRoIGQ9Ik00Ny4yNSAxNWwtMi4wODYtMi4wODZMMjUgMzMuMDc4IDQuODM2IDEyLjkxNCAyLjc1IDE1IDI1IDM3LjI1eiIgZmlsbD0iI2ExYTFhMSIvPjwvc3ZnPg==) no-repeat center center;
 	background-size: 2.4rem 2.4rem;
+}
+/*
+ * #submit-signup-data
+ */
+
+#submit-signup-data .processing {
+	display: none;
+	width: 3.6rem;
+	height: 3.6rem;
+	margin: 0 auto;
+}
+#submit-signup-data[disabled],
+#submit-signup-data[disabled]:hover {
+	width: 4.8rem;
+	padding: 0;
+	background: rgba(15, 15, 15, .5);
+	cursor: default;
+}
+#submit-signup-data[disabled]:after,
+#submit-signup-data[disabled] .idle {
+	display: none;
+}
+#submit-signup-data[disabled] .processing {
+	display: block;
 }
 
 /*

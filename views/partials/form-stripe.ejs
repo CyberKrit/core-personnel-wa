@@ -34,86 +34,11 @@
       </div>
       <div class="grp-btn">
         <a class="btn-go-back">Go Back</a>
-        <button>Let's Get Started!</button>
+        <button id="submit-signup-data">
+          <span class="idle">Let's Get Started!</span>          
+          <span class="processing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg></span>
+        </button>
       </div>
     </form>
   </div>
 </div>
-
-<script>
-  // Create a Stripe client.
-var stripe = Stripe('pk_test_Okgc1K7VMvnqESGK5uMdmMCf');
-
-// Create an instance of Elements.
-var elements = stripe.elements();
-
-// Custom styling can be passed to options when creating an Element.
-// (Note that this demo uses a wider set of styles than the guide below.)
-var style = {
-  base: {
-    fontFamily: '"Lato", sans-serif',
-    fontSize: '16px',
-    lineHeight: '18px',
-    fontWeight: 400,
-    color: '#fff',
-    fontSmoothing: 'antialiased',
-    iconColor: '#a1a1a1',
-    '::placeholder': {
-      color: '#a1a1a1'
-    }
-  },
-  invalid: {
-    color: '#f00',
-    iconColor: '#f00'
-  }
-};
-
-// Create an instance of the card Element.
-var card = elements.create('card', {style: style});
-
-// Add an instance of the card Element into the `card-element` <div>.
-card.mount('#card-element');
-
-// Handle real-time validation errors from the card Element.
-card.addEventListener('change', function(event) {
-  var displayError = document.getElementById('card-errors');
-  if (event.error) {
-    displayError.textContent = event.error.message;
-  } else {
-    displayError.textContent = '';
-  }
-});
-
-// Handle form submission.
-var form = document.getElementById('payment-form');
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
-
-  stripe.createToken(card).then(function(result) {
-    if (result.error) {
-      // Inform the user if there was an error.
-      var errorElement = document.getElementById('card-errors');
-      errorElement.textContent = result.error.message;
-    } else {
-      // Send the token to your server.
-      stripeTokenHandler(result.token);
-    }
-  });
-});
-
-function stripeTokenHandler(data) {console.log(data);
-
-  var ajaxReq = $.ajax('/dashboard', {
-    dataType: 'json',
-    method: 'POST',
-    data: { stripeToken: data.id },
-    success: function(data, status, xhr) {
-      console.log('status: ' + status + ', data: ' + data);
-    },
-    error: function(jqXhr, textStatus, errorMessage) {
-      console.log('Error' + errorMessage);
-    }
-  });
-
-}
-</script>

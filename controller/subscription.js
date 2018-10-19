@@ -23,8 +23,8 @@ module.exports = {
 
 					// filter info
 					let buildRes = [];
-					list.map(({ name, price, duration, currency, limit }) => {
-						buildRes.push({ name, price, duration, currency, limit });
+					list.map(({ _id, name, price, duration, currency, limit }) => {
+						buildRes.push({ _id, name, price, duration, currency, limit });
 					});
 
 					// response
