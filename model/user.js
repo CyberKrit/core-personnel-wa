@@ -11,13 +11,20 @@ const UserSchema = new Schema({
 	credentials: [{
 		email: { type: String, required: true, lowercase: true, trim: true, unique: true },
 		password: { type: String, required: true },
-		tel: { type: String, unique: true }
+		tel: { 
+			type: String, 
+			trim: true, 
+			index: { 
+				unique: true, 
+				partialFilterExpression: { email: {$type: 'string'} } 
+			} 
+		}
 	}],
 	company: [{
 		name: { type: String, required: true, default: null },
 		type: { type: String, default: null },
 		size: { type: String, default: null },
-		founded: { type: Date, default: Date.now }
+		founded: { type: Date, default: null }
 	}],
 	address: [{
 		number: { type: String, default: null },
@@ -53,7 +60,7 @@ const UserSchema = new Schema({
 		id: { type: Schema.Types.ObjectId, ref: 'invoice' }
 	}],
 	roleManagement: [{
-		permission: { type: String, required: true, enum: ['create', 'read', 'update', 'delete'], default: 'read' }
+		permission: { type: String, required: true, enum: ['create', 'read', 'update', 'delete', 'all', 'none'], default: 'all' }
 	}],
 	tokens: [{
 		access: { type: String, required: true },

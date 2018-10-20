@@ -6,6 +6,7 @@ module.exports = {
 
 	create(req, res, next) {
 		let { company, email, pwd, stripeToken, subscriptionId } = req.body;
+		let trialOnSignup = config.trialOnSignup ? 'trial' : 'unset';
 
 		// create stripe user
 		if( stripeToken ) {
@@ -21,9 +22,10 @@ module.exports = {
 				let buildInput = {
 					credentials: [{ email, password: pwd }],
 					company: [{ name: company }],
-					subscription: [{ id: subscriptionId, status: 'trial' }],
+					subscription: [{ id: subscriptionId, status: trialOnSignup }],
 					status: [{ active: true }],
 					userType: 'client',
+					paymentMethod: 'stripe',
 					stripe: [{ 
 						customerId: source.customer,
 						cardId: source.id,
@@ -32,7 +34,8 @@ module.exports = {
 						expMonth: source.exp_month,
 						expYear: source.exp_year,
 						funding: source.funding
-					}]
+					}],
+					roleManagement: [{ permission: 'all' }]
 				};
 				UserModel.create(buildInput)
 					.then(newsUser => {
@@ -44,7 +47,7 @@ module.exports = {
 				//console.log(source);
 			})
 			.catch(err => {
-			  res.status(422).send({ error: err.message });
+			  res.status(422).send({ error: err });
 			});
 		}
 		//res.send({ send: true });

@@ -563,6 +563,7 @@
 				      console.log(data);
 				    },
 				    error: function(jqXhr, textStatus, errorMessage) {
+				    	console.log(jqXhr);
 				      signup.enablePaymentForm();
 				    }
 				  });
