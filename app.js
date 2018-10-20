@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const moment = require('moment');
-
 const config = require('./config/config');
 const stripe = require('stripe')(config.stripeSecretkey);
 
@@ -12,6 +11,7 @@ const stripe = require('stripe')(config.stripeSecretkey);
 const User = require('./route/user');
 const AbandonedSubs = require('./route/abandoned-subscription');
 const Subscription = require('./route/subscription');
+const Dashboard = require('./route/dashboard');
 
 app.use('/', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
@@ -38,30 +38,31 @@ app.use(function(req, res, next) {
 User(app);
 AbandonedSubs(app);
 Subscription(app);
+Dashboard(app);
 
 // admin
 // app.get('/dashboard', (req, res) => res.render('dashboard'));
 // app.get('/dashboard/**', (req, res) => res.render('dashboard'));
 
 // website
-app.get('/login', (req, res) => res.render('login', { stripePublishablekey: config.stripePublishablekey }));
+app.get('/login', (req, res) => res.render('pages/login'));
 app.get('/signup', (req, res) => res.render('pages/signup'));
 app.post('/dashboard', (req, res) => {
 
-	console.log(req.body);
-	const amount = 132;
+	// console.log(req.body);
+	// const amount = 132;
 
-	stripe.charges.create({
-    amount,
-    currency: 'usd',
-    customer: 'cus_Dn8NmfUiGfTnsu'
-  })
-  .then(function(charge) {
-	  res.send({ status: true });
-	})
-	.catch(function(err) {
-	  res.status(422).send({ error: err.message });
-	});
+	// stripe.charges.create({
+ //    amount,
+ //    currency: 'usd',
+ //    customer: 'cus_Dn8NmfUiGfTnsu'
+ //  })
+ //  .then(function(charge) {
+	//   res.send({ status: true });
+	// })
+	// .catch(function(err) {
+	//   res.status(422).send({ error: err.message });
+	// });
 
 	// stripe.customers.create({
 	//   email: 'mail.1238.sam@gmail.com'//req.body.stripeEmail

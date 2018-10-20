@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+// custom import
+const config = require('../config/config');
 
 const UserSchema = new Schema({
 	personal: [{
@@ -10,7 +15,7 @@ const UserSchema = new Schema({
 	}],
 	credentials: [{
 		email: { type: String, required: true, lowercase: true, trim: true, unique: true },
-		password: { type: String, required: true },
+		password: { type: String, required: true, minlength: config.pwdMinLength },
 		tel: { 
 			type: String, 
 			trim: true, 
@@ -63,12 +68,71 @@ const UserSchema = new Schema({
 		permission: { type: String, required: true, enum: ['create', 'read', 'update', 'delete', 'all', 'none'], default: 'all' }
 	}],
 	tokens: [{
-		access: { type: String, required: true },
+		type: { type: String, required: true },
 		token: { type: String, required: true }
 	}],
 	createdAt: { type: Date, required: true, default: Date.now },
 	updatedAt: { type: Date, required: true, default: Date.now }
 }, { collection: 'user' });
+
+// UserSchema.methods.toJSON = function() {
+// 	let user = this;
+// 	let buildRes = user.toObject();
+
+// 	return { company: buildRes.company[0].name }
+// };
+
+UserSchema.pre('save', function(next) {
+	let user = this;
+
+	if( this.credentials[0].password ) {
+			try {
+				bcrypt.genSalt(10, (err, salt) => {
+					bcrypt.hash(user.credentials[0].password, salt, (err, hash) => {
+						user.credentials[0].password = hash;
+						next();
+					});
+				});
+			} catch(err) {
+				return next();
+			}
+	} else {
+		next();
+	}
+
+
+});
+
+UserSchema.statics.findByToken = function(token) {
+	let User = this, decode;
+
+	try {
+		decode = jwt.verify(token, config.jwtSecret);
+	} catch(err) {
+		return Promise.reject();
+	}
+
+	return User.findOne({
+		_id: decode._id,
+		'tokens.type': 'auth',
+		'tokens.token': token
+	});
+
+};
+
+UserSchema.methods.generateAuthToken = function() {
+	let user = this;
+	let type = 'auth';
+	let token = jwt.sign({ type, _id: user._id.toHexString() }, config.jwtSecret);
+
+	user.tokens.push({ type, token });
+
+	return user.save()
+		.then( updatedUser => {
+			return { token, user: updatedUser };
+		});
+};
+
 
 const User = mongoose.model('user', UserSchema);
 module.exports = User;

@@ -39,15 +39,18 @@ module.exports = {
 				};
 				UserModel.create(buildInput)
 					.then(newsUser => {
-						res.send({ status: true, data: newsUser._id });
+						return newsUser.generateAuthToken();
+					})
+					.then(data => {console.log(data.token);
+						res.header('x-auth', data.token).send({ status: true, data: data.user });
 					})
 					.catch(err => {
-					  res.status(422).send({ error: err });
+					  res.status(422).send(err);
 					});
 				//console.log(source);
 			})
 			.catch(err => {
-			  res.status(422).send({ error: err });
+			  res.status(422).send(err);
 			});
 		}
 		//res.send({ send: true });

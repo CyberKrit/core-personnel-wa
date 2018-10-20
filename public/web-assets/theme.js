@@ -561,6 +561,7 @@
 				    data: buildReq,
 				    success: function(data, status, xhr) {
 				      console.log(data);
+				      console.log(xhr.getResponseHeader('x-auth'));
 				    },
 				    error: function(jqXhr, textStatus, errorMessage) {
 				    	console.log(jqXhr);

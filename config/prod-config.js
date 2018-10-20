@@ -3,5 +3,7 @@ module.exports = {
 	stripeSecretkey: process.env.STRIPE_SECRET_KEY,
 	mongodbURL: process.env.MONGODB_URL,
 	trialOnSignup: true,
-	trialDuration: 14
+	trialDuration: 14,
+	pwdMinLength: 8,
+	jwtSecret: process.env.JWT_SECRET_KEY
 };
