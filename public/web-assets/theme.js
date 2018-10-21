@@ -614,5 +614,137 @@
 			stripeApiKey: 'pk_test_Okgc1K7VMvnqESGK5uMdmMCf'
 		});
 
+		var login = {
+
+			config: {
+				emailRegx: emailRegx,
+				emailTest: false,
+				pwdTest: false,
+				pwdMinLength: 8
+			},
+
+			init: function(config) {
+				$.extend(this.config, config);
+
+				// this.validation();
+				this.testCtrl();
+				this.submit();
+			},
+
+			testCtrl: function() {
+				var self = this,
+						$loginForm = $('#form-login');
+
+				// email
+				$('#login_field_email').on('focusout keyup', function(e) {
+					self.HandleError({ value: e.target.value, event: e.type, type: 'email' });
+				});
+
+				// pwd
+				$('#login_field_pwd').on('focusout keyup', function(e) {
+					self.HandleError({ value: e.target.value, event: e.type, type: 'pwd' });
+				});
+
+			},
+
+			HandleError: function(req) {
+				var $emailTrgt = $('.login-email-input-status');
+				var $pwdTrgt = $('.login-pwd-input-status');
+
+				if( req.type === 'email' ) {
+					this.emailHandleError(req.value, req.event, $emailTrgt);
+				}
+				if( req.type === 'pwd' ) {
+					this.pwdHandleError(req.value, req.event, $pwdTrgt);
+				}
+			},
+
+			emailHandleError: function(value, event, $trgt) {
+				var patternTest, required;
+				patternTest = required = false;
+
+				// test email pattern
+				patternTest = emailRegx ? emailRegx.test(value) : false;
+				// test require
+				required = value ? true : false;
+
+				if( required ) {
+					$trgt.find('.required').slideUp(300);
+
+					// patter test
+					if( patternTest ) {
+						$trgt.find('.pattern').slideUp(300);
+					} else {
+						// do not show error in type mode
+						if( event === 'focusout' ) {
+							$trgt.find('.pattern').slideDown(300);
+						}
+					}
+				} else {
+						if( event === 'focusout' ) {
+							// do not show error in type mode
+							$trgt.find('.required').slideDown(300);
+						}
+				}
+
+				this.config.emailTest = ( patternTest && required ) ? true : false;
+
+			}, // emailHandleError
+
+			pwdHandleError: function(value, event, $trgt) {
+				var patternTest, required;
+				minlength = required = false;
+
+				// test minlength
+				minlength = value.length >= this.config.pwdMinLength ? true : false;
+				// test require
+				required = value ? true : false;
+
+				if( required ) {
+					$trgt.find('.required').slideUp(300);
+
+					// patter test
+					if( minlength ) {
+						$trgt.find('.minlength').slideUp(300);
+					} else {
+						// do not show error in type mode
+						if( event === 'focusout' ) {
+							$trgt.find('.minlength').slideDown(300);
+						}
+					}
+				} else {
+						if( event === 'focusout' ) {
+							// do not show error in type mode
+							$trgt.find('.required').slideDown(300);
+						}
+				}
+
+				this.config.pwdTest = ( minlength && required ) ? true : false;
+
+			}, // pwdHandleError
+
+			submit: function() {
+				var self = this;
+
+				$('.btn-login').on('click', function(e) {
+					e.preventDefault();
+					$('#login_field_email, #login_field_pwd').trigger('focusout');
+
+					if( self.config.emailTest && self.config.pwdTest ) {
+
+
+
+					}
+
+				});
+			}
+
+		};
+
+		login.init({
+			emailRegx: emailRegx,
+			pwdMinLength: 8
+		});
+
 	});
 }(jQuery));
