@@ -4,72 +4,120 @@
 		<%- include('../partials/head'); %>
 	</head>
 	<body>
-		<div class="body-inner-wrapper">
+		<div class="app">
 			<%- include('../partials/aside'); %>
 
-			<main id="main" class="section-input">
-				<div class="section-input-overlay"></div>
-				<div class="inner-wrapper">
-					<header class="section-input-header">
-						<h1 class="section-input-title">Register With <strong>CorePersonnel&nbsp;WA</strong></h1>
+			<main id="main" class="app__main app__main--form">
+				<div class="app__main--form-overlay"></div>
+				<div class="_app__main--form">
+
+					<header class="app__main--form__header">
+						<h1 class="app__main--form__header-title">
+							Register With 
+							<strong>CorePersonnel&nbsp;WA</strong>
+						</h1>
 					</header>
-					<div class="form-outer-wrapper">
-						<div class="form-bread-crumb">
-							<ul>
-								<li class="active"><a>Primary Details</a></li>
-								<li><a>Payment Details</a></li>
-							</ul>
-						</div>
-						<div class="form-outer">
-							<div class="module-form">
-								<form id="form-signup" name="signup_form" novalidate>
-									<div class="input-wrapper">
-										<label for="field_company">Company Name</label>
-										<input type="text" id="field_company" name="field_company" placeholder="Registered Company Name">
-										<div class="input-status">
-											<ul>
-												<li class="required">This field is required</li>
+
+					<div class="form-bread-crumb">
+						<ul>
+							<li class="active"><a>Primary Details</a></li>
+							<li><a>Payment Details</a></li>
+						</ul>
+					</div>
+							
+					<div class="-form--signup">
+						<form id="form--signup" name="form form--signup" novalidate>
+							<div class="_form--signup">
+								<fieldset class="form--signup__step1">
+									<div class="form--signup__input -company">
+										<label for="form--signup__input-company">Company Name</label>
+										<input type="text" id="form--signup__input-company" placeholder="Registered company name">
+										<div class="-err-list">
+											<ul class="err-list">
+												<li class="err-list--required">This field is required</li>
 											</ul>
 										</div>
 									</div>
-									<div class="input-wrapper">
-										<label for="field_email">Email Address</label>
-										<input type="email" id="field_email" name="field_email" placeholder="Enter your email address">
-										<div class="input-status">
-											<ul>
-												<li class="required">This field is required</li>
-												<li class="validation">This email is not valid</li>
+									<div class="form--signup__input -email">
+										<label for="form--signup__input-email">Email Address</label>
+										<input type="email" id="form--signup__input-email" placeholder="Registered Email">
+										<div class="-err-list">
+											<ul class="err-list">
+												<li class="err-list--required">This field is required</li>
+												<li class="err-list--pattern">This email is not valid</li>
 											</ul>
 										</div>
 									</div>
-									<div class="input-wrapper">
-										<label for="field_pwd">Password</label>
-										<input type="password" id="field_pwd" name="field_pwd" placeholder="Minimum 8 characters long">
-										<div class="input-status">
-											<ul>
-												<li class="required">This field is required</li>
-												<li class="minlength">Your password should be at least 8 characters long</li>
+									<div class="form--signup__input -pwd">
+										<label for="form--signup__input-pwd">Password</label>
+										<input type="password" id="form--signup__input-pwd" placeholder="Minimum 8 characters long">
+										<div class="-err-list">
+											<ul class="err-list">
+												<li class="err-list--required">This field is required</li>
+												<li class="err-list--minlength">Your password should be at least 8 characters long</li>
 											</ul>
 										</div>
 									</div>
-									<div class="action-wrapper">
-										<button type="button" class="form-action-button">
-											<span class="active">Next Step <i class="arrow-right"></i></span>
-											<span class="processing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg></span>
+									<div class="form--signup__submit">
+										<button type="button" id="form--signup__submit-step1-btn" data-state="idle">
+											<div class="btn--idle">Next</div>
+											<div class="btn--busy">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+											</div>
 										</button>
 									</div>
-								</form>
+								</fieldset>
+								<fieldset class="form--signup__step2">
+									<h2 class="form--signup__step2-title">Start Your 14 Day Free Trial</h2>
+									<p>You'll be charged only after 14 days of trial period to avail our service uninterruptedly.</p>
+									<div class="form--signup__input -subscription">
+										<label for="form--signup__input-subscription">Subscription plan</label>
+										<select id="form--signup__input-subscription"></select>
+										<div class="-err-list">
+											<ul class="err-list">
+												<li class="err-list--required">This field is required</li>
+											</ul>
+										</div>
+									</div>
+									<div class="form--signup__input -payment">
+										<label>Payment Details</label>
+										<div id="card-element"></div>
+										<div id="card-errors" role="alert"></div>
+										<div class="-err-list">
+											<ul class="err-list">
+											</ul>
+										</div>
+									</div>
+									<p>Upgrade, downgrade or cancel your account anytime with a single click from your dashboard.</p>
+									<div class="form--signup__submit">
+										<button type="submit" id="form--signup__submit-btn" data-state="idle">
+											<div class="btn--idle">Let's Get Started!</div>
+											<div class="btn--busy">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+											</div>
+										</button>
+										<button type="button" id="form--signup__submit-goback-btn" class="__complementary__" data-state="idle">
+											<div class="btn--idle">Go Back</div>
+											<div class="btn--busy">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+											</div>
+										</button>
+									</div>
+								</fieldset>
 							</div>
-							<%- include('../partials/form-stripe'); %>
-						</div>
+						</form>
 					</div>
+						
+
 				</div>
-				<div class="section-input-compliment">
+
+				<div class="app__main--form-compliment">
 					<p>Already have an account? <a href="/login">Login Here</a></p>
 				</div>
+
 			</main>
 			
-			<footer>
+			<footer class="app__footer">
 				<%- include('../partials/footer'); %>
 			</footer>
 		</div>

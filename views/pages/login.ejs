@@ -4,60 +4,62 @@
 		<%- include('../partials/head'); %>
 	</head>
 	<body>
-		<div class="body-inner-wrapper">
+		<div class="app">
 			<%- include('../partials/aside'); %>
 
-			<main id="main" class="section-input">
-				<div class="section-input-overlay"></div>
-				<div class="inner-wrapper">
-					<header class="section-input-header">
-						<h1 class="section-input-title">Sign In to <strong>CorePersonnel&nbsp;WA</strong></h1>
+			<main id="main" class="app__main app__main--form">
+				<div class="app__main--form-overlay"></div>
+				<div class="_app__main--form">
+
+					<header class="app__main--form__header">
+						<h1 class="app__main--form__header-title">Sign In to <strong>CorePersonnel&nbsp;WA</strong></h1>
 					</header>
-					<div class="form-outer-wrapper">
-						<div class="form-outer">
-							<div class="module-form">
-								<form id="form-login" name="signup_form" novalidate>
-									<div class="input-wrapper">
-										<label for="login_field_email">Email Address</label>
-										<input type="email" id="login_field_email" name="login_field_email" placeholder="Registered Email">
-										<div class="input-status login-email-input-status">
-											<ul>
-												<li class="required">This field is required</li>
-												<li class="pattern">This email is not valid</li>
-											</ul>
+
+					<div class="-form--login">
+						<form id="form--login" class="form form--login" novalidate>
+							<div class="_form--login">
+								<div class="form--login__input -email">
+									<label for="form--login__input-email">Email Address</label>
+									<input type="email" id="form--login__input-email" placeholder="Registered Email">
+									<div class="-err-list">
+										<ul class="err-list">
+											<li class="err-list--required">This field is required</li>
+											<li class="err-list--pattern">This email is not valid</li>
+										</ul>
+									</div>
+								</div>
+								<div class="form--login__input -pwd _pb2_">
+									<label for="form--login__input-pwd">Password</label>
+									<input type="password" id="form--login__input-pwd" placeholder="Minimum 8 characters long">
+									<div class="-err-list">
+										<ul class="err-list">
+											<li class="err-list--required">This field is required</li>
+											<li class="err-list--minlength">Your password should be at least 8 characters long</li>
+										</ul>
+									</div>
+								</div>
+								<div class="form-login__reset-pwd _pb2_">
+									<p>Forget Password? <a href="#">Click Here</a></p>
+								</div>
+								<div class="form--login__submit">
+									<button type="button" id="form--login__submit-btn" data-state="idle">
+										<div class="btn--idle">Get Started</div>
+										<div class="btn--busy">
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
 										</div>
-									</div>
-									<div class="input-wrapper">
-										<label for="login_field_pwd">Password</label>
-										<input type="password" id="login_field_pwd" name="login_field_pwd" placeholder="Minimum 8 characters long">
-										<div class="input-status login-pwd-input-status">
-											<ul>
-												<li class="required">This field is required</li>
-												<li class="minlength">Your password should be at least 8 characters long</li>
-											</ul>
-										</div>
-									</div>
-									<div>
-										Forget Password? Click Here
-									</div>
-									<div class="action-wrapper">
-										<button type="button" class="btn-login">
-											<span class="active">Get Started <i class="arrow-right"></i></span>
-											<span class="processing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg></span>
-										</button>
-									</div>
-								</form>
+									</button>
+								</div>
 							</div>
-							<%- include('../partials/form-stripe'); %>
-						</div>
+						</form>
 					</div>
+					
 				</div>
-				<div class="section-input-compliment">
+				<div class="app__main--form-compliment">
 					<p>Don't have an account? <a href="/signup">Register Here</a></p>
 				</div>
 			</main>
 			
-			<footer>
+			<footer class="app__footer">
 				<%- include('../partials/footer'); %>
 			</footer>
 		</div>

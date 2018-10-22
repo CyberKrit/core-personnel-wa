@@ -1,44 +1,4 @@
-<div class="payment-form-wrapper">
-  <div class="payment-form-wrapper-inner">
-    <form action="/dashboard" method="post" id="payment-form">
-      <div class="form-row">
-        <div class="form-header">
-          <h3 class="form-title">Start Your 14 Day Free Trial</h3>
-          <p>You'll be charged <strong class="inline-price"></strong> only after 14 days of trial period to avail our service uninterruptedly.</p>
-        </div>
-        <div class="subscription-plan">
-          <div class="input-wrapper">
-            <label for="field_subscription">Subscription plan</label>
-            <div class="input-sub-outer">
-              <input type="text" id="field_subscription" name="field_subscription" placeholder="Pick a subscription plan" disabled>
-            </div>
-            <div class="input-status">
-              <ul>
-                <li class="required">This field is required</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="payment-details-label">Payment Details</div>
-        <div id="card-element">
-          <!-- A Stripe Element will be inserted here. -->
-        </div>
 
-        <!-- Used to display form errors. -->
+
+        <div id="card-element"></div>
         <div id="card-errors" role="alert"></div>
-      </div>
-      <div class="payment-rel-info">
-        <ul>
-          <li>Upgrade, downgrade or cancel your account anytime with a single click from your dashboard.</li>
-        </ul>
-      </div>
-      <div class="grp-btn">
-        <a class="btn-go-back">Go Back</a>
-        <button id="submit-signup-data">
-          <span class="idle">Let's Get Started!</span>          
-          <span class="processing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg></span>
-        </button>
-      </div>
-    </form>
-  </div>
-</div>

@@ -28,12 +28,14 @@ module.exports = {
 					});
 
 					// response
-					res.send({ status: true, resData: buildRes });
+					res.status(200).send({ res: buildRes });
 				} else {
-					res.send({ status: false });
+					res.status(204).send({ message: 'no subscription entry has been found' });
 				}
 			})
-			.catch(next);
+			.catch(err => {
+				res.status(422).send(err);
+			});
 		
 	}, // end::list
 
