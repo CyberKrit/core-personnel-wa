@@ -309,8 +309,9 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  border: 1px solid green;
-  -webkit-text-fill-color: green;
+	background-color: red;
+  border: 1px solid #fff;
+  -webkit-text-fill-color: #fff;
   -webkit-box-shadow: 0 0 0px 1000px #000 inset;
   transition: background-color 5000s ease-in-out 0s;
 }
@@ -890,6 +891,12 @@ body:not(:-moz-handler-blocked) fieldset {
 	line-height: 1.4;
 	color: #f2f2f2;
 }
+#form--signup fieldset {
+	display: none;
+}
+#form--signup fieldset.__active__ {
+	display: block;
+}
 
 /* ===[ form--signup__step1 ] === */
 
@@ -906,6 +913,7 @@ body:not(:-moz-handler-blocked) fieldset {
 	font-weight: 700;
 	color: #fff;
 }
+/*** buttons ***/
 #form--signup__submit-btn {
 	width: 23rem;
 }
@@ -914,6 +922,10 @@ body:not(:-moz-handler-blocked) fieldset {
 }
 .form--signup__step2 button.__complementary__ {
 	float: left;
+}
+/*** refresh ***/
+.err-list--required .__refresh__ {
+	cursor: pointer;
 }
 
 /***  stripe ***/

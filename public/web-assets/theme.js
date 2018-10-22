@@ -520,7 +520,8 @@
 					companyVal: null,
 					emailVal: null,
 					pwdVal: null,
-					subscriptionVal: null
+					subscriptionVal: null,
+          stripeId: null
 				}
 			},
 
@@ -531,6 +532,7 @@
 				this.submit();
 				this.populateData({ block: ['subscription'] });
 				this.stripeconfig(this.config.stripeApiKey);
+        this.goBack();
 
 			}, // init
 
@@ -552,12 +554,18 @@
 					self.HandleError({ value: e.target.value, event: e.type, type: 'pwd' });
 				});
 
+        // subscription
+        $('#form--signup__input-subscription').on('change', function(e) {
+          self.HandleError({ value: e.target.value, event: e.type, type: 'subscription' });
+        });
+
 			}, // testCtrl
 
 			HandleError: function(req) {
 				var $companyTrgt = $('.form--signup__input.-company').find('.err-list'),
 						$emailTrgt = $('.form--signup__input.-email').find('.err-list'),
-						$pwdTrgt = $('.form--signup__input.-pwd').find('.err-list');
+						$pwdTrgt = $('.form--signup__input.-pwd').find('.err-list'),
+            $subscriptionTrgt = $('.form--signup__input.-subscription').find('.err-list');
 
 				if( req.type === 'company' ) {
 					this.companyHandleError(req.value, req.event, $companyTrgt);
@@ -568,6 +576,9 @@
 				if( req.type === 'pwd' ) {
 					this.pwdHandleError(req.value, req.event, $pwdTrgt);
 				}
+        if( req.type === 'subscription' ) {
+          this.subscriptionHandleError(req.value, req.event, $subscriptionTrgt);
+        }
 
 			}, // HandleError
 
@@ -653,6 +664,30 @@
 
 			}, // pwdHandleError
 
+      subscriptionHandleError: function(value, event, $trgt) {
+        var self = this;
+        var required = false;
+        // test require
+        required = value ? true : false;
+
+        if( required ) {
+          $trgt.find('[class*="--required"]').slideUp(300);
+        } else {
+          $trgt.find('[class*="--required"]').slideDown(300);
+        }
+
+        // repopulate subscription options
+        $refresh = $('.form--signup__input.-subscription').find('.__refresh__');
+        $refresh.off('click');
+        $refresh.on('click', function(e) {
+          e.preventDefault();
+          self.populateSubscription({ block: ['subscription'] });
+        });
+
+        this.config.companyTest = required ? true : false;
+
+      }, // subscriptionHandleError
+
 			submit: function() {
 				var self = this,
 						$btnStep1 = $('#form--signup__submit-step1-btn');
@@ -672,10 +707,27 @@
 						self.config.value.companyVal = $company.val();
 						self.config.value.emailVal = $email.val();
 						self.config.value.pwdVal = $pwd.val();
+
+            // open payment fieldset and hide current fieldset
+            $('.form--signup__step1').removeClass('__active__');
+            $('.form--signup__step2').addClass('__active__');
 					}
 
 				});
+
 			}, // submit
+
+      goBack: function() {
+
+        $('#form--signup__submit-goback-btn').on('click', function(e) {
+          e.preventDefault();
+          $('#form--signup__submit-step1-btn').attr({ 'data-state': 'idle', disabled: false });
+          // open primary fieldset and hide current fieldset
+          $('.form--signup__step1').addClass('__active__');
+          $('.form--signup__step2').removeClass('__active__');
+        });
+
+      }, // goBack
 
 			populateData: function(req) {
 				var getReq = req.block;
@@ -714,20 +766,24 @@
 								if(getDuration === 1) duration = 'month';
 
 								// populate data
+                
 								$('<option value="' + option._id + '">' + option.name.charAt(0).toUpperCase() + option.name.slice(1) + ' - ' + currency + option.price + '/' + duration + '</option>').appendTo('#form--signup__input-subscription');
 
 							});
 		
 							// trigger plugin
-							$('#form--signup__input-subscription').prettyDropdown({
-								classic: false,
-								width: '100%'
-							});
+              if( data.res.length ) {
+  							$('#form--signup__input-subscription').prettyDropdown({
+  								classic: false,
+  								width: '100%'
+  							});
+              }
 
 						} // endif
+
 					},
 					error: function(jqXhr, textStatus, errorMessage) {
-						console.log(jqXhr);
+						console.log(errorMessage);
 					}
 				});
 
@@ -799,7 +855,21 @@
 
 			stripeTokenHandler: function(data) {
 				
-				console.log(data);
+				this.config.value.subscriptionVal = $('#form--signup__input-subscription').val();
+        this.config.value.stripeId = data.id;
+
+        var $submit = $('#form--signup__submit-btn'),
+            $goBack = $('#form--signup__submit-goback-btn');
+
+        if( !this.config.value.subscriptionVal ) {
+          $('#form--signup__input-subscription').trigger('change');
+          $submit.attr({ 'data-state': 'idle', disabled: false });
+          $goBack.fadeIn(240);
+        } else {
+          $submit.attr({ 'data-state': 'busy', disabled: true });
+          $goBack.fadeOut(240);
+        }
+
 
 			} // stripeTokenHandler
 
