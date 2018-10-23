@@ -7,23 +7,14 @@ const bcrypt = require('bcryptjs');
 const config = require('../config/config');
 
 const UserSchema = new Schema({
+	email: { type: String, required: true, lowercase: true, trim: true, unique: true },
+	password: { type: String, required: true, minlength: config.pwdMinLength },
+	tel: { type: String, trim: true, unique: true, sparse: true },
 	personal: [{
 		firstname: { type: String, default: null },
 		middlename: { type: String, default: null },
 		lastname: { type: String, default: null },
 		age: { type: Number, default: null }
-	}],
-	credentials: [{
-		email: { type: String, required: true, lowercase: true, trim: true, unique: true },
-		password: { type: String, required: true, minlength: config.pwdMinLength },
-		tel: { 
-			type: String, 
-			trim: true, 
-			index: { 
-				unique: true, 
-				partialFilterExpression: { email: {$type: 'string'} } 
-			} 
-		}
 	}],
 	company: [{
 		name: { type: String, required: true, default: null },
@@ -45,10 +36,15 @@ const UserSchema = new Schema({
 		subscribeAt: { type: Date, required: true, default: Date.now },
 		status: { type: String, required: true, enum: ['trial', 'expire', 'active', 'wait', 'unset'], default: 'unset' }
 	}],
+	emailVerification: [{
+		type: { type: String, required: true },
+		token: { type: String, required: true },
+		createdAt: { type: Date, required: true, default: Date.now }
+	}],
 	status: [{
 		emailVerification: { type: Boolean, required: true, default: false },
 		phoneVerification: { type: Boolean, required: true, default: false },
-		active: { type: Boolean, required: true, default: false }
+		active: { type: String, required: true, enum: ['yes', 'no', 'view'], default: 'no' }
 	}],
 	userType: { type: String, required: true, enum: ['client', 'user'], default: 'user' },
 	paymentMethod: { type: String, required: true, enum: ['stripe', 'paypal'], default: 'stripe' },
@@ -85,11 +81,11 @@ const UserSchema = new Schema({
 UserSchema.pre('save', function(next) {
 	let user = this;
 
-	if( this.credentials[0].password ) {
+	if( user.password ) {
 			try {
 				bcrypt.genSalt(10, (err, salt) => {
-					bcrypt.hash(user.credentials[0].password, salt, (err, hash) => {
-						user.credentials[0].password = hash;
+					bcrypt.hash(user.password, salt, (err, hash) => {
+						user.password = hash;
 						next();
 					});
 				});
@@ -132,6 +128,23 @@ UserSchema.methods.generateAuthToken = function() {
 			return { token, user: updatedUser };
 		});
 };
+
+UserSchema.methods.generateEmailToken = function() {
+	let type = 'email',
+			token = jwt.sign({ type, _id: this._id.toHexString() }, config.jwtSecret);
+
+	this.emailVerification = [{
+		type,
+		token: token,
+		createdAt: Date.now()
+	}];
+
+	return this.save()
+		.then( updatedUser => {
+			return { token }
+		});
+
+}
 
 
 const User = mongoose.model('user', UserSchema);

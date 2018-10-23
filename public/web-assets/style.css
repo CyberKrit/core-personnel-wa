@@ -816,6 +816,15 @@ body:not(:-moz-handler-blocked) fieldset {
 		margin-left: 40%;
 	}
 
+
+	/* =====================
+	   Strip Error
+	   ===================== */
+
+	body.page-signup .error-strip {
+		left: 40%;
+	}
+
 }
 
 @media screen and (min-width: 920px) {
@@ -841,6 +850,15 @@ body:not(:-moz-handler-blocked) fieldset {
 	.app__main--form {
 		width: 70%;
 		margin-left: 30%;
+	}
+
+
+	/* =====================
+	   Strip Error
+	   ===================== */
+
+	body.page-signup .error-strip {
+		left: 30%;
 	}
 
 }
@@ -1009,6 +1027,41 @@ body:not(:-moz-handler-blocked) fieldset {
 }
 
 
+/* =======================================
+   Error Strip
+   ======================================= */
+
+.error-strip {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 99999;
+}
+.error-strip__list-item {
+	position: relative;
+	display: none;
+	padding: 1.3rem 4.2rem 1.3rem 1.6rem;
+	font-size: 1.6rem;
+	line-height: 1.1;
+	font-weight: 400;
+	background-color: #cc0000;
+	color: #ffbaba;
+}
+/*** error-strip__hide ***/
+.error-strip__hide {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+	width: 4.2rem;
+	background-color: #990000;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
 
 
 

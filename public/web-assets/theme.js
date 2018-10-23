@@ -503,18 +503,31 @@
 
     var serverErrDisplay = {
 
-      init: function(status) {
-        console.log('from server: ' + status);
+      init: function(err) {
+        if( err ) {
+          console.log(err);
+          $('.error-strip__list-item.__' + err.status + '__').slideDown(240).siblings('.error-strip__list-item').slideUp(300);
+        }
+      },
+
+      closeMsg: function() {
+
+        $('.error-strip__hide').on('click', function() {
+          $('.error-strip__list-item.__show__').slideUp(300);
+        });
+
       }
 
     };
+
+    serverErrDisplay.closeMsg();
 
 		var signup = {
 
 			config: {
 				emailRegx: emailRegx,
-        timeout: 12000,
-				pwdMinLength: 8,
+        timeout: CLIENT_TIMEOUT,
+				pwdMinLength: PWD_MIN_LENGTH,
 				companyTest: false,
 				emailTest: false,
 				pwdTest: false,
@@ -523,7 +536,7 @@
 				defaultCurrency: 'usd',
 				defaultSymbol: '$',
 				// strip
-				stripeApiKey: 'pk_test_Okgc1K7VMvnqESGK5uMdmMCf',
+				stripeApiKey: STRIPE_API_KEY,
 				// value
 				value: {
 					company: null,
@@ -733,6 +746,7 @@
               method: 'POST',
               dataType: 'json',
               url: self.config.abandonedSubURL,
+              timeout: self.config.timeout,
               data: { company: self.config.value.company, email: self.config.value.email },
               success: function(data, status, xhr) {
                 if( xhr.status === 200 && data.clientId ) {
@@ -742,11 +756,11 @@
                   $('.form--signup__step1').removeClass('__active__');
                   $('.form--signup__step2').addClass('__active__');
                 } else {
-                  serverErrDisplay.init(xhr.status);
+                  serverErrDisplay.init(xhr);
                 }
               },
               error: function(jqXhr, textStatus, errorMessage) {
-                serverErrDisplay.init(jqXhr.status);
+                serverErrDisplay.init(jqXhr);
               }
             });
 
@@ -794,6 +808,7 @@
 					method: 'GET',
 					dataType: 'json',
 					url: self.config.populateSubscriptionURL,
+          timeout: self.config.timeout,
 					success: function(data, status, xhr) {
 						if( xhr.status === 200 && data.res.length ) {
 							$.each( data.res, function( index, option ) {
@@ -828,13 +843,13 @@
 
 						} else {
 
-              serverErrDisplay.init(xhr.status);
+              serverErrDisplay.init(xhr);
 
             }// endif
 
 					},
-					error: function(jqXhr, textStatus, errorMessage) {
-						serverErrDisplay.init(jqXhr.status);
+					error: function(jqXhr, textStatus, errorMessage) {console.log(errorMessage);
+						serverErrDisplay.init(jqXhr);
 					}
 				});
 
@@ -914,20 +929,27 @@
 
         if( !this.config.value.subscription ) {
           $('#form--signup__input-subscription').trigger('change');
-          $submit.attr({ 'data-state': 'idle', disabled: false });
-          $goBack.fadeIn(240);
-          $('#card-element').removeClass('__disabled__');
-          $('.form--signup__input.-subscription').removeClass('__disabled__');
+          this.enablePaymentSet();
         } else {
-          $submit.attr({ 'data-state': 'busy', disabled: true });
-          $goBack.fadeOut(240);
-          $('#card-element').addClass('__disabled__');
-          $('.form--signup__input.-subscription').addClass('__disabled__');
-
+          this.disablePaymentSet();
           this.createUser();
         }
 
 			}, // stripeTokenHandler
+
+      enablePaymentSet: function() {
+        $('#form--signup__submit-btn').attr({ 'data-state': 'idle', disabled: false });
+        $('#form--signup__submit-goback-btn').fadeIn(240);
+        $('#card-element').removeClass('__disabled__');
+        $('.form--signup__input.-subscription').removeClass('__disabled__');
+      }, // enablePaymentSet
+
+      disablePaymentSet: function() {
+        $('#form--signup__submit-btn').attr({ 'data-state': 'busy', disabled: true });
+        $('#form--signup__submit-goback-btn').fadeOut(240);
+        $('#card-element').addClass('__disabled__');
+        $('.form--signup__input.-subscription').addClass('__disabled__');
+      }, // enablePaymentSet
 
       createUser: function() {
         var self = this;
@@ -939,16 +961,16 @@
           data: self.config.value,
           timeout: self.config.timeout,
           success: function(data, status, xhr) {
-            serverErrDisplay.init(xhr.status);
-            console.log(data);
             if( xhr.status === 200 ) {
-
+              window.location.replace('/email-verification');
             } else {
-              serverErrDisplay.init(jqXhr.status);
+              self.enablePaymentSet();
+              serverErrDisplay.init(xhr);
             }
           },
           error: function(jqXhr, textStatus, errorMessage) {
-            serverErrDisplay.init(jqXhr.status);
+            self.enablePaymentSet();
+            serverErrDisplay.init(jqXhr);
           }
         });
 
@@ -956,11 +978,7 @@
 
 		};
 
-		signup.init({
-			emailRegx: emailRegx,
-			pwdMinLength: 8,
-			stripeApiKey: 'pk_test_Okgc1K7VMvnqESGK5uMdmMCf'
-		});
+		signup.init();
 
 		var login = {
 

@@ -27,7 +27,9 @@ module.exports = {
 								res.status(204).send({ clientId: null });
 							}
 						})
-						.catch(next);
+						.catch(err => {
+							res.status(422).send(err);
+						});
 				}
 			})
 			.catch(err => {

@@ -5,5 +5,6 @@ module.exports = {
 	trialOnSignup: true,
 	trialDuration: 14,
 	pwdMinLength: 8,
-	jwtSecret: process.env.JWT_SECRET_KEY
+	jwtSecret: process.env.JWT_SECRET_KEY,
+	clientTimeout: 12000
 };

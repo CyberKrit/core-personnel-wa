@@ -20,10 +20,11 @@ module.exports = {
 			})
 			.then(source => {
 				let buildInput = {
-					credentials: [{ email, password: pwd }],
+					email,
+					password: pwd,
 					company: [{ name: company }],
 					subscription: [{ id: subscription, status: trialOnSignup }],
-					status: [{ active: true }],
+					status: [{ active: 'no' }],
 					userType: 'client',
 					paymentMethod: 'stripe',
 					stripe: [{ 
@@ -39,10 +40,10 @@ module.exports = {
 				};
 				UserModel.create(buildInput)
 					.then(newsUser => {
-						return newsUser.generateAuthToken();
+						return newsUser.generateEmailToken();
 					})
-					.then(data => {console.log(data.token);
-						res.header('x-auth', data.token).send({ data: data.user });
+					.then( ({ token }) => {
+						res.header('x-auth', token).send({ message: 'User is set. Email verifiction is pending.' });
 					})
 					.catch(err => {
 					  res.status(422).send(err);
