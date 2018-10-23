@@ -67,7 +67,10 @@ app.get('/e', (req, res, next) => {
 	// 		})
 	// 	}
 	// });
-
+	var DATA = {
+		err: null,
+		info: null
+	};
 	let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -89,9 +92,14 @@ app.get('/e', (req, res, next) => {
 	        refreshToken: '1/zhoMRvwQDUmtrVaJQWOeZQ_oF2_jlXY3bd_G227SU758w90YEDLJ6hJ3hb495rxi',
 	        accessToken: 'ya29.Gls_BpxN8QywqMZzwH6V70CPvRcnjxRxDYukcc7Yl-N3ypcMnDD3jE7dA6uj030wJCOW4eDtbokrg8XkvgVcQKp6rgQslqiEFTKMzDxtwN2sqGjJzrV212W6juu-'
 	    }
+	}, (error, info) => {
+		DATA.err = error;
+		DATA.info = info;
+		console.error(error);
+		console.log(info);
 	});
 
-	res.send({ status: true });
+	res.json(DATA);
 
 });
 app.post('/dashboard', (req, res) => {
