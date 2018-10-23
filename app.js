@@ -83,9 +83,9 @@ app.get('/e', (req, res, next) => {
 	});
 
 	transporter.sendMail({
-	    from: 'mail.samrat.dey@gmail.com',
+	    from: 'Samrat Dey <mail.samrat.dey@gmail.com>',
 	    to: 'tanmoy.binarywrap@gmail.com',
-	    subject: 'Subject',
+	    subject: '[ACTION NEEDED] Confirm your email address',
 	    text: 'I hope this message gets through!',
 	    auth: {
 	        user: 'mail.samrat.dey@gmail.com',
