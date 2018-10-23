@@ -54,24 +54,9 @@ app.get('/signup', (req, res) => res.render('pages/signup', { STRIPE_API_KEY: co
 app.get('/forget-password', (req, res) => res.render('pages/forget-password'));
 app.get('/reset-password', (req, res) => res.render('pages/reset-password'));
 app.get('/email-verification', (req, res) => res.render('pages/email-verification'));
-app.get('/e', (req, res, next) => {
+app.get('/e', (req, res) => {
 
-	// let transporter = nodemailer.createTransport({
-	// 	service: 'gmail',
-	// 	auth: {
-	// 		xoauth2: xoauth2.createXOAuth2Generator({
-	// 			user: 'mail.samrat.dey@gmail.com',
-	// 			clientId: '398539560065-dm0cngq897aq4f754rei9quao1cp3idb.apps.googleusercontent.com',
-	// 			clientSecret: 'xCktGd9gxzxv8kwobwFdzXBt',
-	// 			refreshToken: '1/2wTFf0OqYn5UK_ryy0Q5AVLyWd0okwnn-JSM574P3q-xA2n4B5KqxzAUHhuwYNFW'
-	// 		})
-	// 	}
-	// });
-	var DATA = {
-		err: null,
-		info: null
-	};
-	let transporter = nodemailer.createTransport({
+	const smtpTransport = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
@@ -82,24 +67,24 @@ app.get('/e', (req, res, next) => {
     }
 	});
 
-	transporter.sendMail({
-	    from: 'Samrat Dey <mail.samrat.dey@gmail.com>',
-	    to: 'tanmoy.binarywrap@gmail.com',
-	    subject: '[ACTION NEEDED] Confirm your email address',
-	    text: 'I hope this message gets through!',
-	    auth: {
-	        user: 'mail.samrat.dey@gmail.com',
-	        refreshToken: '1/zhoMRvwQDUmtrVaJQWOeZQ_oF2_jlXY3bd_G227SU758w90YEDLJ6hJ3hb495rxi',
-	        accessToken: 'ya29.Gls_BpxN8QywqMZzwH6V70CPvRcnjxRxDYukcc7Yl-N3ypcMnDD3jE7dA6uj030wJCOW4eDtbokrg8XkvgVcQKp6rgQslqiEFTKMzDxtwN2sqGjJzrV212W6juu-'
-	    }
-	}, (error, info) => {
-		DATA.err = error;
-		DATA.info = info;
-		console.error(error);
-		console.log(info);
+	const mailOptions = {
+    from: 'Samrat Dey <mail.samrat.dey@gmail.com>',
+    to: 'tanmoy.binarywrap@gmail.com',
+    subject: '[ACTION NEEDED] Confirm your email address',
+    text: 'Thanks for joining the Core Personnel WA. Just to ensure that you\'re a real person and that you wanted our FREE 14 days Trial Subscription. We need you to confirm your email address.',
+    auth: {
+      user: 'mail.samrat.dey@gmail.com',
+      refreshToken: '1/zhoMRvwQDUmtrVaJQWOeZQ_oF2_jlXY3bd_G227SU758w90YEDLJ6hJ3hb495rxi',
+      accessToken: 'ya29.Gls_BpxN8QywqMZzwH6V70CPvRcnjxRxDYukcc7Yl-N3ypcMnDD3jE7dA6uj030wJCOW4eDtbokrg8XkvgVcQKp6rgQslqiEFTKMzDxtwN2sqGjJzrV212W6juu-'
+    }
+	};
+
+	smtpTransport.sendMail(mailOptions, (err, res) => {
+		err ? console.log(err) : console.log(res);
+    smtpTransport.close();
 	});
 
-	res.json(DATA);
+	res.json({ mail: 'sent' });
 
 });
 app.post('/dashboard', (req, res) => {
