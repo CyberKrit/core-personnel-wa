@@ -5,7 +5,7 @@ const stripe = require('stripe')(config.stripeSecretkey);
 module.exports = {
 
 	create(req, res, next) {
-		let { company, email, pwd, stripeToken, subscriptionId } = req.body;
+		let { company, email, pwd, subscription, stripeToken, abandonedSub } = req.body;
 		let trialOnSignup = config.trialOnSignup ? 'trial' : 'unset';
 
 		// create stripe user
@@ -22,7 +22,7 @@ module.exports = {
 				let buildInput = {
 					credentials: [{ email, password: pwd }],
 					company: [{ name: company }],
-					subscription: [{ id: subscriptionId, status: trialOnSignup }],
+					subscription: [{ id: subscription, status: trialOnSignup }],
 					status: [{ active: true }],
 					userType: 'client',
 					paymentMethod: 'stripe',
@@ -42,7 +42,7 @@ module.exports = {
 						return newsUser.generateAuthToken();
 					})
 					.then(data => {console.log(data.token);
-						res.header('x-auth', data.token).send({ status: true, data: data.user });
+						res.header('x-auth', data.token).send({ data: data.user });
 					})
 					.catch(err => {
 					  res.status(422).send(err);
@@ -53,7 +53,7 @@ module.exports = {
 			  res.status(422).send(err);
 			});
 		}
-		//res.send({ send: true });
+
 	}
 
 };

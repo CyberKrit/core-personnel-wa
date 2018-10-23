@@ -11,9 +11,9 @@ module.exports = {
 					AbandonedSubsModel.create({ company, email })
 						.then(newClient => {
 							if( newClient ) {
-								res.send({ status: true, clientId: newClient._id.toString() });
+								res.status(200).send({ clientId: newClient._id.toHexString() });
 							} else {
-								res.send({ status: false });
+								res.status(204).send({ clientId: null });
 							}
 						})
 						.catch(next);
@@ -22,15 +22,17 @@ module.exports = {
 					AbandonedSubsModel.findByIdAndUpdate(_id, { company, updatedAt: Date.now() })
 						.then(updatedClient => {
 							if( updatedClient ) {
-								res.send({ status: true, clientId: updatedClient._id.toString() });
+								res.status(200).send({ clientId: updatedClient._id.toHexString() });
 							} else {
-								res.send({ status: false });
+								res.status(204).send({ clientId: null });
 							}
 						})
 						.catch(next);
 				}
 			})
-			.catch(next);
+			.catch(err => {
+				res.status(422).send(err);
+			});
 	} // end::create
 
 };

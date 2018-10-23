@@ -501,10 +501,19 @@
 
 		var emailRegx = /[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?/;
 
+    var serverErrDisplay = {
+
+      init: function(status) {
+        console.log('from server: ' + status);
+      }
+
+    };
+
 		var signup = {
 
 			config: {
 				emailRegx: emailRegx,
+        timeout: 12000,
 				pwdMinLength: 8,
 				companyTest: false,
 				emailTest: false,
@@ -517,12 +526,17 @@
 				stripeApiKey: 'pk_test_Okgc1K7VMvnqESGK5uMdmMCf',
 				// value
 				value: {
-					companyVal: null,
-					emailVal: null,
-					pwdVal: null,
-					subscriptionVal: null,
-          stripeId: null
-				}
+					company: null,
+					email: null,
+					pwd: null,
+					subscription: null,
+          stripeToken: null,
+          abandonedSub: null
+				},
+        // urlx
+        populateSubscriptionURL: '/api/subscription',
+        abandonedSubURL: '/api/abandoned-subs',
+        createUserURL: '/api/user'
 			},
 
 			init: function(config) {
@@ -703,14 +717,39 @@
 					if( self.config.companyTest && self.config.emailTest && self.config.pwdTest ) {
 						$btnStep1.attr({ 'data-state': 'busy', disabled: true });
 
-						// add value
-						self.config.value.companyVal = $company.val();
-						self.config.value.emailVal = $email.val();
-						self.config.value.pwdVal = $pwd.val();
+            // disable congrols
+            $company.prop('disabled', true);
+            $email.prop('disabled', true);
+            $pwd.prop('disabled', true);
 
-            // open payment fieldset and hide current fieldset
-            $('.form--signup__step1').removeClass('__active__');
-            $('.form--signup__step2').addClass('__active__');
+            // add value
+            self.config.value.company = $company.val();
+            self.config.value.email = $email.val();
+            self.config.value.pwd = $pwd.val();
+
+            // saving data s abandoned subscription
+            // will be removed after successful signup
+            $.ajax({
+              method: 'POST',
+              dataType: 'json',
+              url: self.config.abandonedSubURL,
+              data: { company: self.config.value.company, email: self.config.value.email },
+              success: function(data, status, xhr) {
+                if( xhr.status === 200 && data.clientId ) {
+                  self.config.value.abandonedSub = data.clientId;
+
+                  // open payment fieldset and hide current fieldset
+                  $('.form--signup__step1').removeClass('__active__');
+                  $('.form--signup__step2').addClass('__active__');
+                } else {
+                  serverErrDisplay.init(xhr.status);
+                }
+              },
+              error: function(jqXhr, textStatus, errorMessage) {
+                serverErrDisplay.init(jqXhr.status);
+              }
+            });
+
 					}
 
 				});
@@ -721,10 +760,18 @@
 
         $('#form--signup__submit-goback-btn').on('click', function(e) {
           e.preventDefault();
+
           $('#form--signup__submit-step1-btn').attr({ 'data-state': 'idle', disabled: false });
+
           // open primary fieldset and hide current fieldset
           $('.form--signup__step1').addClass('__active__');
           $('.form--signup__step2').removeClass('__active__');
+
+          // enable controld
+          $('#form--signup__input-company').attr('disabled', false);
+          $('#form--signup__input-email').attr('disabled', false);
+          $('#form--signup__input-pwd').attr('disabled', false);
+
         });
 
       }, // goBack
@@ -746,9 +793,9 @@
 				$.ajax({
 					method: 'GET',
 					dataType: 'json',
-					url: '/api/subscription',
+					url: self.config.populateSubscriptionURL,
 					success: function(data, status, xhr) {
-						if( data.res.length ) {
+						if( xhr.status === 200 && data.res.length ) {
 							$.each( data.res, function( index, option ) {
 
 								// currency
@@ -779,11 +826,15 @@
   							});
               }
 
-						} // endif
+						} else {
+
+              serverErrDisplay.init(xhr.status);
+
+            }// endif
 
 					},
 					error: function(jqXhr, textStatus, errorMessage) {
-						console.log(errorMessage);
+						serverErrDisplay.init(jqXhr.status);
 					}
 				});
 
@@ -855,23 +906,53 @@
 
 			stripeTokenHandler: function(data) {
 				
-				this.config.value.subscriptionVal = $('#form--signup__input-subscription').val();
-        this.config.value.stripeId = data.id;
+				this.config.value.subscription = $('#form--signup__input-subscription').val();
+        this.config.value.stripeToken = data.id;
 
         var $submit = $('#form--signup__submit-btn'),
             $goBack = $('#form--signup__submit-goback-btn');
 
-        if( !this.config.value.subscriptionVal ) {
+        if( !this.config.value.subscription ) {
           $('#form--signup__input-subscription').trigger('change');
           $submit.attr({ 'data-state': 'idle', disabled: false });
           $goBack.fadeIn(240);
+          $('#card-element').removeClass('__disabled__');
+          $('.form--signup__input.-subscription').removeClass('__disabled__');
         } else {
           $submit.attr({ 'data-state': 'busy', disabled: true });
           $goBack.fadeOut(240);
+          $('#card-element').addClass('__disabled__');
+          $('.form--signup__input.-subscription').addClass('__disabled__');
+
+          this.createUser();
         }
 
+			}, // stripeTokenHandler
 
-			} // stripeTokenHandler
+      createUser: function() {
+        var self = this;
+
+        $.ajax({
+          method: 'POST',
+          dataType: 'json',
+          url: self.config.createUserURL,
+          data: self.config.value,
+          timeout: self.config.timeout,
+          success: function(data, status, xhr) {
+            serverErrDisplay.init(xhr.status);
+            console.log(data);
+            if( xhr.status === 200 ) {
+
+            } else {
+              serverErrDisplay.init(jqXhr.status);
+            }
+          },
+          error: function(jqXhr, textStatus, errorMessage) {
+            serverErrDisplay.init(jqXhr.status);
+          }
+        });
+
+      }
 
 		};
 

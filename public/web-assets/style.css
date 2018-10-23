@@ -309,7 +309,7 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-	background-color: red;
+	background-color: red !important;
   border: 1px solid #fff;
   -webkit-text-fill-color: #fff;
   -webkit-box-shadow: 0 0 0px 1000px #000 inset;
@@ -517,6 +517,9 @@ button.__complementary__:hover .btn--idle {
 	line-height: 1.3;
 	font-weight: 400;
 	color: #fff;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
 }
 [class^="err-list--"] {
 	position: relative;
@@ -923,13 +926,27 @@ body:not(:-moz-handler-blocked) fieldset {
 .form--signup__step2 button.__complementary__ {
 	float: left;
 }
-/*** refresh ***/
+/*** subscription ***/
+.form--signup__input.-subscription.__disabled__ .prettydropdown {
+	opacity: .5;
+	pointer-events: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
 .err-list--required .__refresh__ {
 	cursor: pointer;
 }
 
 /***  stripe ***/
 
+#card-element.__disabled__ {
+	opacity: .5;
+	pointer-events: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
 .StripeElement {
   background-color: transparent;
   height: 5rem;
