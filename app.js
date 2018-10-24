@@ -17,6 +17,12 @@ const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const xoauth2 = require('xoauth2');
 
+const _ = require('underscore');
+_.templateSettings = {
+  interpolate: /\{\{(.+?)\}\}/g
+};
+const fs = require('fs');
+
 app.use('/', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 mongoose.Promise = global.Promise;
@@ -71,7 +77,7 @@ app.get('/e', (req, res) => {
     from: 'Samrat Dey <mail.samrat.dey@gmail.com>',
     to: 'tanmoy.binarywrap@gmail.com',
     subject: '[ACTION NEEDED] Confirm your email address',
-    text: 'Thanks for joining the Core Personnel WA. Just to ensure that you\'re a real person and that you wanted our FREE 14 days Trial Subscription. We need you to confirm your email address.',
+    html: getEmailTemplate(),
     auth: {
       user: 'mail.samrat.dey@gmail.com',
       refreshToken: '1/zhoMRvwQDUmtrVaJQWOeZQ_oF2_jlXY3bd_G227SU758w90YEDLJ6hJ3hb495rxi',
@@ -84,9 +90,25 @@ app.get('/e', (req, res) => {
     smtpTransport.close();
 	});
 
-	res.json({ mail: 'sent' });
+	res.json({ mail: getEmailTemplate() });
 
 });
+
+const model = {
+	verify: 'http://samratdey.com/',
+	body: 'Thanks for joining the Core Personnel WA. Just to ensure that you\'re a real person and that you wanted our FREE 14 days Trial Subscription, We need you to confirm your email address.'
+};
+
+function getEmailTemplate() {
+
+	const path = './views/email-template/confirmation.html';
+	let emailTemplate = fs.readFileSync(path, encoding = 'utf8');
+
+	let emailTemplateAltered = _.template(emailTemplate);
+
+	return emailTemplateAltered(model);
+}
+
 app.post('/dashboard', (req, res) => {
 
 	// console.log(req.body);
