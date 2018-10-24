@@ -13,15 +13,9 @@ const AbandonedSubs = require('./route/abandoned-subscription');
 const Subscription = require('./route/subscription');
 const Dashboard = require('./route/dashboard');
 
-const nodemailer = require('nodemailer');
+
 const smtpTransport = require('nodemailer-smtp-transport');
 const xoauth2 = require('xoauth2');
-
-const _ = require('underscore');
-_.templateSettings = {
-  interpolate: /\{\{(.+?)\}\}/g
-};
-const fs = require('fs');
 
 app.use('/', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
@@ -62,52 +56,13 @@ app.get('/reset-password', (req, res) => res.render('pages/reset-password'));
 app.get('/email-verification', (req, res) => res.render('pages/email-verification'));
 app.get('/e', (req, res) => {
 
-	const smtpTransport = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-        type: 'OAuth2',
-        clientId: '690998438847-01s79q1daise7flph2mupj584cqon37g.apps.googleusercontent.com',
-        clientSecret: 'oKe1qSCxtJwoCcvbcCjjIZtk'
-    }
-	});
+	
 
-	const mailOptions = {
-    from: 'Samrat Dey <mail.samrat.dey@gmail.com>',
-    to: 'tanmoy.binarywrap@gmail.com',
-    subject: '[ACTION NEEDED] Confirm your email address',
-    html: getEmailTemplate(),
-    auth: {
-      user: 'mail.samrat.dey@gmail.com',
-      refreshToken: '1/zhoMRvwQDUmtrVaJQWOeZQ_oF2_jlXY3bd_G227SU758w90YEDLJ6hJ3hb495rxi',
-      accessToken: 'ya29.Gls_BpxN8QywqMZzwH6V70CPvRcnjxRxDYukcc7Yl-N3ypcMnDD3jE7dA6uj030wJCOW4eDtbokrg8XkvgVcQKp6rgQslqiEFTKMzDxtwN2sqGjJzrV212W6juu-'
-    }
-	};
-
-	smtpTransport.sendMail(mailOptions, (err, res) => {
-		err ? console.log(err) : console.log(res);
-    smtpTransport.close();
-	});
-
-	res.json({ mail: getEmailTemplate() });
+	
 
 });
 
-const model = {
-	verify: 'http://samratdey.com/',
-	body: 'Thanks for joining the Core Personnel WA. Just to ensure that you\'re a real person and that you wanted our FREE 14 days Trial Subscription, We need you to confirm your email address.'
-};
 
-function getEmailTemplate() {
-
-	const path = './views/email-template/confirmation-bck.html';
-	let emailTemplate = fs.readFileSync(path, encoding = 'utf8');
-
-	let emailTemplateAltered = _.template(emailTemplate);
-
-	return emailTemplateAltered(model);
-}
 
 app.post('/dashboard', (req, res) => {
 
