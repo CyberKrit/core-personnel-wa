@@ -1,13 +1,32 @@
 const UserModel = require('../model/user');
 const config = require('../config/config');
 const stripe = require('stripe')(config.stripeSecretkey);
-
 const nodemailer = require('nodemailer');
+const fs = require('fs');
+
 const _ = require('underscore');
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
 };
-const fs = require('fs');
+
+function getEmailTemplate(token, req) {
+
+	// server base path
+	let baseURL = req.protocol + '://' + req.get('host');
+	// create email confirmation link
+	let tokenURL = baseURL + '/verifyEmail?token=' + token;
+	// email template path
+	const templatePath = './views/email-template/confirmation.min.html';
+	// logo url
+	const logoURL = baseURL + '/web-assets/app-logo.png';
+	// create model
+	let model = { tokenURL, logoURL };
+
+	let emailTemplate = fs.readFileSync(templatePath, encoding = 'utf8');
+	let emailTemplateAltered = _.template(emailTemplate);
+	return emailTemplateAltered(model);
+
+}
 
 module.exports = {
 
@@ -66,7 +85,7 @@ module.exports = {
 					    from: 'Samrat Dey <mail.samrat.dey@gmail.com>',
 					    to: 'tanmoy.binarywrap@gmail.com',
 					    subject: '[ACTION NEEDED] Confirm your email address',
-					    html: getEmailTemplate(),
+					    html: getEmailTemplate(token, req),
 					    auth: {
 					      user: 'mail.samrat.dey@gmail.com',
 					      refreshToken: '1/zhoMRvwQDUmtrVaJQWOeZQ_oF2_jlXY3bd_G227SU758w90YEDLJ6hJ3hb495rxi',
@@ -75,9 +94,7 @@ module.exports = {
 						};
 
 						smtpTransport.sendMail(mailOptions, (err, res) => {
-							console.log('=========================================================');
 							err ? console.log(err) : console.log(res);
-							console.log('=========================================================');
 					    smtpTransport.close();
 						});
 
@@ -96,19 +113,3 @@ module.exports = {
 	}
 
 };
-
-const model = {
-	verify: 'http://samratdey.com/',
-	body: 'Thanks for joining the Core Personnel WA. Just to ensure that you\'re a real person and that you wanted our FREE 14 days Trial Subscription, We need you to confirm your email address.'
-};
-
-function getEmailTemplate() {
-
-	const path = './views/email-template/confirmation-bck.html';
-	let emailTemplate = fs.readFileSync(path, encoding = 'utf8');
-
-	let emailTemplateAltered = _.template(emailTemplate);
-
-	return emailTemplateAltered(model);
-
-}

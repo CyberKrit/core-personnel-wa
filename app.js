@@ -56,8 +56,8 @@ app.get('/reset-password', (req, res) => res.render('pages/reset-password'));
 app.get('/email-verification', (req, res) => res.render('pages/email-verification'));
 app.get('/e', (req, res) => {
 
-	
-
+	var fullUrl = req.protocol + '://' + req.get('host') ;
+	console.log(fullUrl);
 	
 
 });
