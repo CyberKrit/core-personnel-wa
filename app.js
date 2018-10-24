@@ -101,7 +101,7 @@ const model = {
 
 function getEmailTemplate() {
 
-	const path = './views/email-template/confirmation.html';
+	const path = './views/email-template/confirmation-bck.html';
 	let emailTemplate = fs.readFileSync(path, encoding = 'utf8');
 
 	let emailTemplateAltered = _.template(emailTemplate);
