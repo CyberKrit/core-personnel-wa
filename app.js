@@ -12,10 +12,7 @@ const User = require('./route/user');
 const AbandonedSubs = require('./route/abandoned-subscription');
 const Subscription = require('./route/subscription');
 const Dashboard = require('./route/dashboard');
-
-
-const smtpTransport = require('nodemailer-smtp-transport');
-const xoauth2 = require('xoauth2');
+const NonApi = require('./route/non-api');
 
 app.use('/', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
@@ -43,6 +40,7 @@ User(app);
 AbandonedSubs(app);
 Subscription(app);
 Dashboard(app);
+NonApi(app);
 
 // admin
 // app.get('/dashboard', (req, res) => res.render('dashboard'));
@@ -50,19 +48,18 @@ Dashboard(app);
 
 // website
 app.get('/login', (req, res) => res.render('pages/login'));
-app.get('/signup', (req, res) => res.render('pages/signup', { STRIPE_API_KEY: config.stripePublishablekey, PWD_MIN_LENGTH: config.pwdMinLength, CLIENT_TIMEOUT: config.clientTimeout }));
+
+app.get('/signup', (req, res) => res.render('pages/signup', { 
+	STRIPE_API_KEY: config.stripePublishablekey, 
+	PWD_MIN_LENGTH: config.pwdMinLength, 
+	CLIENT_TIMEOUT: config.clientTimeout 
+}));
+
 app.get('/forget-password', (req, res) => res.render('pages/forget-password'));
+
 app.get('/reset-password', (req, res) => res.render('pages/reset-password'));
-app.get('/email-verification', (req, res) => res.render('pages/email-verification'));
-app.get('/e', (req, res) => {
 
-	var fullUrl = req.protocol + '://' + req.get('host') ;
-	console.log(fullUrl);
-	
-
-});
-
-
+app.get('/email-confirmation', (req, res) => res.render('pages/email-confirmation'));
 
 app.post('/dashboard', (req, res) => {
 

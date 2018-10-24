@@ -37,8 +37,9 @@ const UserSchema = new Schema({
 		status: { type: String, required: true, enum: ['trial', 'expire', 'active', 'wait', 'unset'], default: 'unset' }
 	}],
 	emailVerification: [{
-		type: { type: String, required: true },
+		type: { type: String, required: true, default: 'email' },
 		token: { type: String, required: true },
+		isverified: { type: Boolean, required: true, default: false },
 		createdAt: { type: Date, required: true, default: Date.now }
 	}],
 	status: [{
@@ -115,6 +116,22 @@ UserSchema.statics.findByToken = function(token) {
 	});
 
 };
+UserSchema.statics.findByEmailToken = function(token) {
+	let User = this, decode;
+
+	try {
+		decode = jwt.verify(token, config.jwtSecret);
+	} catch(err) {
+		return Promise.reject();
+	}
+
+	return User.findOne({
+		_id: decode._id,
+		'emailVerification.type': 'email',
+		'emailVerification.token': token
+	});
+
+};
 
 UserSchema.methods.generateAuthToken = function() {
 	let user = this;
@@ -136,6 +153,7 @@ UserSchema.methods.generateEmailToken = function() {
 	this.emailVerification = [{
 		type,
 		token: token,
+		isverified: false,
 		createdAt: Date.now()
 	}];
 

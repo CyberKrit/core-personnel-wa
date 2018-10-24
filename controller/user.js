@@ -14,7 +14,7 @@ function getEmailTemplate(token, req) {
 	// server base path
 	let baseURL = req.protocol + '://' + req.get('host');
 	// create email confirmation link
-	let tokenURL = baseURL + '/verifyEmail?token=' + token;
+	let tokenURL = baseURL + '/verify-email?token=' + token;
 	// email template path
 	const templatePath = './views/email-template/confirmation.min.html';
 	// logo url
@@ -83,7 +83,7 @@ module.exports = {
 
 						const mailOptions = {
 					    from: 'Samrat Dey <mail.samrat.dey@gmail.com>',
-					    to: 'tanmoy.binarywrap@gmail.com',
+					    to: email,
 					    subject: '[ACTION NEEDED] Confirm your email address',
 					    html: getEmailTemplate(token, req),
 					    auth: {
