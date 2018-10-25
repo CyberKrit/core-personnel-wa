@@ -362,6 +362,59 @@ input:focus {
 	border-color: #fff;
 	outline: 0;
 }
+.__lazy-check__ {
+	position: relative;
+}
+.__lazy-check__ svg {
+	position: absolute;
+	top: 0;
+	right: 1rem;
+	bottom: 0;
+	z-index: 10;
+	width: 3rem;
+	height: 3rem;
+	margin: auto 0;
+	opacity: 0;
+	-webkit-transition: all .14s ease-out;
+	-moz-transition: all .14s ease-out;
+	-ms-transition: all .14s ease-out;
+	-o-transition: all .14s ease-out;
+	transition: all .14s ease-out;
+}
+.__lazy-check-active__ svg {
+	opacity: 1;
+}
+.__lazy-check__ input {
+	padding-right: 5rem;
+}
+/*** password visibility ***/
+.__pwd-eye__ {
+	position: relative;
+}
+.__pwd-eye__ input {
+	padding-right: 5rem;
+}
+.form--signup__input-pwd-eye {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 10;
+	width: 5rem;
+	height: 5rem;
+	margin: 0;
+	background: url(data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjQ4IiB2aWV3Qm94PSIwIDAgNDggNDgiIHdpZHRoPSI0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCAwaDQ4djQ4SDB6bTAgMGg0OHY0OEgwem0wIDBoNDh2NDhIMHptMCAwaDQ4djQ4SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTI0IDE0YzUuNTIgMCAxMCA0LjQ4IDEwIDEwIDAgMS4yOS0uMjYgMi41Mi0uNzEgMy42NWw1Ljg1IDUuODVjMy4wMi0yLjUyIDUuNC01Ljc4IDYuODctOS41LTMuNDctOC43OC0xMi0xNS0yMi4wMS0xNS0yLjggMC01LjQ4LjUtNy45NyAxLjRsNC4zMiA0LjMxYzEuMTMtLjQ0IDIuMzYtLjcxIDMuNjUtLjcxek00IDguNTVsNC41NiA0LjU2LjkxLjkxQzYuMTcgMTYuNiAzLjU2IDIwLjAzIDIgMjRjMy40NiA4Ljc4IDEyIDE1IDIyIDE1IDMuMSAwIDYuMDYtLjYgOC43Ny0xLjY5bC44NS44NUwzOS40NSA0NCA0MiA0MS40NiA2LjU1IDYgNCA4LjU1ek0xNS4wNiAxOS42bDMuMDkgMy4wOWMtLjA5LjQzLS4xNS44Ni0uMTUgMS4zMSAwIDMuMzEgMi42OSA2IDYgNiAuNDUgMCAuODgtLjA2IDEuMy0uMTVsMy4wOSAzLjA5QzI3LjA2IDMzLjYgMjUuNTggMzQgMjQgMzRjLTUuNTIgMC0xMC00LjQ4LTEwLTEwIDAtMS41OC40LTMuMDYgMS4wNi00LjR6bTguNjEtMS41N2w2LjMgNi4zTDMwIDI0YzAtMy4zMS0yLjY5LTYtNi02bC0uMzMuMDN6IiBmaWxsPSIjYTFhMWExIi8+PC9zdmc+) no-repeat center center;
+	background-size: 3rem 3rem;
+	cursor: pointer;
+	-webkit-transition: all .14s ease-out;
+	-moz-transition: all .14s ease-out;
+	-ms-transition: all .14s ease-out;
+	-o-transition: all .14s ease-out;
+	transition: all .14s ease-out;
+}
+.form--signup__input-pwd-eye.__open__ {
+	background-image: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNDggNDgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGg0OHY0OEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0yNCA5QzE0IDkgNS40NiAxNS4yMiAyIDI0YzMuNDYgOC43OCAxMiAxNSAyMiAxNSAxMC4wMSAwIDE4LjU0LTYuMjIgMjItMTUtMy40Ni04Ljc4LTExLjk5LTE1LTIyLTE1em0wIDI1Yy01LjUyIDAtMTAtNC40OC0xMC0xMHM0LjQ4LTEwIDEwLTEwIDEwIDQuNDggMTAgMTAtNC40OCAxMC0xMCAxMHptMC0xNmMtMy4zMSAwLTYgMi42OS02IDZzMi42OSA2IDYgNiA2LTIuNjkgNi02LTIuNjktNi02LTZ6IiBmaWxsPSIjYTFhMWExIi8+PC9zdmc+);
+}
 
 /* ==[ select ] == */
 

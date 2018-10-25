@@ -1,5 +1,6 @@
 const UserModel = require('../model/user');
 const moment = require('moment');
+const config = require('../config/config');
 
 module.exports = {
 
@@ -10,23 +11,36 @@ module.exports = {
 		if( getToken ) {
 			UserModel.findByEmailToken(getToken)
 				.then(user => {
+
+					let tokenIndex;
+					// find token position is user email verification array
+					user.emailVerification.forEach(({ token }, index) => {
+						tokenIndex = ( token === getToken ) ? index : null;
+					});
+					// cache position for late use
+					let tokenPos = user.emailVerification[tokenIndex];
+
+					// day difference
 					let start = moment(user.createdAt);
 					let now = moment(new Date());
 					let duration = moment.duration(now.diff(start));
 					let days = duration.asDays();
 
-					if( user.emailVerification[0].isverified === true ) {
+					// if true return else update database
+					if( tokenPos.isverified === true ) {
 						res.status(200).send({ message: 'email is already verified' });
 						return;
-					}
-
-					if( days > 3 ) {
-						user.emailVerification = [];
 					} else {
-						user.emailVerification[0].isverified = true;
+						if( days > config.emailConfirmationExp ) {
+							tokenPos.isExpired = true;
+							tokenPos.isverified = false;
+						} else {
+							tokenPos.isverified = true;
+							tokenPos.isExpired = true;
+						}
 					}
 
-					if( days > 3 ) {
+					if( days > config.emailConfirmationExp ) {
 						user.save()
 							.then(updatedUser => {
 								if( updatedUser ) {
@@ -56,7 +70,6 @@ module.exports = {
 		} else {
 			res.status(401).send({ message: 'invalid token' });
 		}
-
 
 	}
 

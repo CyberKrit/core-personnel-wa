@@ -110,6 +110,23 @@ module.exports = {
 			});
 		}
 
+	},
+
+	isEmailAvailable(req, res) {
+		const email = req.params.email;
+
+		UserModel.findOne({ email })
+			.then(user => {
+				if( user ) {
+					res.status(200).send({ isAvailable: false });
+				} else {
+					res.status(200).send({ isAvailable: true });
+				}
+			})
+			.catch(err => {
+			  res.status(422).send(err);
+			});
+
 	}
 
 };

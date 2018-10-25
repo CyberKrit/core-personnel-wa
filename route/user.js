@@ -4,4 +4,7 @@ module.exports = (app) => {
 
 	app.post('/api/user', UserController.create);
 
+	// avaibility
+	app.get('/api/user/is-available/email/:email', UserController.isEmailAvailable);
+
 };

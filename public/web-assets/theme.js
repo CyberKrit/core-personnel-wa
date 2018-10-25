@@ -501,6 +501,24 @@
 
 		var emailRegx = /[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?/;
 
+    var pwdVisibility = {
+
+      toggle: function() {
+
+        $('[class*="__input-pwd-eye"]').on('click', function() {
+          $(this).toggleClass('__open__');
+
+          // toggle field type
+          var inputType = $(this).hasClass('__open__') ? 'text' : 'password';
+          $(this).closest('.__pwd-eye__').find('input').prop('type', inputType);
+        });
+
+      }
+
+    };
+
+    pwdVisibility.toggle();
+
     var serverErrDisplay = {
 
       init: function(err) {
@@ -549,7 +567,8 @@
         // urlx
         populateSubscriptionURL: '/api/subscription',
         abandonedSubURL: '/api/abandoned-subs',
-        createUserURL: '/api/user'
+        createUserURL: '/api/user',
+        emailAvaibilityURL: '/api/user/is-available/email/'
 			},
 
 			init: function(config) {
@@ -589,6 +608,7 @@
 			}, // testCtrl
 
 			HandleError: function(req) {
+
 				var $companyTrgt = $('.form--signup__input.-company').find('.err-list'),
 						$emailTrgt = $('.form--signup__input.-email').find('.err-list'),
 						$pwdTrgt = $('.form--signup__input.-pwd').find('.err-list'),
@@ -635,6 +655,9 @@
 				patternTest = emailRegx ? emailRegx.test(value) : false;
 				// test require
 				required = value ? true : false;
+
+        // hide email avaibility on keyup
+        if( event === 'keyup' ) $trgt.find('[class*="--available"]').slideUp(300);
 
 				if( required ) {
 					$trgt.find('[class*="--required"]').slideUp(300);
@@ -716,59 +739,102 @@
       }, // subscriptionHandleError
 
 			submit: function() {
-				var self = this,
-						$btnStep1 = $('#form--signup__submit-step1-btn');
+				var self = this;
 
-				$btnStep1.on('click', function(e) {
-					e.preventDefault();
-					var $company = $('#form--signup__input-company'),
-							$email = $('#form--signup__input-email'),
-							$pwd = $('#form--signup__input-pwd');
+				$('#form--signup__submit-step1-btn').on('click', function(e) {
+          e.preventDefault();
 
-					$('#form--signup__input-company, #form--signup__input-email, #form--signup__input-pwd').trigger('focusout');
+          // err check
+          $('#form--signup__input-company, #form--signup__input-email, #form--signup__input-pwd').trigger('focusout');
 
-					if( self.config.companyTest && self.config.emailTest && self.config.pwdTest ) {
-						$btnStep1.attr({ 'data-state': 'busy', disabled: true });
-
-            // disable congrols
-            $company.prop('disabled', true);
-            $email.prop('disabled', true);
-            $pwd.prop('disabled', true);
-
-            // add value
-            self.config.value.company = $company.val();
-            self.config.value.email = $email.val();
-            self.config.value.pwd = $pwd.val();
-
-            // saving data s abandoned subscription
-            // will be removed after successful signup
-            $.ajax({
-              method: 'POST',
-              dataType: 'json',
-              url: self.config.abandonedSubURL,
-              timeout: self.config.timeout,
-              data: { company: self.config.value.company, email: self.config.value.email },
-              success: function(data, status, xhr) {
-                if( xhr.status === 200 && data.clientId ) {
-                  self.config.value.abandonedSub = data.clientId;
-
-                  // open payment fieldset and hide current fieldset
-                  $('.form--signup__step1').removeClass('__active__');
-                  $('.form--signup__step2').addClass('__active__');
-                } else {
-                  serverErrDisplay.init(xhr);
-                }
-              },
-              error: function(jqXhr, textStatus, errorMessage) {
-                serverErrDisplay.init(jqXhr);
-              }
-            });
-
-					}
-
+          self.submitFn();
 				});
 
 			}, // submit
+
+      submitFn: function() {
+
+        var self = this,
+            $btnStep1 = $('#form--signup__submit-step1-btn'),
+            $company = $('#form--signup__input-company'),
+            $email = $('#form--signup__input-email'),
+            $pwd = $('#form--signup__input-pwd');
+
+        if( this.config.companyTest && this.config.emailTest && this.config.pwdTest) {
+          $btnStep1.attr({ 'data-state': 'busy', disabled: true });
+
+          // disable controls
+          $company.prop('disabled', true);
+          $email.prop('disabled', true);
+          $pwd.prop('disabled', true);
+
+          var $inputParent = $('.form--signup__input.-email').find('.__lazy-check__'),
+              $errList = $('.form--signup__input.-email').find('.err-list');
+          
+          // show email check animation
+          $inputParent.addClass('__lazy-check-active__');
+
+          $.ajax({
+            method: 'GET',
+            dataType: 'json',
+            url: self.config.emailAvaibilityURL + $email.val(),
+            timeout: self.config.timeout,
+            success: function(data, message, xhr) {
+              $inputParent.removeClass('__lazy-check-active__');
+
+              if( data.isAvailable === false ) {
+                $errList.find('[class*="--available"]').slideDown(300);
+
+                // disable controls
+                $company.attr('disabled', false);
+                $email.attr('disabled', false);
+                $pwd.attr('disabled', false);
+
+                $btnStep1.attr({ 'data-state': 'idle', disabled: false });
+              } else {
+                $errList.find('[class*="--available"]').slideUp(300);
+
+                // add value
+                self.config.value.company = $company.val();
+                self.config.value.email = $email.val();
+                self.config.value.pwd = $pwd.val();
+
+                // saving data s abandoned subscription
+                // will be removed after successful signup
+                $.ajax({
+                  method: 'POST',
+                  dataType: 'json',
+                  url: self.config.abandonedSubURL,
+                  timeout: self.config.timeout,
+                  data: { company: self.config.value.company, email: self.config.value.email },
+                  success: function(data, status, xhr) {
+                    if( xhr.status === 200 && data.clientId ) {
+                      self.config.value.abandonedSub = data.clientId;
+
+                      // open payment fieldset and hide current fieldset
+                      $('.form--signup__step1').removeClass('__active__');
+                      $('.form--signup__step2').addClass('__active__');
+                    } else {
+                      serverErrDisplay.init(xhr);
+                    }
+                  },
+                  error: function(jqXhr, textStatus, errorMessage) {
+                    serverErrDisplay.init(jqXhr);
+                  }
+                });
+
+              }
+
+            }, // success
+            error: function(jqXhr) {
+              $errList.find('[class*="--available"]').slideDown(300);
+              serverErrDisplay.init(jqXhr);
+            }
+          }); // end ajax call
+
+        } // endif
+
+      }, // submitFn
 
       goBack: function() {
 
@@ -962,7 +1028,7 @@
           timeout: self.config.timeout,
           success: function(data, status, xhr) {
             if( xhr.status === 200 ) {
-              window.location.replace('/email-verification');
+              window.location.replace('/email-confirmation');
             } else {
               self.enablePaymentSet();
               serverErrDisplay.init(xhr);

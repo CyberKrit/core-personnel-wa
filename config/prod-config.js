@@ -6,5 +6,7 @@ module.exports = {
 	trialDuration: 14,
 	pwdMinLength: 8,
 	jwtSecret: process.env.JWT_SECRET_KEY,
-	clientTimeout: 12000
+	clientTimeout: 12000,
+	// email
+	emailConfirmationExp: 3 // in days
 };

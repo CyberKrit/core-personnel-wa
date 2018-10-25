@@ -7,7 +7,7 @@
 		<script>
 			var STRIPE_API_KEY = '<%= STRIPE_API_KEY %>' || '';
 			var PWD_MIN_LENGTH = parseInt(<%= PWD_MIN_LENGTH %>) || 8;
-			var CLIENT_TIMEOUT = parseInt(<%= CLIENT_TIMEOUT %>) || 8;
+			var CLIENT_TIMEOUT = parseInt(<%= CLIENT_TIMEOUT %>) || 12000;
 		</script>
 		<div class="app">
 			<%- include('../partials/aside'); %>
@@ -45,17 +45,24 @@
 									</div>
 									<div class="form--signup__input -email">
 										<label for="form--signup__input-email">Email Address</label>
-										<input type="email" id="form--signup__input-email" placeholder="Registered Email">
+										<div class="__lazy-check__">
+											<input type="email" id="form--signup__input-email" placeholder="Registered Email">
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+										</div>
 										<div class="-err-list">
 											<ul class="err-list">
 												<li class="err-list--required">This field is required</li>
 												<li class="err-list--pattern">This email is not valid</li>
+												<li class="err-list--available">This email is not available</li>
 											</ul>
 										</div>
 									</div>
 									<div class="form--signup__input -pwd">
 										<label for="form--signup__input-pwd">Password</label>
-										<input type="password" id="form--signup__input-pwd" placeholder="Minimum 8 characters long">
+										<div class="__pwd-eye__">
+											<input type="password" id="form--signup__input-pwd" placeholder="Minimum 8 characters long">
+											<div class="form--signup__input-pwd-eye"></div>
+										</div>
 										<div class="-err-list">
 											<ul class="err-list">
 												<li class="err-list--required">This field is required</li>

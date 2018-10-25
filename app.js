@@ -101,6 +101,7 @@ app.post('/dashboard', (req, res) => {
 	// });
 
 });
+app.get('/api/**', (req, res) => res.status(404).send({ message: '404 not found' }));
 app.get('/', (req, res) => res.render('index'));
 app.get('**', (req, res) => res.redirect('/'));
 

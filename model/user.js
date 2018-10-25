@@ -40,6 +40,7 @@ const UserSchema = new Schema({
 		type: { type: String, required: true, default: 'email' },
 		token: { type: String, required: true },
 		isverified: { type: Boolean, required: true, default: false },
+		isExpired: { type: Boolean, required: true, default: false },
 		createdAt: { type: Date, required: true, default: Date.now }
 	}],
 	status: [{
@@ -154,6 +155,7 @@ UserSchema.methods.generateEmailToken = function() {
 		type,
 		token: token,
 		isverified: false,
+		isExpired:false,
 		createdAt: Date.now()
 	}];
 
