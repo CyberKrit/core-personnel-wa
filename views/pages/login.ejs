@@ -2,8 +2,13 @@
 <html lang="en">
 	<head>
 		<%- include('../partials/head'); %>
+		<script>
+			var STRIPE_API_KEY = '<%= STRIPE_API_KEY %>' || '';
+			var PWD_MIN_LENGTH = parseInt(<%= PWD_MIN_LENGTH %>) || 8;
+			var CLIENT_TIMEOUT = parseInt(<%= CLIENT_TIMEOUT %>) || 12000;
+		</script>
 	</head>
-	<body>
+	<body class="page-login">
 		<div class="app">
 			<%- include('../partials/aside'); %>
 
@@ -30,7 +35,10 @@
 								</div>
 								<div class="form--login__input -pwd _pb2_">
 									<label for="form--login__input-pwd">Password</label>
-									<input type="password" id="form--login__input-pwd" placeholder="Minimum 8 characters long">
+									<div class="__pwd-eye__">
+										<input type="password" id="form--login__input-pwd" placeholder="Minimum 8 characters long">
+										<div class="form--signup__input-pwd-eye"></div>
+									</div>
 									<div class="-err-list">
 										<ul class="err-list">
 											<li class="err-list--required">This field is required</li>
@@ -63,6 +71,5 @@
 				<%- include('../partials/footer'); %>
 			</footer>
 		</div>
-		<%- include('../partials/popup-subscription-plan'); %>
 	</body>
 </html>

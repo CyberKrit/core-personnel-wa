@@ -2,13 +2,13 @@
 <html lang="en">
 	<head>
 		<%- include('../partials/head'); %>
-	</head>
-	<body class="page-signup">
 		<script>
 			var STRIPE_API_KEY = '<%= STRIPE_API_KEY %>' || '';
 			var PWD_MIN_LENGTH = parseInt(<%= PWD_MIN_LENGTH %>) || 8;
 			var CLIENT_TIMEOUT = parseInt(<%= CLIENT_TIMEOUT %>) || 12000;
 		</script>
+	</head>
+	<body class="page-signup">
 		<div class="app">
 			<%- include('../partials/aside'); %>
 

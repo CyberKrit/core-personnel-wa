@@ -103,7 +103,7 @@ module.exports = {
 					.catch(err => {
 					  res.status(422).send(err);
 					});
-				//console.log(source);
+				
 			})
 			.catch(err => {
 			  res.status(422).send(err);
@@ -127,6 +127,26 @@ module.exports = {
 			  res.status(422).send(err);
 			});
 
-	}
+	},
+
+	login(req, res) {
+		let { email, pwd } = req.body;
+
+		UserModel.findByCredentials(email, pwd)
+			.then(user => {
+				if( user ) {
+					return user.generateAuthToken();
+				} else {
+					res.status(403).send(err);
+				}
+			})
+			.then(({ token }) => {
+				res.header('x-auth', token).send({ message: 'User has successfully authenticated' });
+			})
+			.catch(err => {
+			  res.status(403).send(err);
+			});
+			
+	} // login
 
 };

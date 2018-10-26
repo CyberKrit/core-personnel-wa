@@ -47,7 +47,11 @@ NonApi(app);
 // app.get('/dashboard/**', (req, res) => res.render('dashboard'));
 
 // website
-app.get('/login', (req, res) => res.render('pages/login'));
+app.get('/login', (req, res) => res.render('pages/login', {
+	STRIPE_API_KEY: config.stripePublishablekey,
+	PWD_MIN_LENGTH: config.pwdMinLength, 
+	CLIENT_TIMEOUT: config.clientTimeout
+}));
 
 app.get('/signup', (req, res) => res.render('pages/signup', { 
 	STRIPE_API_KEY: config.stripePublishablekey, 
@@ -61,7 +65,9 @@ app.get('/reset-password', (req, res) => res.render('pages/reset-password'));
 
 app.get('/email-confirmation', (req, res) => res.render('pages/email-confirmation'));
 
-app.post('/dashboard', (req, res) => {
+app.get('/dashboard', (req, res) => {
+
+	res.render('pages/dashboard');
 
 	// console.log(req.body);
 	// const amount = 132;

@@ -8,7 +8,7 @@ const config = require('../config/config');
 
 const UserSchema = new Schema({
 	email: { type: String, required: true, lowercase: true, trim: true, unique: true },
-	password: { type: String, required: true, minlength: config.pwdMinLength },
+	password: { type: String, required: true },
 	tel: { type: String, trim: true, unique: true, sparse: true },
 	personal: [{
 		firstname: { type: String, default: null },
@@ -83,21 +83,14 @@ const UserSchema = new Schema({
 UserSchema.pre('save', function(next) {
 	let user = this;
 
-	if( user.password ) {
-			try {
-				bcrypt.genSalt(10, (err, salt) => {
-					bcrypt.hash(user.password, salt, (err, hash) => {
-						user.password = hash;
-						next();
-					});
-				});
-			} catch(err) {
-				return next();
-			}
+	if( user.isModified('password') ) {
+		bcrypt.hash(user.password, 10, function(err, hash) {
+			user.password = hash;
+			next();
+		});
 	} else {
 		next();
 	}
-
 
 });
 
@@ -117,6 +110,7 @@ UserSchema.statics.findByToken = function(token) {
 	});
 
 };
+
 UserSchema.statics.findByEmailToken = function(token) {
 	let User = this, decode;
 
@@ -151,13 +145,13 @@ UserSchema.methods.generateEmailToken = function() {
 	let type = 'email',
 			token = jwt.sign({ type, _id: this._id.toHexString() }, config.jwtSecret);
 
-	this.emailVerification = [{
+	this.emailVerification.push({
 		type,
 		token: token,
 		isverified: false,
 		isExpired:false,
 		createdAt: Date.now()
-	}];
+	});
 
 	return this.save()
 		.then( updatedUser => {
@@ -165,6 +159,26 @@ UserSchema.methods.generateEmailToken = function() {
 		});
 
 }
+
+UserSchema.statics.findByCredentials = function(email, pwd) {
+	let User = this;
+
+	return User.findOne({ email })
+		.then(user => {
+			if( !user ) return Promise.reject();
+
+			return new Promise((resolve, reject) => {
+				console.log(pwd);
+				console.log(user.password);
+				bcrypt.compare(pwd, user.password, (err, res) => {console.log(res);console.log(err);
+					if( !res ) reject();
+					resolve(user);
+				});
+			});
+
+		});
+
+};
 
 
 const User = mongoose.model('user', UserSchema);
