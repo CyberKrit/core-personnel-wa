@@ -37,7 +37,3 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-# custom
-/config/dev-config.js
-/public/application/node_modules

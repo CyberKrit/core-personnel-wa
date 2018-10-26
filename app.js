@@ -16,6 +16,7 @@ const NonApi = require('./route/non-api');
 
 app.use('/', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 mongoose.Promise = global.Promise;
 
 // connection to mongodb 
@@ -67,7 +68,7 @@ app.get('/email-confirmation', (req, res) => res.render('pages/email-confirmatio
 
 app.get('/dashboard', (req, res) => {
 
-	res.render('pages/dashboard');
+	res.render('../public/app-assets/index.html');
 
 	// console.log(req.body);
 	// const amount = 132;
