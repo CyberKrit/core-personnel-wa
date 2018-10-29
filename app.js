@@ -14,7 +14,8 @@ const Subscription = require('./route/subscription');
 const Dashboard = require('./route/dashboard');
 const NonApi = require('./route/non-api');
 
-app.use('/', express.static(__dirname + '/public'));
+app.use('/', express.static(__dirname + '/public/app-assets'));
+app.use('/web-assets', express.static(__dirname + '/public/web-assets'));
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 mongoose.Promise = global.Promise;
@@ -68,7 +69,7 @@ app.get('/email-confirmation', (req, res) => res.render('pages/email-confirmatio
 
 app.get('/dashboard', (req, res) => {
 
-	res.render('../public/app-assets/index.html');
+	res.render('../public/app-assets/app.html');
 
 	// console.log(req.body);
 	// const amount = 132;

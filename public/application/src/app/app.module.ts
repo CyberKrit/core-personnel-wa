@@ -1,10 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 
 // custom imports
 import { AppComponent } from './app.component';
-import { AppRoute } from './app.route';
+import { AppRouteModule } from './app-route.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +11,7 @@ import { AppRoute } from './app.route';
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(AppRoute)
+    AppRouteModule
   ],
   providers: [],
   bootstrap: [AppComponent]

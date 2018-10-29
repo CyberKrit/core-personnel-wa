@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // custom imports
-import { DashboardComp } from './dashboard';
+import { DashboardComponent } from './dashboard.component';
 import { DashboardService } from './dashboard.service';
-import { DashboardRoutes } from './dashboard.route';
+import { DashboardRouteModule } from './dashboard-route.module';
 
 @NgModule({
 	declarations: [
-		DashboardComp
+		DashboardComponent
 	],
 	imports: [
 		CommonModule,
-		RouterModule.forChild(DashboardRoutes)
+		DashboardRouteModule
 	],
 	providers: [
 		DashboardService
