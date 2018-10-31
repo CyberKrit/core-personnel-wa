@@ -1,2 +1,15 @@
-<h1>List</h1>
-<a [routerLink]="['']">Website</a>
+<div class="comp-header _clr_">
+	<h1 class="comp-header_title _comp-title_ _start_">All Inductions</h1>
+	<div class="comp-header_options _end_ _dropdown-wrapper_">
+		<button class="comp-header_options-action _dropdown_" #btnDropDown (click)="btnDropDownEvt(btnDropDown)">
+			<span class="_text_">Manage Inductions</span>
+			<i class="_symbol_ _symbol-darr--white_"></i>
+		</button>
+		<ul class="_dropdown-list_" #btnDropDownList>
+			<li><a [routerLink]="['/induction/create']">Add Induction</a></li>
+			<li><a [routerLink]="['/induction/categories']">Categories</a></li>
+			<li><a>Import CSV</a></li>
+			<li><a>Export CSV of all Inductions</a></li>
+		</ul>
+	</div>
+</div>

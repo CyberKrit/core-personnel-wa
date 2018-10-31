@@ -1,0 +1,145 @@
+@import "../../../../partial/variable";
+@import "../../../../partial/image";
+
+/* ===============================================
+   SIDEBAR
+   =============================================== */
+
+.sidebar {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	max-width: 20rem;
+	background: $color-aside-top;
+	background: -moz-linear-gradient(top, $color-aside-top 0%, $color-aside-bottom 100%);
+	background: -webkit-linear-gradient(top, $color-aside-top 0%, $color-aside-bottom 100%);
+	background: linear-gradient(to bottom, $color-aside-top 0%, $color-aside-bottom 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$color-aside-top', endColorstr='$color-aside-bottom',GradientType=0 );
+}
+
+/*** [ branding ] ***/
+
+.sidebar_branding {
+	position: relative;
+	display: block;
+	height: 6.7rem;
+	padding: 1rem;
+	background-color: #f3eeee;
+	border-bottom: .1rem solid #fff;
+	overflow: hidden;
+	cursor: pointer;
+
+	&._wordmark {
+		.sidebar_branding-wordmark {
+			display: block;
+		}
+	}
+
+	&._symbol {
+		.sidebar_branding-symbol {
+			display: block;
+		}
+	}
+
+	&._wordmark._symbol {
+		.sidebar_branding-wordmark,
+		.sidebar_branding-symbol {
+			display: block;
+		}
+	}
+}
+[class^="sidebar_branding-"] {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	bottom: 1rem;
+	left: 1rem;
+	z-index: 5;
+	display: none;
+	height: 4.7rem;
+	overflow: hidden;
+}
+.sidebar_branding-wordmark {
+	font-size: 2rem;
+	line-height: 4.7rem;
+	font-weight: 700;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.sidebar_branding-symbol {
+	max-width: 80%;
+	margin: auto;
+	background: $logo-full no-repeat center center;
+	background-size: contain;
+}
+
+/*** [sidebar_nav] ***/
+
+.sidebar_nav {
+	padding: 2rem 1rem;
+}
+.sidebar_nav li + li {
+	margin-top: 1rem;
+}
+.sidebar_nav-item-link {
+	position: relative;
+	display: block;
+	min-height: 4.2rem;
+	padding: 1.3rem 0 .7rem 4rem;
+	color: $color-primary;
+
+	&:hover {
+		color: $color-primary-dark;
+	}
+
+	.title {
+		display: block;
+		font-size: 1.8rem;
+		line-height: 2.2rem;
+		text-transform: capitalize;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+}
+.sidebar_nav .symbol {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	display: block;
+	width: 3.2rem;
+	height: 3.2rem;
+	margin: auto 0;
+
+	svg {
+		display: block;
+		max-width: 100%;
+		max-height: 100%;
+	}
+
+	&.__lock svg g {
+		stroke: $color-primary;
+	}
+}
+
+/* hover */
+
+.sidebar_nav-item-link:hover {
+	.__lock svg g {
+		stroke: $color-primary-dark;
+	}
+}
+
+@media screen and (min-width: 1100px) {
+	.sidebar {
+		max-width: 25rem;
+	}
+	
+	.sidebar_nav {
+		padding-right: 2rem;
+		padding-left: 2rem;
+	}
+}

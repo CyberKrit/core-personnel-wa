@@ -12,6 +12,7 @@ const User = require('./route/user');
 const AbandonedSubs = require('./route/abandoned-subscription');
 const Subscription = require('./route/subscription');
 const Dashboard = require('./route/dashboard');
+const InductionCat = require('./route/induction-cat');
 const NonApi = require('./route/non-api');
 
 app.use('/', express.static(__dirname + '/public/app-assets'));
@@ -43,6 +44,7 @@ AbandonedSubs(app);
 Subscription(app);
 Dashboard(app);
 NonApi(app);
+InductionCat(app);
 
 // admin
 // app.get('/dashboard', (req, res) => res.render('dashboard'));

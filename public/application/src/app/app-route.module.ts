@@ -3,10 +3,11 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
 // custom imports
 import { AppComponent } from './app.component';
+import { AuthGuard } from './auth-guard.service';
 
 const AppRoute: Routes = [
 	{ path: 'dashboard', loadChildren: './modules/dashboard/dashboard.module#DashboardModule' },
-	{ path: 'induction', loadChildren: './modules/induction/induction.module#InductionModule' },
+	{ path: 'induction', canActivate: [AuthGuard], loadChildren: './modules/induction/induction.module#InductionModule' },
 	{ path: '', redirectTo: '/', pathMatch: 'full' },
 	{ path: 'login', redirectTo: '/login', pathMatch: 'full' },
 	{ path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
@@ -18,6 +19,9 @@ const AppRoute: Routes = [
 	],
 	exports: [
 		RouterModule
+	],
+	providers: [
+		AuthGuard
 	]
 })
 
