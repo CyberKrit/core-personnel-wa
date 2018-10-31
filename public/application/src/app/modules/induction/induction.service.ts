@@ -13,6 +13,7 @@ export class InductionService {
 		private http: Http) {}
 
 	public createCategory(req): Observable<any> {
+		
 		const baseurl =  'https://evening-shelf-25137.herokuapp.com/api/induction-cat';
 
 		const headers = new Headers({ 
