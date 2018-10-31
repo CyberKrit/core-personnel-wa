@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
@@ -16,6 +17,7 @@ import { InductionRouteModule } from './induction-route.module';
 		InductionCategories
 	],
 	imports: [
+		CommonModule,
 		InductionRouteModule,
 		HttpModule,
 		FormsModule

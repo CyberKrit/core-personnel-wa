@@ -48,6 +48,24 @@ $palette-text-light: #949293;
 $palette-icon-light: #bab8b9;
 $palette-icon-dark: #949293;
 
+// error code
+$palette-err-light: #ffcccc;
+$palette-err-dark: #cc0000;
+
+// success message code
+$palette-success-backdrop: #d4edda;
+$palette-success-text: #155724;
+$palette-success-border: #c3e6cb;
+// error message code
+$palette-err-backdrop: #f8d7da;
+$palette-err-text: #721c24;
+$palette-err-border: #f5c6cb;
+// info message code
+$palette-info-backdrop: #d1ecf1;
+$palette-info-text: #0c5460;
+$palette-info-border: #bee5eb;
+
+
 $color-label-a: #f6a0a6;
 $color-label-b: #e31836;
 $color-label-c: #fbb567;
