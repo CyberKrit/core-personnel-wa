@@ -9,7 +9,7 @@ export class InductionService {
 	private headers: Headers;
 	private options: RequestOptions;
 	// private baseURL: string = 'http://localhost:3000/';
-	private baseURL: string = 'http://evening-shelf-25137.herokuapp.com/';
+	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
 
 	constructor(
 		private http: Http) {}
