@@ -68,7 +68,7 @@ export class InductionCategories implements OnInit {
 			.subscribe(
 				(res: Array<any>)  => {
 					this.categories = res;
-					this.categories.map(item => { item['highlight'] = false });
+					this.categories.map(item => { item['highlight'] = { edit: false, delete: false } });
 				},
 				(err) => console.error(err)
 			);
@@ -83,7 +83,7 @@ export class InductionCategories implements OnInit {
 		this.categories.map(({ _id }, index) => {
 			if ( _id.toString() === id.toString() ) deleteItemIndex = index;
 		});
-		this.categories[deleteItemIndex].highlight = true;
+		this.categories[deleteItemIndex].highlight.delete = true;
 		
 
 		dialogRef.afterClosed()
@@ -91,7 +91,7 @@ export class InductionCategories implements OnInit {
 				if( res ) {
 					this.categories.splice(deleteItemIndex, 1);
 				} else {
-					this.categories[deleteItemIndex].highlight = false;
+					this.categories[deleteItemIndex].highlight.delete = false;
 				}
 			});
 	}

@@ -21,12 +21,12 @@
 			<div class="_column_ _column-user_">User</div>
 			<div class="_column_ _column-action_">Actions</div>
 		</li>
-		<li class="_row_" *ngFor="let category of categories" [ngClass]="{ '_highlight_': category.highlight }">
+		<li class="_row_" *ngFor="let category of categories" [ngClass]="{ '_highlight-delete_': category.highlight.delete }">
 			<div class="_column_ _column-cat_">
 				<a [routerLink]="['/induction']" [queryParams]="{cat:category.slug}">{{ category.name }}</a>
 			</div>
-			<div class="_column_ _column-induction_">1</div>
-			<div class="_column_ _column-user_">2</div>
+			<div class="_column_ _column-induction_">&ndash;&ndash;</div>
+			<div class="_column_ _column-user_">&ndash;&ndash;</div>
 			<div class="_column_ _column-action_">
 				<ul>
 					<li><a class="action-btn action-btn--edit"></a></li>
