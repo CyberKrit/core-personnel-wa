@@ -72,4 +72,25 @@ export class InductionService {
 			);
 	}
 
+	public updateCategory(_id, name): Observable<any> {
+		const baseurl =  this.baseURL + 'api/induction-cat/';
+
+		const headers = new Headers({ 
+			'Content-Type': 'application/json', 
+			'Accept': 'application/json'
+		});
+		const options = new RequestOptions({ headers: headers });
+
+		let buildReq = { _id, name };
+
+		return this.http
+			.put(baseurl, JSON.stringify(buildReq), options)
+			.pipe(
+				map((res: Response) => {
+					return res.json() || null;
+				}),
+				catchError(err => throwError(err))
+			);
+	}
+
 }

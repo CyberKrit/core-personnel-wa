@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { InductionService } from '../induction.service';
 import { InductionListComp } from '../list/induction-list.component';
 import { ConsentBox } from '../../../shared/component/modal/consent-box';
+import { PromptBox } from '../../../shared/component/modal/prompt-box';
 
 
 @Component({
@@ -68,7 +69,7 @@ export class InductionCategories implements OnInit {
 			.subscribe(
 				(res: Array<any>)  => {
 					this.categories = res;
-					this.categories.map(item => { item['highlight'] = { edit: false, delete: false } });
+					this.categories.map(item => { item['highlight'] = { update: false, delete: false } });
 				},
 				(err) => console.error(err)
 			);
@@ -92,6 +93,27 @@ export class InductionCategories implements OnInit {
 					this.categories.splice(deleteItemIndex, 1);
 				} else {
 					this.categories[deleteItemIndex].highlight.delete = false;
+				}
+			});
+	}
+
+	public updateItem(id, fieldValue) {
+		let dialogRef = this.dialog.open(PromptBox, {
+			data: { id, fieldValue, title: 'Enter a new name for this category' }
+		});
+
+		let updateItemIndex: number = 0;
+		this.categories.map(({ _id }, index) => {
+			if ( _id.toString() === id.toString() ) updateItemIndex = index;
+		});
+		this.categories[updateItemIndex].highlight.update = true;
+		
+
+		dialogRef.afterClosed()
+			.subscribe(res => {console.log(res);
+				if( res ) {
+					this.categories[updateItemIndex].highlight.update = false;
+					this.categories[updateItemIndex].name = res;
 				}
 			});
 	}

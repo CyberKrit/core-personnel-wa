@@ -21,7 +21,7 @@
 			<div class="_column_ _column-user_">User</div>
 			<div class="_column_ _column-action_">Actions</div>
 		</li>
-		<li class="_row_" *ngFor="let category of categories" [ngClass]="{ '_highlight-delete_': category.highlight.delete }">
+		<li class="_row_" *ngFor="let category of categories" [ngClass]="{ '_highlight-delete_': category.highlight.delete, '_highlight-update_': category.highlight.update }">
 			<div class="_column_ _column-cat_">
 				<a [routerLink]="['/induction']" [queryParams]="{cat:category.slug}">{{ category.name }}</a>
 			</div>
@@ -29,7 +29,7 @@
 			<div class="_column_ _column-user_">&ndash;&ndash;</div>
 			<div class="_column_ _column-action_">
 				<ul>
-					<li><a class="action-btn action-btn--edit"></a></li>
+					<li><a class="action-btn action-btn--edit" (click)="updateItem(category._id, category.name)"></a></li>
 					<li><a class="action-btn action-btn--remove" (click)="removeItem(category._id)"></a></li>
 				</ul>
 			</div>

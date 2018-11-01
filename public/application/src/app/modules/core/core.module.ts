@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';
 
 // custom imports
 import { HeaderComponent } from './header/header.component';
@@ -22,6 +23,7 @@ import { InductionService } from '../induction/induction.service';
 		BrowserAnimationsModule,
 		HttpModule,
 		RouterModule,
+		FormsModule,
 		AngularMaterialModule
 	],
 	entryComponents: [

@@ -754,6 +754,9 @@ button._dropdown_ {
 	font-weight: 500;
 	color: $palette-text;
 }
+.modal-input-wrapper {
+	padding-top: 1rem;
+}
 .modal-button-group:before {
 	content: ' ';
 	display: table;

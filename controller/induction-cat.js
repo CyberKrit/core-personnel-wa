@@ -43,6 +43,22 @@ module.exports = {
 			.catch(err => {
 			  res.status(422).send(err);
 			});
+	},
+
+	update(req, res) {console.log(req.body);
+		const { _id, name } = req.body;
+
+		InductionCatModel.findByIdAndUpdate(_id, { _id, name, updatedAt: new Date() }, { new: true })
+			.then(updatedCat => {
+				if( updatedCat ) {
+					res.status(200).send({ message: 'category name has been updated' });
+				} else {
+					res.status(204).send({ message: 'something went wrong' });
+				}
+			})
+			.catch(err => {
+			  res.status(422).send(err);
+			});
 	}
 
 };
