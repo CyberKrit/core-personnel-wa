@@ -51,6 +51,7 @@ InductionCat(app);
 // app.get('/dashboard/**', (req, res) => res.render('dashboard'));
 
 // website
+
 app.get('/login', (req, res) => res.render('pages/login', {
 	STRIPE_API_KEY: config.stripePublishablekey,
 	PWD_MIN_LENGTH: config.pwdMinLength, 
@@ -69,7 +70,7 @@ app.get('/reset-password', (req, res) => res.render('pages/reset-password'));
 
 app.get('/email-confirmation', (req, res) => res.render('pages/email-confirmation'));
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard1', (req, res) => {
 
 	res.render('../public/app-assets/app.html');
 
@@ -112,7 +113,14 @@ app.get('/dashboard', (req, res) => {
 
 });
 app.get('/api/**', (req, res) => res.status(404).send({ message: '404 not found' }));
-app.get('/', (req, res) => res.render('index'));
+
+// app route
+app.get('/dashboard', (req, res) => res.render('../public/app-assets/app.html'));
+app.get('/dashboard/**', (req, res) => res.render('../public/app-assets/app.html'));
+app.get('/induction', (req, res) => res.render('../public/app-assets/app.html'));
+app.get('/induction/**', (req, res) => res.render('../public/app-assets/app.html'));
+
+app.get('/', (req, res) => res.render('pages/index'));
 app.get('**', (req, res) => res.redirect('/'));
 
 // handle error

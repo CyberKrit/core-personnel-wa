@@ -31,6 +31,18 @@ module.exports = {
 			.catch(err => {
 			  res.status(422).send(err);
 			});
+	},
+
+	delete(req, res) {
+		const id = req.params.id;
+
+		InductionCatModel.deleteOne({ _id: id })
+			.then(item => {
+				res.status(200).send({ status: true });
+			})
+			.catch(err => {
+			  res.status(422).send(err);
+			});
 	}
 
 };

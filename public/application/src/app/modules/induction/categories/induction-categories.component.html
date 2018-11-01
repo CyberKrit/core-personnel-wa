@@ -21,7 +21,7 @@
 			<div class="_column_ _column-user_">User</div>
 			<div class="_column_ _column-action_">Actions</div>
 		</li>
-		<li class="_row_" *ngFor="let category of categories">
+		<li class="_row_" *ngFor="let category of categories" [ngClass]="{ '_highlight_': category.highlight }">
 			<div class="_column_ _column-cat_">
 				<a [routerLink]="['/induction']" [queryParams]="{cat:category.slug}">{{ category.name }}</a>
 			</div>
@@ -30,7 +30,7 @@
 			<div class="_column_ _column-action_">
 				<ul>
 					<li><a class="action-btn action-btn--edit"></a></li>
-					<li><a class="action-btn action-btn--remove"></a></li>
+					<li><a class="action-btn action-btn--remove" (click)="removeItem(category._id)"></a></li>
 				</ul>
 			</div>
 		</li>
@@ -51,7 +51,7 @@
 			</button>
 		</div>
 		<ul class="err-list">
-			<li class="err-item" *ngIf="!newCatControl.valid && newCatControl.touched  && newCatControl.dirty">This field is required</li>
+			<li class="err-item" *ngIf="!newCatControl.valid && newCatControl.touched">This field is required</li>
 		</ul>
 	</form>
 </div>

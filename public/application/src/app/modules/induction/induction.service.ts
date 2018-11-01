@@ -53,4 +53,23 @@ export class InductionService {
 			);
 	}
 
+	public removeCategory(catId): Observable<any> {
+		const baseurl =  this.baseURL + 'api/induction-cat/' + catId;
+
+		const headers = new Headers({ 
+			'Content-Type': 'application/json', 
+			'Accept': 'application/json'
+		});
+		const options = new RequestOptions({ headers: headers });
+
+		return this.http
+			.delete(baseurl, options)
+			.pipe(
+				map((res: Response) => {
+					return res.json() || null;
+				}),
+				catchError(err => throwError(err))
+			);
+	}
+
 }

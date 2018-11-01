@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material';
 // custom import
 import { InductionService } from '../induction.service';
 import { InductionListComp } from '../list/induction-list.component';
+import { ConsentBox } from '../../../shared/component/modal/consent-box';
 
 
 @Component({
@@ -46,8 +47,6 @@ export class InductionCategories implements OnInit {
 			slug
 		};
 
-		console.log(createCatForm);
-
 		this.inductionService.createCategory(req)
 			.subscribe(
 				(res) => {
@@ -69,13 +68,32 @@ export class InductionCategories implements OnInit {
 			.subscribe(
 				(res: Array<any>)  => {
 					this.categories = res;
+					this.categories.map(item => { item['highlight'] = false });
 				},
 				(err) => console.error(err)
 			);
 	}
 
-	public openDialog() {
-		let dialogRef = this.dialog.open(InductionListComp);
+	public removeItem(id) {
+		let dialogRef = this.dialog.open(ConsentBox, {
+			data: { id, title: 'Are you sure you want to delete this file?' }
+		});
+
+		let deleteItemIndex: number = 0;
+		this.categories.map(({ _id }, index) => {
+			if ( _id.toString() === id.toString() ) deleteItemIndex = index;
+		});
+		this.categories[deleteItemIndex].highlight = true;
+		
+
+		dialogRef.afterClosed()
+			.subscribe(res => {
+				if( res ) {
+					this.categories.splice(deleteItemIndex, 1);
+				} else {
+					this.categories[deleteItemIndex].highlight = false;
+				}
+			});
 	}
 
 }
