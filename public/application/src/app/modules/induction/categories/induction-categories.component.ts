@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatDialog } from '@angular/material';
+import { ActivatedRoute, Data } from '@angular/router';
 
 // custom import
 import { InductionService } from '../induction.service';
 import { InductionListComp } from '../list/induction-list.component';
+import { CoreService } from '../../core/core.service';
+import { ICategories } from '../../../shared/interface/induction.interface';
 import { ConsentBox } from '../../../shared/component/modal/consent-box';
 import { PromptBox } from '../../../shared/component/modal/prompt-box';
 
@@ -16,17 +19,32 @@ import { PromptBox } from '../../../shared/component/modal/prompt-box';
 })
 
 export class InductionCategories implements OnInit {
+	// preloaded
+	isPreloaded: boolean = false;
+	// target add category submit button for styling
 	@ViewChild('createCatFormActionBtn') createCatFormActionBtn: ElementRef;
-	public categories: Array<any> = [];
+	@ViewChild('newCatControl') newCatControl: ElementRef;
+	// list of categories
+	public categories: Array<ICategories>;
+	// check whether category form was submitted
 	public createCatFormSubmit: boolean = false;
 	public catNameDefaultVal: string = '';
 
 	constructor(
 		public inductionService: InductionService,
-		public dialog: MatDialog) {}
+		public dialog: MatDialog,
+		public route: ActivatedRoute,
+		private coreService: CoreService) {}
 
 	ngOnInit() {
-		this.listCat();
+		this.route.data
+			.subscribe((res: Data) => {
+				this.categories = res.categories;
+				this.categories.map(item => { item['highlight'] = { update: false, delete: false } });
+				this.isPreloaded = true;
+				// deactivate progressbar
+				this.coreService.removeProgressbar();
+			});
 	}
 
 	public addCategoryForm(createCatForm: NgForm) {
@@ -70,12 +88,10 @@ export class InductionCategories implements OnInit {
 				(res: Array<any>)  => {
 					this.categories = res;
 					this.categories.map(item => { item['highlight'] = { update: false, delete: false } });
-				},
-				(err) => console.error(err)
-			);
+				});
 	}
 
-	public removeItem(id) {
+	public removeItem(id) {console.log(this.categories);
 		let dialogRef = this.dialog.open(ConsentBox, {
 			data: { id, title: 'Are you sure you want to delete this file?' }
 		});
@@ -85,7 +101,6 @@ export class InductionCategories implements OnInit {
 			if ( _id.toString() === id.toString() ) deleteItemIndex = index;
 		});
 		this.categories[deleteItemIndex].highlight.delete = true;
-		
 
 		dialogRef.afterClosed()
 			.subscribe(res => {
@@ -107,10 +122,9 @@ export class InductionCategories implements OnInit {
 			if ( _id.toString() === id.toString() ) updateItemIndex = index;
 		});
 		this.categories[updateItemIndex].highlight.update = true;
-		
 
 		dialogRef.afterClosed()
-			.subscribe(res => {console.log(res);
+			.subscribe(res => {
 				if( res ) {
 					this.categories[updateItemIndex].highlight.update = false;
 					this.categories[updateItemIndex].name = res;

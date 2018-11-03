@@ -1,57 +1,61 @@
-<div class="comp-header _clr_">
-	<h1 class="comp-header_title _comp-title_">Induction Categories</h1>
-</div>
-
-<div class="comp-filter _clr_" *ngIf="categories.length">
-	<div class="comp-filter_meta _start_">
-		{{ categories.length }} categories
+<div *ngIf="isPreloaded">
+	
+	<div class="comp-header _clr_">
+		<h1 class="comp-header_title _comp-title_">Induction Categories</h1>
 	</div>
-	<div class="comp-filter_control _end_">
-		<form>
-			<input type="search" name="" placeholder="Search your categories">
+
+	<div class="comp-filter _clr_" *ngIf="categories.length">
+		<div class="comp-filter_meta _start_">
+			{{ categories.length }} categories
+		</div>
+		<div class="comp-filter_control _end_">
+			<form>
+				<input type="search" name="" placeholder="Search your categories">
+			</form>
+		</div>
+	</div>
+
+	<div class="comp-body">
+		<ul class="_table_" *ngIf="categories.length">
+			<li class="_row_ _row-head_">
+				<div class="_column_ _column-cat_">Category</div>
+				<div class="_column_ _column-induction_">Induction</div>
+				<div class="_column_ _column-user_">User</div>
+				<div class="_column_ _column-action_">Actions</div>
+			</li>
+			<li class="_row_" *ngFor="let category of categories" [ngClass]="{ '_highlight-delete_': category?.highlight?.delete, '_highlight-update_': category?.highlight?.update }">
+				<div class="_column_ _column-cat_">
+					<a [routerLink]="['/induction']" [queryParams]="{cat:category?.slug}">{{ category?.name }}</a>
+				</div>
+				<div class="_column_ _column-induction_">&ndash;&ndash;</div>
+				<div class="_column_ _column-user_">&ndash;&ndash;</div>
+				<div class="_column_ _column-action_">
+					<ul>
+						<li><a class="action-btn action-btn--edit" (click)="updateItem(category?._id, category?.name)"></a></li>
+						<li><a class="action-btn action-btn--remove" (click)="removeItem(category?._id)"></a></li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+		<div class="comp-body-null" *ngIf="!categories.length">Get started with creating your first category</div>
+	</div>
+
+	<div class="comp-complement">	
+		<form #addCatForm="ngForm" (ngSubmit)="addCategoryForm(addCatForm)" novalidate autocomplete="false">
+			<label for="control-add-category">Add new category</label>
+			<div class="input-action-inline">
+				<input type="text" name="newCategoryName" id="control-add-category" placeholder="Category name" required #newCatControl="ngModel" [(ngModel)]="catNameDefaultVal">
+				<button type="submit" class="" [disabled]="!addCatForm.valid || createCatFormSubmit" #createCatFormActionBtn>
+					<span class="text">Add category</span>
+					<span class="busy">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#ed1c24" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+					</span>
+				</button>
+			</div>
+			<ul class="err-list">
+				<li class="err-item" *ngIf="!newCatControl.valid && newCatControl.touched">This field is required</li>
+			</ul>
 		</form>
 	</div>
-</div>
 
-<div class="comp-body">
-	<ul class="_table_" *ngIf="categories.length">
-		<li class="_row_ _row-head_">
-			<div class="_column_ _column-cat_">Category</div>
-			<div class="_column_ _column-induction_">Induction</div>
-			<div class="_column_ _column-user_">User</div>
-			<div class="_column_ _column-action_">Actions</div>
-		</li>
-		<li class="_row_" *ngFor="let category of categories" [ngClass]="{ '_highlight-delete_': category.highlight.delete, '_highlight-update_': category.highlight.update }">
-			<div class="_column_ _column-cat_">
-				<a [routerLink]="['/induction']" [queryParams]="{cat:category.slug}">{{ category.name }}</a>
-			</div>
-			<div class="_column_ _column-induction_">&ndash;&ndash;</div>
-			<div class="_column_ _column-user_">&ndash;&ndash;</div>
-			<div class="_column_ _column-action_">
-				<ul>
-					<li><a class="action-btn action-btn--edit" (click)="updateItem(category._id, category.name)"></a></li>
-					<li><a class="action-btn action-btn--remove" (click)="removeItem(category._id)"></a></li>
-				</ul>
-			</div>
-		</li>
-	</ul>
-	<div class="comp-body-null" *ngIf="!categories.length">Get started with creating your first category</div>
-</div>
-
-<div class="comp-complement">	
-	<form #addCatForm="ngForm" (ngSubmit)="addCategoryForm(addCatForm)" novalidate autocomplete="false">
-		<label for="control-add-category">Add new category</label>
-		<div class="input-action-inline">
-			<input type="text" name="newCategoryName" id="control-add-category" placeholder="Category name" required #newCatControl="ngModel" [(ngModel)]="catNameDefaultVal">
-			<button type="submit" class="" [disabled]="!addCatForm.valid || createCatFormSubmit" #createCatFormActionBtn>
-				<span class="text">Add category</span>
-				<span class="busy">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#ed1c24" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
-				</span>
-			</button>
-		</div>
-		<ul class="err-list">
-			<li class="err-item" *ngIf="!newCatControl.valid && newCatControl.touched">This field is required</li>
-		</ul>
-	</form>
 </div>

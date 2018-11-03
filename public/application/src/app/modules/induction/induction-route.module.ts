@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { InductionComponent } from './induction.component';
 import { InductionCategories } from './categories/induction-categories.component';
 import { InductionListComp } from './list/induction-list.component';
+import { InductionResolve } from './induction.resolve';
 
 const InductionRoutes: Routes = [
 	{ 
@@ -14,7 +15,11 @@ const InductionRoutes: Routes = [
 			{ path: '', component: InductionListComp },
 			{ path: 'list', component: InductionListComp },
 			{ path: 'create', component: InductionListComp },
-			{ path: 'categories', component: InductionCategories },
+			{ 
+				path: 'categories',
+				component: InductionCategories,
+				resolve: { categories: InductionResolve }
+			},
 			{ path: '**', redirectTo: '/induction', pathMatch: 'full' }
 		] 
 	}
@@ -27,6 +32,9 @@ const InductionRoutes: Routes = [
 	],
 	exports: [
 		RouterModule
+	],
+	providers: [
+		InductionResolve
 	]
 })
 

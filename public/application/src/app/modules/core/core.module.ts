@@ -8,9 +8,10 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { AngularMaterialModule } from './angular-material.module';
+import { InductionService } from '../induction/induction.service';
+import { CoreService } from './core.service';
 import { ConsentBox } from '../../shared/component/modal/consent-box';
 import { PromptBox } from '../../shared/component/modal/prompt-box';
-import { InductionService } from '../induction/induction.service';
 
 @NgModule({
 	declarations: [
@@ -32,11 +33,13 @@ import { InductionService } from '../induction/induction.service';
   ],
 	exports: [
 		HeaderComponent,
-		SidebarComponent
+		SidebarComponent,
+		AngularMaterialModule
 	],
-  providers: [
-  	InductionService
-  ],
+	providers: [
+		CoreService,
+		InductionService
+	]
 })
 
 export class CoreModule {}

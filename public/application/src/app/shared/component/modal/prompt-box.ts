@@ -9,7 +9,7 @@ import { InductionService } from '../../../modules/induction/induction.service';
 	template: `
 		<h2 class="modal-title">{{ data.title }}</h2>
 		<div class="modal-input-wrapper">
-			<input type="text" value="{{ data.fieldValue }}" #updatedValue>
+			<input type="text" value="{{ data.fieldValue }}" #updatedValue cdkFocusInitial>
 		</div>
 		<div class="modal-button-group">
 			<button class="_btn-confirm_" (click)="confirm(confirmButton)" #confirmButton [disabled]="!enableCancelButton" cdkFocusInitial>
@@ -36,7 +36,7 @@ export class PromptBox {
 
 	public confirm(confirmButton) {
 		this.enableCancelButton = false;
-		confirmButton.classList.add('_lazy_');console.log(this.updatedValue.nativeElement.value);
+		confirmButton.classList.add('_lazy_');
 		this.inductionService.updateCategory(this.data.id, this.updatedValue.nativeElement.value)
 			.subscribe(res => {
 				this.matDialogRef.close(this.updatedValue.nativeElement.value);

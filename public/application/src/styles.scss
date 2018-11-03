@@ -196,6 +196,23 @@ a:not([href]) {
 	clear: both;
 }
 
+/* ===[ progress-bar ]=== */
+
+.mat-progress-bar {
+	position: fixed !important;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 9999999;
+	height: .2rem  !important;
+}
+.mat-progress-bar-buffer {
+	background-color: $palette-err-backdrop;
+}
+.mat-progress-bar-fill:after {
+	background-color: $palette-red !important;
+}
+
 
 /* =============================
    BUTTON
@@ -570,6 +587,10 @@ button._dropdown_ {
 	background-color: $palette-err-backdrop !important;
 	border-color: $palette-err-border;
 }
+._table_ ._row_._highlight-update_ {
+	background-color: $palette-info-backdrop !important;
+	border-color: $palette-info-border;
+}
 ._table_ ._row_:nth-child(2n+3) {
 	background-color: $palette-tbl-row;
 }
@@ -585,6 +606,9 @@ button._dropdown_ {
 }
 ._table_ ._row_._highlight-delete_ ._column_ {
 	color: $palette-err-text;
+}
+._table_ ._row_._highlight-update_ ._column_ {
+	color: $palette-info-text;
 }
 ._table_ ._column_ a {
 	color: $color-blue;
