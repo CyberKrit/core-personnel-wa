@@ -3,19 +3,17 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { Observable } from 'rxjs';
 
 // custom imports
-import { ICategories } from '../../shared/interface/induction.interface';
-import { InductionService } from './induction.service';
+import { ICategories } from '../../../shared/interface/induction.interface';
+import { InductionService } from '../induction.service';
 
 @Injectable()
-
-export class InductionResolve implements Resolve<ICategories> {
+export class InductionCreateResolve implements Resolve<ICategories> {
 
 	constructor(
 		public inductionService: InductionService) {}
 
 	resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : Observable<ICategories> | Promise<ICategories> | ICategories {
 			// return all available caterogy
-			return this.inductionService.listCategory();
+			return this.inductionService.briefCategory();
 	}
-
 }

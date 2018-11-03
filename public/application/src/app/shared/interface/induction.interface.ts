@@ -8,3 +8,8 @@ export interface ICategories {
 		delete?: boolean;
 	}
 }
+
+export interface ICategoryBrief {
+	_id: string;
+	name: string;
+}

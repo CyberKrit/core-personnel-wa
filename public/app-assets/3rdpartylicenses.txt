@@ -1,3 +1,7 @@
+@angular/platform-browser@6.1.10
+MIT
+MIT
+
 rxjs@6.2.2
 Apache-2.0
 Apache License
@@ -260,6 +264,10 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 
 END OF TERMS AND CONDITIONS
 
+@angular/common@6.1.10
+MIT
+MIT
+
 hammerjs@2.0.8
 MIT
 The MIT License (MIT)
@@ -284,23 +292,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-@angular/common@6.1.10
-MIT
-MIT
-
-@angular/platform-browser@6.1.10
-MIT
-MIT
-
 @angular/http@6.1.10
 MIT
 MIT
 
-@angular/animations@6.1.10
-MIT
-MIT
-
-@angular/cdk@7.0.2
+@angular/material@7.0.2
 MIT
 The MIT License
 
@@ -324,7 +320,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-@angular/material@7.0.2
+@angular/animations@6.1.10
+MIT
+MIT
+
+@angular/cdk@7.0.2
 MIT
 The MIT License
 

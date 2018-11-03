@@ -2,6 +2,7 @@ const InductionCatModel = require('../model/induction-cat');
 
 module.exports = {
 
+	// view inductions
 	list(req, res) {
 		InductionCatModel.find({})
 			.sort({ 'updatedAt': -1 })
@@ -19,6 +20,7 @@ module.exports = {
 			});
 	},
 
+	// create induction
 	create(req, res) {
 		InductionCatModel.create(req.body)
 			.then(category => {
@@ -33,6 +35,7 @@ module.exports = {
 			});
 	},
 
+	// delete induction
 	delete(req, res) {
 		const id = req.params.id;
 
@@ -45,7 +48,8 @@ module.exports = {
 			});
 	},
 
-	update(req, res) {console.log(req.body);
+	// update induction
+	update(req, res) {
 		const { _id, name } = req.body;
 
 		InductionCatModel.findByIdAndUpdate(_id, { _id, name, updatedAt: new Date() }, { new: true })
@@ -55,6 +59,24 @@ module.exports = {
 				} else {
 					res.status(204).send({ message: 'something went wrong' });
 				}
+			})
+			.catch(err => {
+			  res.status(422).send(err);
+			});
+	},
+
+	// brief induction
+	brief(req, res) {
+		InductionCatModel.find({})
+			.sort({ 'updatedAt': -1 })
+			.then(categories => {
+				buildRes = [];
+				if( categories.length ) {
+					categories.map(({ _id, name }) => {
+						buildRes.push({ _id, name });
+					});
+				}
+				res.status(200).send(buildRes);
 			})
 			.catch(err => {
 			  res.status(422).send(err);

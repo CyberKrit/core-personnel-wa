@@ -1,0 +1,57 @@
+<div *ngIf="isPreloaded">
+	
+	<div class="comp-header _clr_">
+		<h1 class="comp-header_title _comp-title_">Create Induction</h1>
+	</div>
+
+	<div class="-create-induction-form-">
+		<form 
+			novalidate 
+			autocomplete="false" 
+			(ngSubmit)="createInductionFormSubmit(inductionCreateForm)" 
+			[formGroup]="inductionCreateForm">
+			<div class="control-wrapper">
+				<label for="inductionTitle">Induction name</label>
+				<input type="text" id="inductionTitle" formControlName="inductionName">
+				<ul class="err-list" *ngIf="inductionCreateForm.get('inductionName').touched">
+					<li class="err-item" 
+						*ngIf="inductionCreateForm.get('inductionName').errors?.required">
+						This field is required
+					</li>
+					<li class="err-item" 
+						*ngIf="inductionCreateForm.get('inductionName').errors?.invalidTitlePattern">
+						Input is invalid. Please use only letter, number and spaces.
+					</li>
+				</ul>
+			</div>
+			<div class="control-wrapper">
+				<label for="inductionCat">Pick a category</label>
+				<mat-form-field>
+				  <mat-select formControlName="inductionCat">>
+				    <mat-option 
+				    	value="{{ category?._id }}" 
+				    	*ngFor="let category of getCategories">
+				    		{{ category?.name }}
+				  	</mat-option>
+				  </mat-select>
+				</mat-form-field>
+				<ul class="err-list" *ngIf="inductionCreateForm.get('inductionCat').touched">
+					<li class="err-item" 
+						*ngIf="inductionCreateForm.get('inductionCat').errors?.required">
+						This field is required
+					</li>
+					<li class="err-item" 
+						*ngIf="inductionCreateForm.get('inductionCat').errors?.invalidTitlePattern">
+						Input is invalid. Please use only letter, number and spaces.
+					</li>
+				</ul>
+			</div>
+			<div class="control-action-wrapper">
+				<div>
+					<button type="submit">Submit</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+</div>
