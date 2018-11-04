@@ -91,7 +91,7 @@ export class InductionCategories implements OnInit {
 				});
 	}
 
-	public removeItem(id) {console.log(this.categories);
+	public removeItem(id) {
 		let dialogRef = this.dialog.open(ConsentBox, {
 			data: { id, title: 'Are you sure you want to delete this file?' }
 		});
@@ -103,13 +103,17 @@ export class InductionCategories implements OnInit {
 		this.categories[deleteItemIndex].highlight.delete = true;
 
 		dialogRef.afterClosed()
-			.subscribe(res => {
-				if( res ) {
-					this.categories.splice(deleteItemIndex, 1);
-				} else {
+			.subscribe(
+				(res) => {
 					this.categories[deleteItemIndex].highlight.delete = false;
+
+					if( res ) {
+						this.categories.splice(deleteItemIndex, 1);
+					} else if( res === undefined ) {
+						this.coreService.clientSideRippleConfig('error', 'Category deletion failed. Try again!', '');
+					}
 				}
-			});
+			);
 	}
 
 	public updateItem(id, fieldValue) {
@@ -125,9 +129,12 @@ export class InductionCategories implements OnInit {
 
 		dialogRef.afterClosed()
 			.subscribe(res => {
+				this.categories[updateItemIndex].highlight.update = false;
+				
 				if( res ) {
-					this.categories[updateItemIndex].highlight.update = false;
 					this.categories[updateItemIndex].name = res;
+				} else if( res === undefined ) {
+					this.coreService.clientSideRippleConfig('error', 'Category update failed. Try again!', '');
 				}
 			});
 	}

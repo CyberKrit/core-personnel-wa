@@ -66,6 +66,13 @@ $palette-err-border: #f5c6cb;
 $palette-info-backdrop: #d1ecf1;
 $palette-info-text: #0c5460;
 $palette-info-border: #bee5eb;
+// snackbar
+$palette-snackbar-success-backdrop: rgb(37, 46, 57);
+$palette-snackbar-success-text: rgba(255, 255, 255, .7);
+$palette-snackbar-success-button-text: rgb(20, 167, 208);
+$palette-snackbar-err-backdrop: #E0202F;
+$palette-snackbar-err-text: rgba(255, 255, 255, .7);
+$palette-snackbar-err-button-text: #fff;
 
 
 $color-label-a: #f6a0a6;

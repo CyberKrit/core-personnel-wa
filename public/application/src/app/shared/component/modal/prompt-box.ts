@@ -38,9 +38,10 @@ export class PromptBox {
 		this.enableCancelButton = false;
 		confirmButton.classList.add('_lazy_');
 		this.inductionService.updateCategory(this.data.id, this.updatedValue.nativeElement.value)
-			.subscribe(res => {
-				this.matDialogRef.close(this.updatedValue.nativeElement.value);
-			});
+			.subscribe(
+				(res) => this.matDialogRef.close(this.updatedValue.nativeElement.value),
+				(err) => this.matDialogRef.close()
+			);
 	}
 	public exit() {
 		this.matDialogRef.close(null);

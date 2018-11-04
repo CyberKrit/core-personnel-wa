@@ -34,9 +34,10 @@ export class ConsentBox {
 		this.enableCancelButton = false;
 		confirmButton.classList.add('_lazy_');
 		this.inductionService.removeCategory(this.data.id)
-			.subscribe(res => {
-				this.matDialogRef.close(this.data.id);
-			});
+			.subscribe(
+				(res) => this.matDialogRef.close(this.data.id),
+				(err) => this.matDialogRef.close()
+			);
 	}
 	public exit() {
 		this.matDialogRef.close(null);

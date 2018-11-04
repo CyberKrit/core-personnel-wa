@@ -42,7 +42,6 @@ body {
 	line-height: 1.4;
 	font-weight: 400;
 	color: #535353;
-	overflow-y: scroll;
   -moz-osx-font-smoothing: grayscale;
    -webkit-font-smoothing: antialiased;
 }
@@ -874,4 +873,28 @@ button._dropdown_ {
 }
 .modal-button-group ._btn-cancel_:hover {
 	background-color: $palette-semilight;
+}
+
+/* material snackBar button */
+
+.mat-snack-bar-container {
+	margin-bottom: 1rem !important;
+}
+// success
+.mat-snack-bar-container.ripple-success {
+	background-color: $palette-snackbar-success-backdrop !important;
+	color: $palette-snackbar-success-text !important;
+	border: 0 !important;
+}
+.mat-snack-bar-container.ripple-success .mat-simple-snackbar-action {
+	color: $palette-snackbar-success-button-text !important;
+}
+// error
+.mat-snack-bar-container.ripple-error {
+	background-color: $palette-snackbar-err-backdrop !important;
+	color: $palette-snackbar-err-text !important;
+	border: 0 !important;
+}
+.mat-snack-bar-container.ripple-error .mat-simple-snackbar-action {
+	color: $palette-snackbar-err-button-text !important;
 }

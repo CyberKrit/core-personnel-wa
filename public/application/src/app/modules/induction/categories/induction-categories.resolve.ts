@@ -7,12 +7,12 @@ import { ICategories } from '../../../shared/interface/induction.interface';
 import { InductionService } from '../induction.service';
 
 @Injectable()
-export class InductionCategoriesResolve implements Resolve<ICategories> {
+export class InductionCategoriesResolve implements Resolve<ICategories[]> {
 
 	constructor(
 		public inductionService: InductionService) {}
 
-	resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : Observable<ICategories> | Promise<ICategories> | ICategories {
+	resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : Observable<ICategories[]> | Promise<ICategories[]> | ICategories[] {
 			// return all available caterogy
 			return this.inductionService.listCategory();
 	}

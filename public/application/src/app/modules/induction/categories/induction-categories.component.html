@@ -44,16 +44,22 @@
 		<form #addCatForm="ngForm" (ngSubmit)="addCategoryForm(addCatForm)" novalidate autocomplete="false">
 			<label for="control-add-category">Add new category</label>
 			<div class="input-action-inline">
-				<input type="text" name="newCategoryName" id="control-add-category" placeholder="Category name" required #newCatControl="ngModel" [(ngModel)]="catNameDefaultVal">
-				<button type="submit" class="" [disabled]="!addCatForm.valid || createCatFormSubmit" #createCatFormActionBtn>
+				<input type="text" name="newCategoryName" id="control-add-category" placeholder="Category name" required pattern="^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$" #newCatControl="ngModel" [(ngModel)]="catNameDefaultVal">
+				<button type="submit" class="" #createCatFormActionBtn [disabled]="!addCatForm.valid">
 					<span class="text">Add category</span>
 					<span class="busy">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="4" stroke="#ed1c24" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
 					</span>
 				</button>
 			</div>
-			<ul class="err-list">
-				<li class="err-item" *ngIf="!newCatControl.valid && newCatControl.touched">This field is required</li>
+			<ul class="err-list" *ngIf="newCatControl.touched">
+				<!-- <li class="err-item" *ngIf="!newCatControl.valid && newCatControl.touched">This field is required</li> -->
+				<li class="err-item" *ngIf="newCatControl?.errors?.required">
+					This field is required
+				</li>
+				<li class="err-item" *ngIf="newCatControl?.errors?.pattern">
+					The category name must contain only letters, numbers, and spaces.
+				</li>
 			</ul>
 		</form>
 	</div>

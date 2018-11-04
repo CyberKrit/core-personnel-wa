@@ -1,34 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+
+// custom imports
+import { ICategories, ICategoryBrief } from '../../shared/interface/induction.interface';
 
 @Injectable()
 export class InductionService {
 
-	private headers: Headers;
-	private options: RequestOptions;
 	// private baseURL: string = 'http://localhost:3000/';
 	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
 
 	constructor(
-		private http: Http) {
-			this.headers = new Headers({ 
-				'Content-Type': 'application/json',
-				'Accept': 'application/json'
-			});
-			this.options = new RequestOptions({ headers: this.headers });
-	}
+		private http: HttpClient) {}
 
-	public listCategory(): Observable<any> {
+	public listCategory(): Observable<ICategories[]> {
 		const baseurl =  this.baseURL + 'api/induction-cat';
 
 		return this.http
-			.get(baseurl, this.options)
+			.get<ICategories[]>(baseurl)
 			.pipe(
-				map((res: Response) => {
-					return res.json() || null;
-				}),
+				map(categories => categories),
 				catchError(err => throwError(err))
 			);
 	}
@@ -38,11 +31,9 @@ export class InductionService {
 		const baseurl =  this.baseURL + 'api/induction-cat';
 
 		return this.http
-			.post(baseurl, JSON.stringify(req), this.options)
+			.post(baseurl, JSON.stringify(req))
 			.pipe(
-				map((res: Response) => {
-					return res.json() || null;
-				}),
+				map(res => res),
 				catchError(err => throwError(err))
 			);
 	}
@@ -51,11 +42,9 @@ export class InductionService {
 		const baseurl =  this.baseURL + 'api/induction-cat/' + catId;
 
 		return this.http
-			.delete(baseurl, this.options)
+			.delete(baseurl)
 			.pipe(
-				map((res: Response) => {
-					return res.json() || null;
-				}),
+				map(res => res),
 				catchError(err => throwError(err))
 			);
 	}
@@ -66,11 +55,9 @@ export class InductionService {
 		let buildReq = { _id, name };
 
 		return this.http
-			.put(baseurl, JSON.stringify(buildReq), this.options)
+			.put(baseurl, JSON.stringify(buildReq))
 			.pipe(
-				map((res: Response) => {
-					return res.json() || null;
-				}),
+				map(res => res),
 				catchError(err => throwError(err))
 			);
 	}
@@ -79,11 +66,9 @@ export class InductionService {
 		const baseurl =  this.baseURL + 'api/induction-cat/brief';
 
 		return this.http
-			.get(baseurl, this.options)
+			.get(baseurl)
 			.pipe(
-				map((res: Response) => {
-					return res.json() || null;
-				}),
+				map(res => res),
 				catchError(err => throwError(err))
 			);
 	}

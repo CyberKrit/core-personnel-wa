@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const InductionCatSchema = new Schema({
 	name: { type: String, require: true },
 	slug: { type: String, require: true },
-	induction: { type: Number, require: true, default: null },
+	induction: { type: Schema.Types.ObjectId, ref: 'induction' },
 	user: { type: Number, require: true, default: null },
 	createdAt: { type: Date, required: true, default: Date.now },
 	updatedAt: { type: Date, required: true, default: Date.now }

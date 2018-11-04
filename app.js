@@ -12,6 +12,7 @@ const User = require('./route/user');
 const AbandonedSubs = require('./route/abandoned-subscription');
 const Subscription = require('./route/subscription');
 const Dashboard = require('./route/dashboard');
+const InductionCat = require('./route/induction-cat');
 const Induction = require('./route/induction');
 const NonApi = require('./route/non-api');
 
@@ -43,12 +44,9 @@ User(app);
 AbandonedSubs(app);
 Subscription(app);
 Dashboard(app);
-NonApi(app);
+InductionCat(app);
 Induction(app);
-
-// admin
-// app.get('/dashboard', (req, res) => res.render('dashboard'));
-// app.get('/dashboard/**', (req, res) => res.render('dashboard'));
+NonApi(app);
 
 // website
 
@@ -120,6 +118,7 @@ app.get('/dashboard/**', (req, res) => res.render('../public/app-assets/app.html
 app.get('/induction', (req, res) => res.render('../public/app-assets/app.html'));
 app.get('/induction/**', (req, res) => res.render('../public/app-assets/app.html'));
 
+// generic route
 app.get('/', (req, res) => res.render('pages/index'));
 app.get('**', (req, res) => res.redirect('/'));
 
