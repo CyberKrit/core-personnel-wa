@@ -18,3 +18,11 @@ export interface ICreateInduction {
 	inductionName: string;
 	inductionCat: string;
 }
+
+export interface IListInduction {
+	_id: string;
+	name: string;
+	category: string;
+	createdAt: string;
+	updatedAt: string;
+}

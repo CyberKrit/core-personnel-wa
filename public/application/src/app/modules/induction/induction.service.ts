@@ -85,4 +85,15 @@ export class InductionService {
 			);
 	}
 
+	public listInduction(): Observable<any> {
+		const baseUrl = this.baseURL + 'api/induction';
+
+		return this.http
+			.get(baseUrl)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+	}
+
 }

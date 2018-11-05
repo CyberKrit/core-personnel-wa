@@ -1,4 +1,4 @@
-<div class="comp-header _clr_">
+<div class="comp-header _clr_" *ngIf="isPreloaded"> 
 	<h1 class="comp-header_title _comp-title_ _start_">All Inductions</h1>
 	<div class="comp-header_options _end_ _dropdown-wrapper_">
 		<button class="comp-header_options-action _dropdown_" #btnDropDown (click)="btnDropDownEvt(btnDropDown)">
@@ -12,4 +12,12 @@
 			<li><a>Export CSV of all Inductions</a></li>
 		</ul>
 	</div>
+</div>
+
+<div class="comp-body" *ngIf="isPreloaded">
+	<ul>
+		<li *ngFor="let induction of inductionList">
+			<a [routerLink]="['/induction/view/' + induction?._id]">{{ induction?.name }}</a>
+		</li>
+	</ul>
 </div>

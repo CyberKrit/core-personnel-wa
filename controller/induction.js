@@ -23,6 +23,30 @@ module.exports = {
 			  res.status(422).send(err);
 			});
 
+	},
+
+	list(req, res) {
+
+		InductionModel.find({})
+			.sort({ 'updatedAt': -1 })
+			.then(inductionList => {
+				let buildRes = [];
+
+				if( inductionList.length ) {
+					inductionList.map(({ _id, name, category, createdAt, updatedAt }) => {
+						_id = _id.toHexString();
+						
+						buildRes.push({ _id, name, category, createdAt, updatedAt });
+					});
+				}
+
+				res.statusMessage = UtilityFn.ripple(true, 'success', 'Inductions has loaded');
+				res.status(200).send(buildRes);
+			})
+			.catch(err => {
+			  res.status(422).send(err);
+			});
+
 	}
 
 };

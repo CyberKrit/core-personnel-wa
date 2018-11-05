@@ -3,8 +3,8 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { Observable } from 'rxjs';
 
 // custom imports
-import { ICategories } from '../../../shared/interface/induction.interface';
 import { InductionService } from '../induction.service';
+import { ICategories } from '../../../shared/interface/induction.interface';
 
 @Injectable()
 export class InductionCategoriesResolve implements Resolve<ICategories[]> {

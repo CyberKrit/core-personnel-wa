@@ -1,17 +1,41 @@
-import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, OnInit } from '@angular/core';
+import { ActivatedRoute, Data } from '@angular/router';
+
+// custom imports
+import { CoreService } from '../../core/core.service';
+import { IListInduction } from '../../../shared/interface/induction.interface';
 
 @Component({
 	selector: 'induction-list',
 	templateUrl: './induction-list.component.html',
 	styleUrls: ['./induction-list.component.scss']
 })
-export class InductionListComp {
+export class InductionListComp implements OnInit {
 	@ViewChild('btnDropDown') btnDropDown: ElementRef;
 	@ViewChild('btnDropDownList') btnDropDownList: ElementRef;
 	title: string = 'Induction';
 	private btnDropDownActive: boolean = false;
 
-	constructor() {}
+	//
+	private inductionList: IListInduction[];
+	public isPreloaded: boolean = false;
+
+	constructor(
+		private route: ActivatedRoute,
+		private coreService: CoreService) {}
+
+	ngOnInit() {
+
+		this.route.data
+			.subscribe(
+				(res: Data) => {console.log(res.inductions);
+					this.inductionList = res.inductions;
+					this.isPreloaded = true;
+					this.coreService.removeProgressbar();
+				}
+			);
+
+	}
 
 	public btnDropDownEvt(el) {
 		// toggle active state

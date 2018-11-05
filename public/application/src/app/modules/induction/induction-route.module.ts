@@ -11,19 +11,31 @@ import { InductionCreateComponent } from './create/induction-create.component';
 // resolve
 import { InductionCategoriesResolve } from './categories/induction-categories.resolve';
 import { InductionCreateResolve } from './create/induction-create.resolve';
+import { InductionListResolve } from './list/induction-list.resolve';
 
 const InductionRoutes: Routes = [
 	{ 
 		path: '',
 		children: [
-			{ path: '', component: InductionListComp },
-			{ path: 'list', component: InductionListComp },
 			{ 
+				path: '', 
+				component: InductionListComp,
+				resolve: { inductions: InductionListResolve }
+			},
+			{ 
+				path: 'view/:id',
+				component: InductionListComp,
+			},
+			{ 
+				path: 'edit/:id',
+				component: InductionListComp,
+			},
+			{
 				path: 'create', 
 				component: InductionCreateComponent,
 				resolve: { categories: InductionCreateResolve }
 			},
-			{ 
+			{
 				path: 'categories',
 				component: InductionCategories,
 				resolve: { categories: InductionCategoriesResolve }
@@ -43,7 +55,8 @@ const InductionRoutes: Routes = [
 	],
 	providers: [
 		InductionCategoriesResolve,
-		InductionCreateResolve
+		InductionCreateResolve,
+		InductionListResolve
 	]
 })
 
