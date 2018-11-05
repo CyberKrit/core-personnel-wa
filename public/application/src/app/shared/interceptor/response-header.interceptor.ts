@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpEventType, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 // custom imports
 import { CoreService } from '../../modules/core/core.service';
@@ -28,8 +28,12 @@ export class ResponseHeaderInterceptor implements HttpInterceptor {
 							} catch (err) {}
 							
 						}
-					} // event callback
-				) // tap
+					}
+				), // tap
+				catchError(err => {
+					this.coreService.clientSideRippleConfig('error', 'Action failed! Please try again', '');
+					return throwError(err);
+				})
 			);
 	}
 

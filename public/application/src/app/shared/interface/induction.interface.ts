@@ -13,3 +13,8 @@ export interface ICategoryBrief {
 	_id: string;
 	name: string;
 }
+
+export interface ICreateInduction {
+	inductionName: string;
+	inductionCat: string;
+}

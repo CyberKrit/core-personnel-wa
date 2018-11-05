@@ -4,13 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 // custom imports
-import { ICategories, ICategoryBrief } from '../../shared/interface/induction.interface';
+import { ICategories, ICategoryBrief, ICreateInduction } from '../../shared/interface/induction.interface';
 
 @Injectable()
 export class InductionService {
 
-	// private baseURL: string = 'http://localhost:3000/';
-	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
+	private baseURL: string = 'http://localhost:3000/';
+	// private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
 
 	constructor(
 		private http: HttpClient) {}
@@ -67,6 +67,18 @@ export class InductionService {
 
 		return this.http
 			.get(baseurl)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+	}
+
+	// *** INDUCTION *** //
+	public createInduction(value): Observable<any> {
+		const baseUrl = this.baseURL + 'api/induction';
+
+		return this.http
+			.post<ICreateInduction>(baseUrl, JSON.stringify(value))
 			.pipe(
 				map(res => res),
 				catchError(err => throwError(err))

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 // custom import
 import { CoreService } from '../../core/core.service';
 import { ICategoryBrief } from '../../../shared/interface/induction.interface';
+import { InductionService } from '../induction.service';
 
 @Component({
 	templateUrl: './induction-create.component.html',
@@ -18,7 +20,9 @@ export class InductionCreateComponent implements OnInit {
 	constructor(
 		private coreService: CoreService,
 		private route: ActivatedRoute,
-		private fb: FormBuilder) {}
+		private fb: FormBuilder,
+		private inductionService: InductionService,
+		private router: Router) {}
 
 	ngOnInit() {
 		this.route.data
@@ -28,7 +32,6 @@ export class InductionCreateComponent implements OnInit {
 				// make view visible
 				this.isPreloaded = true;
 				this.getCategories = res.categories;
-				console.log(res.categories);
 			});
 
 		this.inductionCreateForm = this.fb.group({
@@ -37,8 +40,15 @@ export class InductionCreateComponent implements OnInit {
 		});
 	}
 
-	private createInductionFormSubmit(form: FormGroup) {
-		console.log(form);
+	private createInductionFormSubmit({ value, valid }: { value: any, valid: boolean }) {
+		if( valid ) {
+			this.inductionService.createInduction(value)
+				.subscribe(
+					data => {
+						this.router.navigate(['/induction']);
+					}
+				);
+		}
 	}
 
 	private inductionTitleFormat(control: FormControl): { [key: string]: boolean } | null {
