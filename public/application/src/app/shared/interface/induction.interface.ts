@@ -2,6 +2,7 @@ export interface ICategories {
 	_id: string;
 	name: string;
 	slug: string;
+	inductions: number;
 	// style purpose only
 	highlight?: {
 		update?: boolean;

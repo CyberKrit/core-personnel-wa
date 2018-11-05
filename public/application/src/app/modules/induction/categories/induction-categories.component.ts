@@ -23,7 +23,7 @@ export class InductionCategories implements OnInit {
 	isPreloaded: boolean = false;
 	// target add category submit button for styling
 	@ViewChild('createCatFormActionBtn') createCatFormActionBtn: ElementRef;
-	@ViewChild('newCatControl') newCatControl: ElementRef;
+	@ViewChild('trgtCatName') trgtCatName: ElementRef;
 	// list of categories
 	public categories: Array<ICategories>;
 	// check whether category form was submitted
@@ -48,6 +48,14 @@ export class InductionCategories implements OnInit {
 	}
 
 	public addCategoryForm(createCatForm: NgForm) {
+		if( !createCatForm.valid ) {
+			this.trgtCatName.nativeElement.focus();
+			this.trgtCatName.nativeElement.blur();
+			return;
+		}
+
+		// focusout active input. this way when enter to submit the field won't be highlighted
+		this.trgtCatName.nativeElement.blur();
 		// change button visual state to busy
 		this.createCatFormActionBtn.nativeElement.classList.add('_busy_');
 		// disable button from template
@@ -80,7 +88,8 @@ export class InductionCategories implements OnInit {
 				},
 				(err) => console.log(err)
 			);
-	}
+
+	} // addCategoryForm
 
 	listCat() {
 		this.inductionService.listCategory()

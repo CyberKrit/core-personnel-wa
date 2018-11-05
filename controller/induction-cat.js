@@ -10,8 +10,8 @@ module.exports = {
 			.then(categories => {
 				resp = [];
 				if( categories.length ) {
-					categories.map(({ _id, name, slug }) => {
-						resp.push({ _id, name, slug });
+					categories.map(({ _id, name, slug, inductions }) => {
+						resp.push({ _id, name, slug, inductions: inductions.length });
 					});
 				}
 				res.statusMessage = UtilityFn.ripple(false, 'success', 'Categories has loaded');
@@ -55,9 +55,9 @@ module.exports = {
 
 	// update induction
 	update(req, res) {
-		const { _id, name } = req.body;
+		const { _id, name, slug } = req.body;
 
-		InductionCatModel.findByIdAndUpdate(_id, { _id, name, updatedAt: new Date() }, { new: true })
+		InductionCatModel.findByIdAndUpdate(_id, { _id, name, slug, updatedAt: new Date() }, { new: true })
 			.then(updatedCat => {
 				if( updatedCat ) {
 					res.statusMessage = UtilityFn.ripple(true, 'success', 'Category was updated');

@@ -52,7 +52,10 @@ export class InductionService {
 	public updateCategory(_id, name): Observable<any> {
 		const baseurl =  this.baseURL + 'api/induction-cat/';
 
-		let buildReq = { _id, name };
+		name = name.trim();
+		let slug = name.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
+
+		let buildReq = { _id, name, slug };
 
 		return this.http
 			.put(baseurl, JSON.stringify(buildReq))
