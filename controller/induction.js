@@ -40,7 +40,7 @@ module.exports = {
 					});
 				}
 
-				res.statusMessage = UtilityFn.ripple(true, 'success', 'Inductions has loaded');
+				res.statusMessage = UtilityFn.ripple(false, 'success', 'Inductions has loaded');
 				res.status(200).send(buildRes);
 			})
 			.catch(err => {
