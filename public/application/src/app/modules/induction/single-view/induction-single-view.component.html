@@ -1,0 +1,11 @@
+<div *ngIf="isPreloaded">
+	
+	<div class="comp-header _clr_">
+		<h1 class="comp-header_title _comp-title_">{{ inductionSingleData?.name }}</h1>
+	</div>
+
+	<div class="com-body">
+		<a [routerLink]="['/induction/edit/' + inductionSingleData?._id]">Edit</a>
+	</div>
+
+</div>

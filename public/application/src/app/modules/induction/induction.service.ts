@@ -2,18 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 // custom imports
-import { ICategories, ICategoryBrief, ICreateInduction } from '../../shared/interface/induction.interface';
+import { ICategories, ICategoryBrief, ICreateInduction, ISingleInductionViewData } from '../../shared/interface/induction.interface';
 
 @Injectable()
 export class InductionService {
 
-	// private baseURL: string = 'http://localhost:3000/';
-	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
+	private baseURL: string = 'http://localhost:3000/';
+	// private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
 
 	constructor(
-		private http: HttpClient) {}
+		private http: HttpClient,
+		private route: ActivatedRoute) {}
 
 	public listCategory(): Observable<ICategories[]> {
 		const baseurl =  this.baseURL + 'api/induction-cat';
@@ -93,6 +95,17 @@ export class InductionService {
 
 		return this.http
 			.get(baseUrl)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+	}
+
+	public SingleInductionView(inductionId): Observable<ISingleInductionViewData> {
+		const baseUrl = this.baseURL + 'api/induction/' + inductionId;
+
+		return this.http
+			.get<ISingleInductionViewData>(baseUrl)
 			.pipe(
 				map(res => res),
 				catchError(err => throwError(err))

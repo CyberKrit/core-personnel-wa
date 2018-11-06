@@ -6,5 +6,6 @@ module.exports = (app) => {
 	// create inductions
 	app.get('/api/induction', InductionController.list);
 	app.post('/api/induction', InductionController.create);
+	app.get('/api/induction/:id', InductionController.singleView);
 
 };

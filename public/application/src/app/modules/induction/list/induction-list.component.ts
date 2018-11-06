@@ -28,7 +28,7 @@ export class InductionListComp implements OnInit {
 
 		this.route.data
 			.subscribe(
-				(res: Data) => {console.log(res.inductions);
+				(res: Data) => {
 					this.inductionList = res.inductions;
 					this.isPreloaded = true;
 					this.coreService.removeProgressbar();

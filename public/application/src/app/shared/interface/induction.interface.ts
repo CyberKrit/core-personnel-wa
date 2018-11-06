@@ -27,3 +27,8 @@ export interface IListInduction {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface ISingleInductionViewData {
+	_id: string;
+	name: string;
+}

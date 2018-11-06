@@ -19,7 +19,6 @@ module.exports = {
 						{ new: true }
 					)
 					.then(updatedCat => {
-						console.log(updatedCat);
 						res.statusMessage = UtilityFn.ripple(false, 'success', 'New induction was set');
 						res.status(200).send({ _id: newInduction._id.toHexString() });
 					})
@@ -55,6 +54,27 @@ module.exports = {
 
 				res.statusMessage = UtilityFn.ripple(false, 'success', 'Inductions has loaded');
 				res.status(200).send(buildRes);
+			})
+			.catch(err => {
+			  res.status(422).send(err);
+			});
+
+	},
+
+	singleView(req, res) {
+		const inductionId = req.params.id;
+
+		InductionModel.findById(inductionId)
+			.then(induction => {
+				if( induction ) {
+					let { _id, name } = induction;
+					let buildRes = {
+						_id, name
+					};
+
+					res.statusMessage = UtilityFn.ripple(false, 'success', 'Induction view has loaded');
+					res.status(200).send(buildRes);
+				}
 			})
 			.catch(err => {
 			  res.status(422).send(err);
