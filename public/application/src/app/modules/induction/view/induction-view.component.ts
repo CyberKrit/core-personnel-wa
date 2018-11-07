@@ -7,11 +7,10 @@ import { InductionService } from '../induction.service';
 import { ISingleInductionViewData } from '../../../shared/interface/induction.interface';
 
 @Component({
-	selector: 'induction-single-view',
-	templateUrl: './induction-single-view.component.html',
-	styleUrls: ['./induction-single-view.component.scss']
+	templateUrl: './induction-view.component.html',
+	styleUrls: ['./induction-view.component.scss']
 })
-export class InductionSingleViewComponent implements OnInit {
+export class InductionViewComponent implements OnInit {
 	public isPreloaded: boolean = false;
 	private inductionSingleData: ISingleInductionViewData;
 

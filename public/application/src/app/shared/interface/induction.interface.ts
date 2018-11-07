@@ -32,3 +32,8 @@ export interface ISingleInductionViewData {
 	_id: string;
 	name: string;
 }
+
+export class IEditInductionResolve {
+	_id: string;
+	name: string;
+}

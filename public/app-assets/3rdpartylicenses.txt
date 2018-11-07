@@ -1,3 +1,7 @@
+@angular/platform-browser@6.1.10
+MIT
+MIT
+
 rxjs@6.2.2
 Apache-2.0
 Apache License
@@ -261,10 +265,6 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 END OF TERMS AND CONDITIONS
 
 @angular/common@6.1.10
-MIT
-MIT
-
-@angular/platform-browser@6.1.10
 MIT
 MIT
 

@@ -17,24 +17,37 @@ export class ResponseHeaderInterceptor implements HttpInterceptor {
 				tap(
 					event => {
 						if( event instanceof HttpResponse ) {
-							try {
-								const decodeMessage = JSON.parse(event.statusText);
-
-								let { visible, type, client, dev } = decodeMessage;
-								let { status } = event;
-
-								let buildRipple = { status, type, message: { client, dev }, visible };
-								this.coreService.startRipple(buildRipple);
-							} catch (err) {}
-							
+							this.parseRippleRawData(event.statusText, event);
 						}
 					}
 				), // tap
 				catchError(err => {
-					this.coreService.clientSideRippleConfig('error', 'Action failed! Please try again', '');
+					try {
+						// auto fail from server
+						this.parseRippleRawData(err.error.data.statusMessage, null);
+					} catch (err) {
+						// manually fail from client
+						this.coreService.startRippleGeneric();
+					}
 					return throwError(err);
 				})
 			);
+	}
+
+	parseRippleRawData(statusText, event) {
+		try {
+			const decodeMessage = JSON.parse(statusText);
+
+			let { visible, type, client, dev } = decodeMessage;
+			let status = 500;
+
+			try {
+				status = event.status || 500;
+			} catch (err) {}
+
+			let buildRipple = { status, type, message: { client, dev }, visible };
+			this.coreService.startRipple(buildRipple);
+		} catch (err) {}
 	}
 
 }

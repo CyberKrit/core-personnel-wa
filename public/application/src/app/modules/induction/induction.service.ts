@@ -10,8 +10,8 @@ import { ICategories, ICategoryBrief, ICreateInduction, ISingleInductionViewData
 @Injectable()
 export class InductionService {
 
-	private baseURL: string = 'http://localhost:3000/';
-	// private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
+	//private baseURL: string = 'http://localhost:3000/';
+	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
 
 	constructor(
 		private http: HttpClient,
@@ -103,6 +103,17 @@ export class InductionService {
 
 	public SingleInductionView(inductionId): Observable<ISingleInductionViewData> {
 		const baseUrl = this.baseURL + 'api/induction/' + inductionId;
+
+		return this.http
+			.get<ISingleInductionViewData>(baseUrl)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+	}
+
+	public EditInduction(inductionId): Observable<ISingleInductionViewData> {
+		const baseUrl = this.baseURL + 'api/induction/edit/' + inductionId;
 
 		return this.http
 			.get<ISingleInductionViewData>(baseUrl)

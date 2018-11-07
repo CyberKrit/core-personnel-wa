@@ -119,7 +119,7 @@ export class InductionCategories implements OnInit {
 					if( res ) {
 						this.categories.splice(deleteItemIndex, 1);
 					} else if( res === undefined ) {
-						this.coreService.clientSideRippleConfig('error', 'Category deletion failed. Try again!', '');
+						this.coreService.startRippleCustomMsg('Category deletion failed. Try again!');
 					}
 				}
 			);
@@ -143,7 +143,7 @@ export class InductionCategories implements OnInit {
 				if( res ) {
 					this.categories[updateItemIndex].name = res;
 				} else if( res === undefined ) {
-					this.coreService.clientSideRippleConfig('error', 'Category update failed. Try again!', '');
+					this.coreService.startRippleCustomMsg('Category update failed. Try again!');
 				}
 			});
 	}

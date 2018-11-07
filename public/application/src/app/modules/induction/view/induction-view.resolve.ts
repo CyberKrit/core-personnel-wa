@@ -7,11 +7,10 @@ import { InductionService } from '../induction.service';
 import { ISingleInductionViewData } from '../../../shared/interface/induction.interface';
 
 @Injectable()
-export class InductionSingleViewResolve implements Resolve<ISingleInductionViewData> {
+export class InductionViewResolve implements Resolve<ISingleInductionViewData> {
 
 	constructor(
-		public inductionService: InductionService,
-		public router: Router) {}
+		public inductionService: InductionService) {}
 
 	resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : Observable<ISingleInductionViewData> | Promise<ISingleInductionViewData> | ISingleInductionViewData {
 

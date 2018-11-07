@@ -4,7 +4,9 @@ const UtilityFn = require('../utility');
 
 module.exports = {
 
-	create(req, res) {
+	create(req, res, next) {
+		req.ifErr = UtilityFn.rippleErr('Induction creation failed');
+
 		let buildInduction = {
 			name: req.body.inductionName,
 			category: req.body.inductionCat
@@ -19,25 +21,20 @@ module.exports = {
 						{ new: true }
 					)
 					.then(updatedCat => {
-						res.statusMessage = UtilityFn.ripple(false, 'success', 'New induction was set');
 						res.status(200).send({ _id: newInduction._id.toHexString() });
 					})
-					.catch(err => {
-					  res.status(422).send(err);
-					});
+					.catch(next);
 
 				} else {
-					res.statusMessage = UtilityFn.ripple(true, 'success', 'Induction creation failed');
-					res.status(500).send({ message: 'Induction creation failed' });
+					next();
 				}
 			})
-			.catch(err => {
-			  res.status(422).send(err);
-			});
+			.catch(next);
 
 	},
 
-	list(req, res) {
+	list(req, res, next) {
+		req.ifErr = UtilityFn.rippleErr('Inductions unable to load');
 
 		InductionModel.find({})
 			.sort({ 'updatedAt': -1 })
@@ -52,12 +49,9 @@ module.exports = {
 					});
 				}
 
-				res.statusMessage = UtilityFn.ripple(false, 'success', 'Inductions has loaded');
 				res.status(200).send(buildRes);
 			})
-			.catch(err => {
-			  res.status(422).send(err);
-			});
+			.catch(next);
 
 	},
 
@@ -80,6 +74,29 @@ module.exports = {
 			  res.status(422).send(err);
 			});
 
+	},
+
+	editResolve(req, res, next) {
+		req.ifErr = UtilityFn.rippleErr('Induction edit data has failed to load');
+		
+		const inductionId = req.params.id;
+
+		InductionModel.findById(inductionId)
+			.then(induction => {
+				if( induction ) {
+
+					let { _id, name } = induction;
+					let buildRes = {
+						_id, name
+					};
+
+					res.status(200).send(buildRes);
+				} else {
+					res.statusMessage = UtilityFn.rippleErr('Induction edit data has failed to load');
+					res.status(500).send({ message: 'Induction edit data has failed to load' });
+				}
+			})
+			.catch(next);
 	}
 
 };

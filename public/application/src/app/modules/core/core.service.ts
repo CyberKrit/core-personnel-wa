@@ -24,15 +24,28 @@ export class CoreService {
 		this.rippleSource.next(ripple);
 	}
 
-	// call manually
-	public clientSideRippleConfig(type, client, dev) {
-		type = type || 'error';
-		client = client || '';
-		dev = dev || '';
+	// generic error
+	public startRippleCustomMsg(msg) {
+		let buildData = {
+			type: 'error',
+			message: {
+				client: msg
+			}
+		};
 
-		let ripple = { visible: true, type, message: { client, dev } };
+		this.rippleSource.next(buildData);
+	}
 
-		this.rippleSource.next(ripple);
+	// generic error
+	public startRippleGeneric() {
+		let buildData = {
+			type: 'error',
+			message: {
+				client: 'Action failed, try again please!'
+			}
+		};
+
+		this.rippleSource.next(buildData);
 	}
 
 }

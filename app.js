@@ -124,6 +124,8 @@ app.get('**', (req, res) => res.redirect('/'));
 
 // handle error
 app.use((err, req, res, next) => {
+	//res.send({ data: err.message, throw: req.clientErr });
+	err.statusMessage = req.ifErr;
 	res.status(422).send({ error: err.message, data: err });
 });
 

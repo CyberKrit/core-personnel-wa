@@ -7,14 +7,15 @@ import { InductionComponent } from './induction.component';
 import { InductionCategories } from './categories/induction-categories.component';
 import { InductionListComp } from './list/induction-list.component';
 import { InductionCreateComponent } from './create/induction-create.component';
-import { InductionSingleViewComponent } from './single-view/induction-single-view.component';
-import { InductionSingleEditComponent } from './single-edit/induction-single-edit.component';
+import { InductionViewComponent } from './view/induction-view.component';
+import { InductionEditComponent } from './edit/induction-edit.component';
 
 // resolve
 import { InductionCategoriesResolve } from './categories/induction-categories.resolve';
 import { InductionCreateResolve } from './create/induction-create.resolve';
 import { InductionListResolve } from './list/induction-list.resolve';
-import { InductionSingleViewResolve } from './single-view/induction-single-view.resolve';
+import { InductionViewResolve } from './view/induction-view.resolve';
+import { InductionEditResolve } from './edit/induction-edit.resolve';
 
 const InductionRoutes: Routes = [
 	{ 
@@ -27,12 +28,13 @@ const InductionRoutes: Routes = [
 			},
 			{ 
 				path: 'view/:id',
-				component: InductionSingleViewComponent,
-				resolve: { inductionSingle: InductionSingleViewResolve }
+				component: InductionViewComponent,
+				resolve: { inductionSingle: InductionViewResolve }
 			},
 			{ 
 				path: 'edit/:id',
-				component: InductionSingleEditComponent,
+				component: InductionEditComponent,
+				resolve: { editData: InductionEditResolve }
 			},
 			{
 				path: 'create', 
@@ -61,7 +63,8 @@ const InductionRoutes: Routes = [
 		InductionCategoriesResolve,
 		InductionCreateResolve,
 		InductionListResolve,
-		InductionSingleViewResolve
+		InductionViewResolve,
+		InductionEditResolve
 	]
 })
 

@@ -8,4 +8,7 @@ module.exports = (app) => {
 	app.post('/api/induction', InductionController.create);
 	app.get('/api/induction/:id', InductionController.singleView);
 
+	// edit resolve data
+	app.get('/api/induction/edit/:id', InductionController.editResolve);
+
 };
