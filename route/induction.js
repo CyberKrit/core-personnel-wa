@@ -1,14 +1,15 @@
 const InductionController = require('../controller/induction');
+const { failMsg } = require('../middleware/failMsg');
 
 module.exports = (app) => {
 
 	// induction category
 	// create inductions
-	app.get('/api/induction', InductionController.list);
-	app.post('/api/induction', InductionController.create);
+	app.get('/api/induction', failMsg('Inductions are unable to load'), InductionController.list);
+	app.post('/api/induction', failMsg('Induction creation failed'), InductionController.create);
 	app.get('/api/induction/:id', InductionController.singleView);
 
 	// edit resolve data
-	app.get('/api/induction/edit/:id', InductionController.editResolve);
+	app.get('/api/induction/edit/:id', failMsg('Induction edit data has failed to load'), InductionController.editResolve);
 
 };

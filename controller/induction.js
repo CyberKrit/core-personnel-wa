@@ -5,7 +5,6 @@ const UtilityFn = require('../utility');
 module.exports = {
 
 	create(req, res, next) {
-		req.ifErr = UtilityFn.rippleErr('Induction creation failed');
 
 		let buildInduction = {
 			name: req.body.inductionName,
@@ -34,7 +33,6 @@ module.exports = {
 	},
 
 	list(req, res, next) {
-		req.ifErr = UtilityFn.rippleErr('Inductions unable to load');
 
 		InductionModel.find({})
 			.sort({ 'updatedAt': -1 })
@@ -66,7 +64,6 @@ module.exports = {
 						_id, name
 					};
 
-					res.statusMessage = UtilityFn.ripple(false, 'success', 'Induction view has loaded');
 					res.status(200).send(buildRes);
 				}
 			})
@@ -77,7 +74,6 @@ module.exports = {
 	},
 
 	editResolve(req, res, next) {
-		req.ifErr = UtilityFn.rippleErr('Induction edit data has failed to load');
 		
 		const inductionId = req.params.id;
 
@@ -92,7 +88,6 @@ module.exports = {
 
 					res.status(200).send(buildRes);
 				} else {
-					res.statusMessage = UtilityFn.rippleErr('Induction edit data has failed to load');
 					res.status(500).send({ message: 'Induction edit data has failed to load' });
 				}
 			})

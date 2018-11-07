@@ -10,7 +10,7 @@ import { ICategories, ICategoryBrief, ICreateInduction, ISingleInductionViewData
 @Injectable()
 export class InductionService {
 
-	//private baseURL: string = 'http://localhost:3000/';
+	// private baseURL: string = 'http://localhost:3000/';
 	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
 
 	constructor(
@@ -29,7 +29,6 @@ export class InductionService {
 	}
 
 	public createCategory(req): Observable<any> {
-		
 		const baseurl =  this.baseURL + 'api/induction-cat';
 
 		return this.http

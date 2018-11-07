@@ -30,7 +30,6 @@ module.exports = {
 					res.statusMessage = UtilityFn.ripple(true, 'success', 'New category was set');
 					res.status(200).send({ message: 'New category was set' });
 				} else {
-					res.statusMessage = UtilityFn.ripple(true, 'error', 'Category creation failed');
 					res.status(500).send({ message: 'Category creation failed' });
 				}
 			})
@@ -57,7 +56,7 @@ module.exports = {
 	update(req, res) {
 		const { _id, name, slug } = req.body;
 
-		InductionCatModel.findByIdAndUpdate(_id, { _id, name, slug, updatedAt: new Date() }, { new: true })
+		InductionCatModel.findByIdAndUpdate1(_id, { _id, name, slug, updatedAt: new Date() }, { new: true })
 			.then(updatedCat => {
 				if( updatedCat ) {
 					res.statusMessage = UtilityFn.ripple(true, 'success', 'Category was updated');
@@ -83,7 +82,6 @@ module.exports = {
 						buildRes.push({ _id, name });
 					});
 				}
-				res.statusMessage = UtilityFn.ripple(false);
 				res.status(200).send(buildRes);
 			})
 			.catch(err => {
