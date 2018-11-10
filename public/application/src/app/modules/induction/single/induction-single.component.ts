@@ -52,6 +52,11 @@ export class inductionSingleComponent implements OnInit {
 		this.showTemplateCollection = true;
 	}
 
+	// backto edit view without selecting a template
+	private goBack(): void {
+		this.showTemplateCollection = false;
+	}
+
 	// pass data to the child custom slide component
 	private selectedTemplate(template): void {
 		this.showTemplateCollection = false;

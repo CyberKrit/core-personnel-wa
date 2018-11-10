@@ -3,8 +3,9 @@
 	<section *ngIf="queryParams?.slideType === 'custom'">	
 		
 		<div class="comp-header _clr_">
-			<div class="_end_" *ngIf="!showTemplateCollection">
-				<button (click)="pickTemplate()">Template</button>
+			<div class="_end_">
+				<button (click)="pickTemplate()" *ngIf="!showTemplateCollection">Template</button>
+				<button class="_cancel_" (click)="goBack()" *ngIf="showTemplateCollection">Go Back</button>
 			</div>
 			
 			<div class="slide-rename" *ngIf="!showTemplateCollection">
