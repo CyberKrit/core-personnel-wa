@@ -29,6 +29,7 @@ export class ResponseHeaderInterceptor implements HttpInterceptor {
 						// manually fail from client
 						this.coreService.startRippleGeneric();
 					}
+					this.coreService.removeProgressbar();
 					return throwError(err);
 				})
 			);

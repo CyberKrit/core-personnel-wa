@@ -14,6 +14,7 @@ const Subscription = require('./route/subscription');
 const Dashboard = require('./route/dashboard');
 const InductionCat = require('./route/induction-cat');
 const Induction = require('./route/induction');
+const Template = require('./route/template');
 const NonApi = require('./route/non-api');
 
 app.use('/', express.static(__dirname + '/public/app-assets'));
@@ -46,6 +47,7 @@ Subscription(app);
 Dashboard(app);
 InductionCat(app);
 Induction(app);
+Template(app);
 NonApi(app);
 
 // website

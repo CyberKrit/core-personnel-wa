@@ -14,7 +14,7 @@
 	</div>
 </div>
 
-<div class="comp-body" *ngIf="isPreloaded">
+<div class="comp-body" *ngIf="isPreloaded" id="testDiv">
 	<ul>
 		<li *ngFor="let induction of inductionList">
 			<a [routerLink]="['/induction/view/' + induction?._id]">{{ induction?.name }}</a>

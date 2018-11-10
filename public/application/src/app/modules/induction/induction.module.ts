@@ -10,6 +10,9 @@ import { InductionListComp } from './list/induction-list.component';
 import { InductionCreateComponent } from './create/induction-create.component';
 import { InductionViewComponent } from './view/induction-view.component';
 import { InductionEditComponent } from './edit/induction-edit.component';
+import { inductionSingleComponent } from './single/induction-single.component';
+import { InductionTemplateComponent } from './template/induction-template.component';
+import { InductionSingleCustomComponent } from './single-custom/induction-single-custom.component';
 import { InductionService } from './induction.service';
 import { InductionRouteModule } from './induction-route.module';
 import { AngularMaterialModule } from '../core/angular-material.module';
@@ -21,7 +24,10 @@ import { AngularMaterialModule } from '../core/angular-material.module';
 		InductionCategories,
 		InductionCreateComponent,
 		InductionViewComponent,
-		InductionEditComponent
+		InductionEditComponent,
+		inductionSingleComponent,
+		InductionTemplateComponent,
+		InductionSingleCustomComponent
 	],
 	imports: [
 		CommonModule,

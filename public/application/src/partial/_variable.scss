@@ -21,8 +21,23 @@ $color-light-green: #8dc63f;
 
 $color-white: #fff;
 
-$palette-red: #ed1c24;
+
 $color-black: #212121;
+
+// red shades
+$palette-red: #ed1c24;
+$palette-red-light: rgba(237, 28, 36, .4);
+$palette-red-xlight: rgba(237, 28, 36, .2);
+
+// blue shades
+$palette-blue: #0787d0;
+$palette-blue-light: rgba(7, 135, 208, .4);
+$palette-blue-xlight: rgba(7, 135, 208, .2);
+
+// green shades
+$palette-green: #00C853;
+$palette-green-light: rgba(0, 200, 83, .4);
+$palette-green-xlight: rgba(0, 200, 83, .2);
 
 // gray-color-paletter
 $palette-xdarker: #bab8b9;

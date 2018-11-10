@@ -12,4 +12,7 @@ module.exports = (app) => {
 	// edit resolve data
 	app.get('/api/induction/edit/:id', failMsg('Induction edit data has failed to load'), InductionController.editResolve);
 
+	// create a slide
+	app.get('/api/induction/slide/create/:id', failMsg('Slide creation failed'), InductionController.slide);
+
 };

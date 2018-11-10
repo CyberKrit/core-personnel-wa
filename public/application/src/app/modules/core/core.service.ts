@@ -13,6 +13,11 @@ export class CoreService {
 		this.progressbarStateSource.next(true);
 	}
 
+	// enable progressbar
+	public enableProgressbar() {
+		this.progressbarStateSource.next(false);
+	}
+
 	// *** RIPPLE *** 
 	private rippleSource: Subject<any> = new Subject<any>();
 	public ripple$ = this.rippleSource.asObservable();

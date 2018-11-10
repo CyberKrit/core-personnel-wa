@@ -8,22 +8,23 @@
 /*** [[[ create-slide-options ]]] ***/
 
 .create-slide-options {
-	margin-right: -1%;
 	margin-bottom: 4.8rem;
-	margin-left: -1%;
 }
 .create-slide-options .slide-option-ripple {
-	float: left;
-	width: 48%;
 	padding: 4rem 1.6rem 4.5rem;
-	margin-right: 1%;
-	margin-left: 1%;
+	margin-bottom: 2.4rem;
 	text-align: center;
 	border: .2rem dashed $palette-semilight;
 	cursor: pointer;
 	-webkit-border-radius: 2rem;
 	-moz-border-radius: 2rem;
 	border-radius: 2rem;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .create-slide-options .mat-icon {
 	width: 7rem;
@@ -44,6 +45,39 @@
 	color: $palette-text;
 	overflow: hidden;
 	white-space: nowrap;
+}
+/*** _custom_ ***/
+.create-slide-options .slide-option-ripple._custom_ {
+	border-color: $palette-red-xlight;
+}
+.create-slide-options .slide-option-ripple._custom_ .option-title {
+	color: $palette-red;
+}
+.create-slide-options .slide-option-ripple._custom_ .mat-icon {
+	color: $palette-red-light;
+}
+.create-slide-options .slide-option-ripple._custom_ .mat-ripple-element {
+	width: 2rem !important;
+}
+/*** _custom_ ***/
+.create-slide-options .slide-option-ripple._import_ {
+	border-color: $palette-blue-xlight;
+}
+.create-slide-options .slide-option-ripple._import_ .option-title {
+	color: $palette-blue;
+}
+.create-slide-options .slide-option-ripple._import_ .mat-icon {
+	color: $palette-blue-light;
+}
+/*** _quiz_ ***/
+.create-slide-options .slide-option-ripple._quiz_ {
+	border-color: $palette-green-xlight;
+}
+.create-slide-options .slide-option-ripple._quiz_ .option-title {
+	color: $palette-green;
+}
+.create-slide-options .slide-option-ripple._quiz_ .mat-icon {
+	color: $palette-green-light;
 }
 
 /*** .slide-header ***/
@@ -132,6 +166,8 @@
 	margin-right: auto;
 	margin-bottom: 3.2rem;
 	margin-left: auto;
+	-webkit-box-shadow: 0 1px 2px rgba(43,59,93,.29);
+	-moz-box-shadow: 0 1px 2px rgba(43,59,93,.29);
 	box-shadow: 0 1px 2px rgba(43,59,93,.29);
 	-webkit-border-radius: .3rem;
 	-moz-border-radius: .3rem;
@@ -177,6 +213,24 @@
 }
 
 @media screen and (min-width: 520px) {
+	/*** [[[ create-slide-options ]]] ***/
+
+	.create-slide-options {
+		margin-right: -1.5%;
+		margin-left: -1.5%;
+	}
+	.create-slide-options .slide-option-ripple {
+		float: left;
+		width: 47%;
+		margin-right: 1.5%;
+		margin-left: 1.5%;
+	}
+	.create-slide-options .slide-option-ripple:last-child {
+		width: 97%;
+	}
+	.create-slide-options .slide-option-ripple:nth-child(2n+1) {
+		clear: left;
+	}
 
 	.slide {
 		float: left;
@@ -200,7 +254,30 @@
 }
 
 @media screen and (min-width: 760px) {
+
+	/*** [[[ create-slide-options ]]] ***/
+
+	.create-slide-options {
+		margin-right: -1.5%;
+		margin-left: -1.5%;
+	}
+	.create-slide-options .slide-option-ripple {
+		width: 30.33%;
+		margin-right: 1.5%;
+		margin-left: 1.5%;
+	}
+	.create-slide-options .slide-option-ripple:last-child {
+		width: 30.33%;
+	}
+	.create-slide-options .slide-option-ripple:nth-child(2n+1) {
+		clear: none;
+	}
+	.create-slide-options .slide-option-ripple:nth-child(3n+1) {
+		clear: left;
+	}
 	
+	/*** [[[ sildes ]]] ***/
+
 	.sildes {
 		margin-right: -1.5%;
 		margin-left: -1.5%;
@@ -245,7 +322,19 @@
 }
 
 @media screen and (min-width: 1360px) {
-	
+
+	/*** [[[ create-slide-options ]]] ***/
+
+	.create-slide-options {
+		margin-right: -1%;
+		margin-left: -1%;
+	}
+	.create-slide-options .slide-option-ripple {
+		width: 31.33%;
+		margin-right: 1%;
+		margin-left: 1%;
+	}
+
 	.sildes {
 		margin-right: -1%;
 		margin-left: -1%;

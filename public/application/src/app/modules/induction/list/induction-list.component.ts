@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
+ import * as html2canvas from 'html2canvas';
 
 // custom imports
 import { CoreService } from '../../core/core.service';
@@ -66,6 +67,20 @@ export class InductionListComp implements OnInit {
 			// hide list
 			this.btnDropDownList.nativeElement.classList.remove('_show_');
 	  }
+	}
+
+	abc() {
+		html2canvas( document.querySelector('#testDiv') )
+    .then(canvas => {
+    	let savedCanvas = canvas;
+    	document.body.appendChild(canvas);
+
+    	//Canvas2Image.saveAsPNG(canvas);
+      console.log(document.querySelector('canvas').toDataURL());
+    })
+    .catch(err => {
+      console.log("error canvas", err);
+    });
 	}
 
 }

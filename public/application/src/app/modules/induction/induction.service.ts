@@ -1,11 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, forkJoin } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 // custom imports
-import { ICategories, ICategoryBrief, ICreateInduction, ISingleInductionViewData } from '../../shared/interface/induction.interface';
+import { 
+	ICategories, 
+	ICategoryBrief, 
+	ICreateInduction, 
+	ISingleInductionViewData,
+	IGETCreateSlide,
+	IEditInductionResolve,
+	ITemplateList
+} from '../../shared/interface/induction.interface';
 
 @Injectable()
 export class InductionService {
@@ -111,15 +119,42 @@ export class InductionService {
 			);
 	}
 
-	public EditInduction(inductionId): Observable<ISingleInductionViewData> {
+	// *** [[[ induction-edit.component resolve data ]]] *** //
+	public EditInduction(inductionId): Observable<IEditInductionResolve> {
 		const baseUrl = this.baseURL + 'api/induction/edit/' + inductionId;
 
 		return this.http
-			.get<ISingleInductionViewData>(baseUrl)
+			.get<IEditInductionResolve>(baseUrl)
 			.pipe(
 				map(res => res),
 				catchError(err => throwError(err))
 			);
+	}
+
+	// *** [[[ induction-edit.component create a new slide ]]] *** //
+	public createSlide(inductionId): Observable<IGETCreateSlide> {
+		const baseUrl = this.baseURL + 'api/induction/slide/create/' + inductionId;
+
+		return this.http
+			.get<IGETCreateSlide>(baseUrl)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+	}
+
+	// *** [[[ induction-single-custom.component create a new slide ]]] *** //
+	public customSlideRouteData(induction, slide): Observable<any> {
+		const templateListAPI = this.baseURL + 'api/template';
+
+		let templateList = this.http
+			.get<ITemplateList[]>(templateListAPI)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+
+			return forkJoin(templateList);
 	}
 
 }

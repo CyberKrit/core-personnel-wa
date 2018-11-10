@@ -36,4 +36,38 @@ export interface ISingleInductionViewData {
 export class IEditInductionResolve {
 	_id: string;
 	name: string;
+	slideCount: number;
+}
+
+// induction slide interfaces
+export class IGETCreateSlide {
+	status: boolean;
+	slideDeckId: string;
+	slideIndex: number;
+}
+
+// induction single slide edit queryparams
+export class ISingleQueryParams {
+	index: number;
+	slideType: string;
+}
+
+// templatelist interface
+export class ITemplateList {
+	_id: string;
+	name: number;
+	slug: string;
+	component: ITemplateListComponent[];
+	byDefault: boolean;
+}
+export class ITemplateListComponent {
+	heroText: boolean;
+	heroImage: boolean;
+	heroVideo: boolean;
+	content: boolean;
+	imageCaption: boolean;
+	imageLContent: boolean;
+	imageRContent: boolean;
+	contentImageGrid: boolean;
+	quiz: boolean;
 }

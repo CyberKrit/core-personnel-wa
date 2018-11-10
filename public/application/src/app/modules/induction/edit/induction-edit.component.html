@@ -7,13 +7,17 @@
 	<div class="comp-body">
 
 		<div class="create-slide-options _clr_">
-			<div class="slide-option-ripple" matRipple [matRippleColor]="myColor">
-			  <mat-icon aria-label="Example icon-button with a heart icon">line_style</mat-icon>
+			<div (click)="customSlide('custom')" class="slide-option-ripple _custom_" matRipple [matRippleColor]="rippleColorCustom">
+			  <mat-icon aria-label="Custom Slide">line_style</mat-icon>
 				<h3 class="option-title">Custom Slide</h3>
 			</div>
-			<div class="slide-option-ripple" matRipple [matRippleColor]="myColor">
-			  <mat-icon aria-label="Example icon-button with a heart icon">input</mat-icon>
+			<div (click)="customSlide('import')" class="slide-option-ripple _import_" matRipple [matRippleColor]="rippleColorImport">
+			  <mat-icon aria-label="Import slide(s)">input</mat-icon>
 				<h3 class="option-title">Import slide(s)</h3>
+			</div>
+			<div (click)="customSlide('quiz')" class="slide-option-ripple _quiz_" matRipple [matRippleColor]="rippleColorQuiz">
+			  <mat-icon aria-label="Quiz">live_help</mat-icon>
+				<h3 class="option-title">Quiz</h3>
 			</div>
 		</div>
 		

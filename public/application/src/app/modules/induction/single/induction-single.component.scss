@@ -1,0 +1,37 @@
+@import "../../../../partial/variable";
+
+.induction-single-wrapper {
+	padding: 2rem 2rem 0;
+}
+
+// button
+.comp-header button {
+	height: 3.8rem;
+	padding: 0 1.6rem;
+	font-size: 1.4rem;
+	line-height: 3.8rem;
+	font-weight: 500;
+}
+
+// slide-rename
+.slide-rename {
+	width: auto;
+	max-width: 32rem;
+	padding-right: 2rem;
+	overflow: hidden;
+}
+.slide-rename input {
+	display: block;
+	width: 100%;
+	height: 3.8rem;
+	padding: 0;
+	margin: 0;
+	font-size: 1.8rem;
+	line-height: 3.8rem;
+	font-weight: 500;
+	color: $palette-text;
+	border: 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}

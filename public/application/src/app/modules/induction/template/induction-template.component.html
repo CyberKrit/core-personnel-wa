@@ -1,0 +1,10 @@
+<div class="template-collection _clr_">
+	<ul>
+		<li *ngFor="let template of templateCollection">
+			<a class="template-overlay" (click)="thisTemplate(template)">
+				<figure class="template-thumbnail temp-{{ template?._id }}"></figure>
+				<h3 class="template-title">{{ template?.name }}</h3>
+			</a>
+		</li>
+	</ul>
+</div>

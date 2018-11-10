@@ -9,6 +9,7 @@ import { InductionListComp } from './list/induction-list.component';
 import { InductionCreateComponent } from './create/induction-create.component';
 import { InductionViewComponent } from './view/induction-view.component';
 import { InductionEditComponent } from './edit/induction-edit.component';
+import { inductionSingleComponent } from './single/induction-single.component';
 
 // resolve
 import { InductionCategoriesResolve } from './categories/induction-categories.resolve';
@@ -35,6 +36,10 @@ const InductionRoutes: Routes = [
 				path: 'edit/:id',
 				component: InductionEditComponent,
 				resolve: { editData: InductionEditResolve }
+			},
+			{ 
+				path: 'single/:induction',
+				component: inductionSingleComponent
 			},
 			{
 				path: 'create', 

@@ -1,0 +1,40 @@
+<div *ngIf="isPreloaded">
+
+	<section *ngIf="queryParams?.slideType === 'custom'">	
+		
+		<div class="comp-header _clr_">
+			<div class="_end_" *ngIf="!showTemplateCollection">
+				<button (click)="pickTemplate()">Template</button>
+			</div>
+			
+			<div class="slide-rename" *ngIf="!showTemplateCollection">
+				<input type="text" [(ngModel)]="slideTitle">
+			</div>
+
+			<h1 class="comp-header_title _comp-title_ _start_" *ngIf="showTemplateCollection">
+				Get started selecting a template
+			</h1>
+		</div>
+
+		<div class="induction-single-wrapper">
+			<induction-temp 
+				[templateCollection]="templateCollection" 
+				*ngIf="showTemplateCollection"
+				(selectedTemplate)="selectedTemplate($event)">
+			</induction-temp>
+			
+			<induction-single-custom 
+				*ngIf="!showTemplateCollection"
+				[templateData]="selectedTemplateData">
+			</induction-single-custom>
+		</div>
+
+	</section>
+
+	<section *ngIf="queryParams?.slideType === 'import'"><h1>Import</h1>
+	</section>
+
+	<section *ngIf="queryParams?.slideType === 'quiz'"><h1>Quiz</h1>
+	</section>
+
+</div>

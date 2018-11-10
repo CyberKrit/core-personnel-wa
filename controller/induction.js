@@ -80,10 +80,11 @@ module.exports = {
 		InductionModel.findById(inductionId)
 			.then(induction => {
 				if( induction ) {
-
 					let { _id, name } = induction;
+					let slideCount = induction.slides.length;
+
 					let buildRes = {
-						_id, name
+						_id, name, slideCount
 					};
 
 					res.status(200).send(buildRes);
@@ -92,6 +93,24 @@ module.exports = {
 				}
 			})
 			.catch(next);
+	},
+
+	slide(req, res, next) {
+		const inductionId = req.params.id;
+		InductionModel.findByIdAndUpdate(inductionId, {$push: { 'slides': { status: 'draft' }} })
+			.then(updatedInduction => {
+				if( updatedInduction ) {
+					res.send({ 
+						status: true, 
+						slideDeckId: updatedInduction._id , 
+						slideIndex: updatedInduction.slides.length 
+					});
+				} else {
+					next();
+				}
+			})
+			.catch(next);
+
 	}
 
 };

@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
     this.coreService.progressbarState
       .subscribe((state: boolean) => {
         if( state ) this.isProgressBarActive = false;
+        if( !state ) this.isProgressBarActive = true;
         this.cd.detectChanges();
       });
   }
