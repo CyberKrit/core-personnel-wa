@@ -6,11 +6,13 @@ const InductionSchema = new Schema({
 	category: { type: Schema.Types.ObjectId, ref: 'inductionCat' },
 	slides: [{
 		template: { type: Schema.Types.ObjectId, ref: 'template' },
-		title: { type: String, trim: true },
-		subTitle: { type: String, trim: true },
-		content: { type: String, trim: true },
-		media: [{
-			asset: { type: Schema.Types.ObjectId, ref: 'media' }
+		name: { type: String, default: null },
+		header: { type: String, default: null },
+		content: { type: String, default: null },
+		resource: [{
+			type: { type: String, default: null },
+			source: { type: String, default: null },
+			caption: { type: String, default: null }
 		}],
 		status: { type: String, enum:['draft', 'publish'], required: true, default: 'draft' },
 		createdAt: { type: Date, required: true, default: Date.now },

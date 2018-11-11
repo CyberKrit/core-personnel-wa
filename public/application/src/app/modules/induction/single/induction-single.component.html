@@ -9,7 +9,7 @@
 			</div>
 			
 			<div class="slide-rename" *ngIf="!showTemplateCollection">
-				<input type="text" [(ngModel)]="slideTitle">
+				<input type="text" [(ngModel)]="slideTitle" id="sliderTitleRef">
 			</div>
 
 			<h1 class="comp-header_title _comp-title_ _start_" *ngIf="showTemplateCollection">
@@ -26,7 +26,9 @@
 			
 			<induction-single-custom 
 				*ngIf="!showTemplateCollection"
-				[templateData]="selectedTemplateData">
+				[templateData]="selectedTemplateData"
+				[inductionData]="inductionData"
+				[slideTitle]="slideTitle">
 			</induction-single-custom>
 		</div>
 

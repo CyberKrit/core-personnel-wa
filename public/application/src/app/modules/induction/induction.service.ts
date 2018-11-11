@@ -12,7 +12,8 @@ import {
 	ISingleInductionViewData,
 	IGETCreateSlide,
 	IEditInductionResolve,
-	ITemplateList
+	ITemplateList,
+	IInductionSingleResolve
 } from '../../shared/interface/induction.interface';
 
 @Injectable()
@@ -155,6 +156,18 @@ export class InductionService {
 			);
 
 			return forkJoin(templateList);
+	}
+
+	// *** [[[ induction-edit.component resolve data ]]] *** //
+	public InductionSingleResolve(inductionId, slideIndex): Observable<IInductionSingleResolve> {
+		const baseUrl = this.baseURL + 'api/induction/singleResolveData/' + inductionId + '/' + slideIndex;
+
+		return this.http
+			.get<IInductionSingleResolve>(baseUrl)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
 	}
 
 }

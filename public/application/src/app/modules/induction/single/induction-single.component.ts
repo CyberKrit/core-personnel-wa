@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 
 // custom import
 import { CoreService } from '../../core/core.service';
 import { InductionService } from '../induction.service';
-import { IEditInductionResolve, ISingleQueryParams, ITemplateList } from '../../../shared/interface/induction.interface';
+import { IEditInductionResolve, ISingleQueryParams, ITemplateList, IInductionSingleResolve } from '../../../shared/interface/induction.interface';
 
 @Component({
 	templateUrl: './induction-single.component.html',
 	styleUrls: ['./induction-single.component.scss']
 })
 export class inductionSingleComponent implements OnInit {
+
 	public isPreloaded: boolean = false;
 	private routeData: any;
 	private queryParams: ISingleQueryParams;
@@ -20,12 +21,17 @@ export class inductionSingleComponent implements OnInit {
 	private templateCollection: ITemplateList[];
 	private showTemplateCollection: boolean = false;
 	private selectedTemplateData: ITemplateList;
+	private defaultTemplateNameList: string[] = [''];
 
 	// component title
 	private slideTitle: string = 'Image Only';
+
+	// inductionData
+	private inductionData: IInductionSingleResolve; 
 	
 	constructor(
 		private route: ActivatedRoute,
+		private router: Router,
 		private coreService: CoreService,
 		private inductionService: InductionService) {}
 
@@ -35,6 +41,18 @@ export class inductionSingleComponent implements OnInit {
 		this.queryParams = { index: parseInt(index), slideType };
 		this.inductionId = this.route.snapshot.url.pop().path;
 
+		this.route.data
+			.subscribe(
+				(res: Data) => {
+					this.inductionData = res.singleData;
+
+					try {
+						this.slideTitle = this.inductionData.slide.name || '';
+					} catch (err) {
+						this.router.navigate(['/induction']);
+					}
+				});
+
 		if( this.queryParams.slideType === 'custom' ) {
 			this.inductionService.customSlideRouteData(this.inductionId, index)
 				.subscribe(
@@ -42,6 +60,16 @@ export class inductionSingleComponent implements OnInit {
 						this.templateCollection = data[0];
 						this.isPreloaded = true;
 						this.coreService.removeProgressbar();
+
+						this.templateCollection.map(({ name, byDefault }) => {
+							this.defaultTemplateNameList.push(name.toLowerCase());
+
+							if( byDefault === true ) {
+								try {
+									this.slideTitle = this.inductionData.slide.name || name || '';
+								} catch (err) {}
+							}
+						});
 					}
 				);
 		}
@@ -61,7 +89,10 @@ export class inductionSingleComponent implements OnInit {
 	private selectedTemplate(template): void {
 		this.showTemplateCollection = false;
 		this.selectedTemplateData = template;
-		this.slideTitle = template.name;
+
+		if( this.defaultTemplateNameList.indexOf(this.slideTitle.toLowerCase()) >= 0 ) {
+			this.slideTitle = template.name;
+		}
 	}
 
 }

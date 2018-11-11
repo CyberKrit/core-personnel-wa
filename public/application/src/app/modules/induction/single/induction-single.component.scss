@@ -1,7 +1,10 @@
 @import "../../../../partial/variable";
 
 .induction-single-wrapper {
-	padding: 2rem 2rem 0;
+	width: 100%;
+	max-width: 116rem;
+	padding: 1rem 2rem 0;
+	margin: 0 auto;
 }
 
 // button

@@ -13,7 +13,13 @@ import { InductionEditComponent } from './edit/induction-edit.component';
 import { inductionSingleComponent } from './single/induction-single.component';
 import { InductionTemplateComponent } from './template/induction-template.component';
 import { InductionSingleCustomComponent } from './single-custom/induction-single-custom.component';
+
+// editor
+import { EditorSectionComponent } from './editor/editor-section.component';
+
+
 import { InductionService } from './induction.service';
+import { FormService } from '../../shared/service/form.service';
 import { InductionRouteModule } from './induction-route.module';
 import { AngularMaterialModule } from '../core/angular-material.module';
 
@@ -27,7 +33,9 @@ import { AngularMaterialModule } from '../core/angular-material.module';
 		InductionEditComponent,
 		inductionSingleComponent,
 		InductionTemplateComponent,
-		InductionSingleCustomComponent
+		InductionSingleCustomComponent,
+		// editor
+		EditorSectionComponent
 	],
 	imports: [
 		CommonModule,
@@ -38,7 +46,8 @@ import { AngularMaterialModule } from '../core/angular-material.module';
 		AngularMaterialModule
 	],
 	providers: [
-		InductionService
+		InductionService,
+		FormService
 	]
 })
 export class InductionModule {}

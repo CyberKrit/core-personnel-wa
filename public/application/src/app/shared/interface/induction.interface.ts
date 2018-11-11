@@ -55,7 +55,7 @@ export class ISingleQueryParams {
 // templatelist interface
 export class ITemplateList {
 	_id: string;
-	name: number;
+	name: string;
 	slug: string;
 	component: ITemplateListComponent[];
 	byDefault: boolean;
@@ -70,4 +70,11 @@ export class ITemplateListComponent {
 	imageRContent: boolean;
 	contentImageGrid: boolean;
 	quiz: boolean;
+}
+
+// induction single resolve data
+export class IInductionSingleResolve {
+	_id: string;
+	name: string;
+	slide: any;
 }

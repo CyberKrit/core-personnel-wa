@@ -15,4 +15,7 @@ module.exports = (app) => {
 	// create a slide
 	app.get('/api/induction/slide/create/:id', failMsg('Slide creation failed'), InductionController.slide);
 
+	// get induction absic details as a resolve for induction-single page
+	app.get('/api/induction/singleResolveData/:id/:index', failMsg('Induction data failed to load'), InductionController.inductionSingleData);
+
 };

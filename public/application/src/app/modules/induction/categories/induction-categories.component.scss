@@ -19,3 +19,20 @@
 .comp-complement {
 	max-width: 40rem;
 }
+
+/* ===[ comp-filter ]=== */
+
+.comp-aside {
+	padding: .4rem 1.6rem 1.6rem;
+}
+.comp-aside_control {
+	max-width: 30rem;
+}
+.comp-aside_meta {
+	display: block;
+	padding: 2rem 0 0;
+	font-size: 1.5rem;
+	line-height: 1;
+	font-weight: 400;
+	color: $color-dark;
+}

@@ -111,6 +111,26 @@ module.exports = {
 			})
 			.catch(next);
 
+	},
+
+	inductionSingleData(req, res, next) {
+		const inductionId = req.params.id;
+		let slideIndex = parseInt(req.params.index);
+
+		InductionModel.findById(inductionId)
+			.then(induction => {
+				if( induction ) {
+					res.send({
+						_id: induction._id ,
+						name: induction.name,
+						slide: induction.slides[--slideIndex]
+					});
+				} else {
+					next();
+				}
+			})
+			.catch(next);
+
 	}
 
 };

@@ -1,0 +1,135 @@
+@import "../../../../partial/variable";
+
+.comp-aside {
+	padding-bottom: 1rem;
+	margin-bottom: 3.2rem;
+	border-bottom: .1rem solid $palette-semilight;
+}
+
+/*** meta-data ***/
+
+.comp-aside_meta {
+	display: block;
+	width: auto;
+	padding: 0;
+	overflow: hidden;
+}
+
+
+/* *** 
+	[[[ breadcrumb ]]]
+  *** */
+
+.comp-aside_meta li {
+	position: relative;
+	float: left;
+	padding-top: .2rem;
+	font-size: 1.3rem;
+	line-height: 1;
+	font-weight: 400;
+	color: $palette-text-light;
+}
+.comp-aside_meta li + li {
+	padding-left: 1.7rem;
+}
+.comp-aside_meta li + li:before {
+	content: '>';
+	position: absolute;
+	left: .8rem;
+	bottom: 0;
+	display: inline;
+	font-size: 1.4rem;
+	line-height: .7;
+	font-weight: 400;
+	color: $palette-xdarker;
+}
+.comp-aside_meta li a,
+.comp-aside_meta li a:hover {
+	display: block;
+	margin-top: -.1rem;
+	font-size: 1.5rem;
+	line-height: 1;
+	color: $palette-text;
+}
+
+/*** publish/draft ***/
+
+.save-as-text {
+	display: inline-block;
+	padding-right: 1rem;
+	font-size: 1.5rem;
+	line-height: .8;
+	font-weight: 400;
+	color: $palette-text;
+	vertical-align: baseline;
+}
+
+/*** form basic settings ***/
+
+.control-wrapper {
+	padding-bottom: 3rem;
+}
+input[disabled] {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	-webkit-pointer-events: none;
+	-moz-pointer-events: none;
+	pointer-events: none;
+}
+
+/* *** 
+	[[[ form-interaction ]]]
+  *** */
+
+.form-interaction button {
+	height: 4rem;
+	padding-top: 0;
+	padding-bottom: 0;
+	line-height: 1;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+.form-interaction button[disabled] {
+	cursor: default;
+}
+.form-interaction .primary-action-btn {
+	float: right;
+	width: 12rem;
+	margin-left: .8rem;
+	background-color: $palette-green;
+
+	.lazy {
+		display: block;
+		height: 4rem;
+		padding-top: .5rem;
+	}
+	.lazy svg {
+		width: 3rem;
+		height: 3rem;
+	}
+}
+.form-interaction .complementary-btn-grp {
+	float: right;
+
+	.preview-btn {
+		background-color: $palette-light;
+		color: $palette-text;
+	}
+
+	.preview-btn {
+		background-color: $palette-light;
+		color: $palette-text;
+	}
+}
+
+.form-interaction {
+	.mat-mini-fab {
+		background-color: $palette-err-backdrop;
+
+		.mat-icon {
+			color: $palette-err-text;
+		}
+	}
+}

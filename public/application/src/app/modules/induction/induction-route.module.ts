@@ -17,6 +17,7 @@ import { InductionCreateResolve } from './create/induction-create.resolve';
 import { InductionListResolve } from './list/induction-list.resolve';
 import { InductionViewResolve } from './view/induction-view.resolve';
 import { InductionEditResolve } from './edit/induction-edit.resolve';
+import { InductionSingleResolve } from './single/induction-single.resolve';
 
 const InductionRoutes: Routes = [
 	{ 
@@ -39,7 +40,8 @@ const InductionRoutes: Routes = [
 			},
 			{ 
 				path: 'single/:induction',
-				component: inductionSingleComponent
+				component: inductionSingleComponent,
+				resolve: { singleData: InductionSingleResolve }
 			},
 			{
 				path: 'create', 
@@ -69,7 +71,8 @@ const InductionRoutes: Routes = [
 		InductionCreateResolve,
 		InductionListResolve,
 		InductionViewResolve,
-		InductionEditResolve
+		InductionEditResolve,
+		InductionSingleResolve
 	]
 })
 
