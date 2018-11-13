@@ -45,6 +45,12 @@ export class inductionSingleComponent implements OnInit {
 			.subscribe(
 				(res: Data) => {
 					this.inductionData = res.singleData;
+					this.selectedTemplateData = this.inductionData.defaultTemplate;
+					
+					// cache data to temp state which will be in use in editor
+					this.inductionService.singleTempData.header = this.inductionData.slide.header;
+					this.inductionService.singleTempData.content = this.inductionData.slide.content;
+					this.inductionService.singleTempData.status = this.inductionData.slide.status;
 
 					try {
 						this.slideTitle = this.inductionData.slide.name || '';

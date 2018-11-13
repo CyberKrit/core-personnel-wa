@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		
-		<div class="slide-header _clr_">
+		<div class="slide-header _clr_" *ngIf="routeData?.slides.length">
 			<ul class="slide-view _clr_">
 				<button mat-icon-button color="primary">
 			    <mat-icon aria-label="Example icon-button with a heart icon">list</mat-icon>
@@ -37,50 +37,14 @@
 			</div>
 		</div>
 
-		<div class="sildes">
-			<div class="slide">
+		<div class="sildes" *ngIf="routeData?.slides.length">
+			<div class="slide" *ngFor="let slide of routeData.slides">
 				<figure class="slide-preview"></figure>
 				<div class="slide-meta">
 					<div class="slide-title">
-						<input type="text" value="Splash screen">
+						{{ slide?.name }}
 					</div>
-					<small class="created-at">1 months ago</small>
-				</div>
-			</div>
-			<div class="slide">
-				<figure class="slide-preview"></figure>
-				<div class="slide-meta">
-					<div class="slide-title">
-						<input type="text" value="Splash screen">
-					</div>
-					<small class="created-at">1 months ago</small>
-				</div>
-			</div>
-			<div class="slide">
-				<figure class="slide-preview"></figure>
-				<div class="slide-meta">
-					<div class="slide-title">
-						<input type="text" value="Splash screen">
-					</div>
-					<small class="created-at">1 months ago</small>
-				</div>
-			</div>
-			<div class="slide">
-				<figure class="slide-preview"></figure>
-				<div class="slide-meta">
-					<div class="slide-title">
-						<input type="text" value="Splash screen">
-					</div>
-					<small class="created-at">1 months ago</small>
-				</div>
-			</div>
-			<div class="slide">
-				<figure class="slide-preview"></figure>
-				<div class="slide-meta">
-					<div class="slide-title">
-						<input type="text" value="Splash screen">
-					</div>
-					<small class="created-at">1 months ago</small>
+					<small class="created-at">{{ slide?.updatedAt }}</small>
 				</div>
 			</div>
 		</div>

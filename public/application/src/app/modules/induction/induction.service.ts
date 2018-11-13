@@ -13,7 +13,8 @@ import {
 	IGETCreateSlide,
 	IEditInductionResolve,
 	ITemplateList,
-	IInductionSingleResolve
+	IInductionSingleResolve,
+	ISingleTempData
 } from '../../shared/interface/induction.interface';
 
 @Injectable()
@@ -21,6 +22,13 @@ export class InductionService {
 
 	// private baseURL: string = 'http://localhost:3000/';
 	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
+
+	// cache induction single slide data for real-time use
+	public singleTempData: ISingleTempData = {
+		header: null,
+		content: null,
+		status: null
+	};
 
 	constructor(
 		private http: HttpClient,
@@ -192,6 +200,10 @@ export class InductionService {
 				map(res => res),
 				catchError(err => throwError(err))
 			);
+	}
+
+	public singleTempDataFn(): ISingleTempData {
+		return this.singleTempData;
 	}
 
 }

@@ -1,13 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Routes } from '@angular/router';
 import { MatDialog } from '@angular/material';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import * as moment from 'moment';
 
 // custom imports
 import { FormService } from '../../../shared/service/form.service';
 import { InductionService } from '../induction.service';
-import { IInductionSingleResolve } from '../../../shared/interface/induction.interface';
+import { IInductionSingleResolve, ITemplateList } from '../../../shared/interface/induction.interface';
 import { ConsentSheet } from '../../../shared/component/modal/consent-sheet';
 
 @Component({
@@ -47,7 +48,10 @@ import { ConsentSheet } from '../../../shared/component/modal/consent-sheet';
 				    <mat-icon aria-label="discard slide">delete_outline</mat-icon>
 				  </button>
 					<button class="primary-action-btn" type="submit" [disabled]="lazyForm">
-						<span class="idle" *ngIf="!lazyForm">Save Slide</span>
+						<div class="idle" *ngIf="!lazyForm">
+							<span *ngIf="sectionForm.get('publish').value === true">Publish Slide</span>
+							<span *ngIf="sectionForm.get('publish').value === false">Save as Draft</span>
+						</div>
 						<span class="lazy" *ngIf="lazyForm">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="8" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
 						</span>
@@ -63,15 +67,18 @@ import { ConsentSheet } from '../../../shared/component/modal/consent-sheet';
 	`,
 	styleUrls: ['./editor.component.scss']
 })
-export class EditorSectionComponent implements OnInit {
+export class EditorSectionComponent implements OnInit, OnDestroy {
 	public sectionForm: FormGroup;
 	private saveAsOptions: string[] = [ 'Draft', 'Publish' ];
 	public saveAs: string = this.saveAsOptions[1];
 	public lazyForm: boolean = false;
 
+	private form$: Subscription;
+
 	@Input('inductionData') public inductionData: IInductionSingleResolve;
 	@Input('slideTitle') public slideTitle: string;
 	@Input('variation') public variation: string;
+	@Input('templateData') public templateData: ITemplateList;
 
 	constructor(
 		private fb: FormBuilder,
@@ -81,11 +88,22 @@ export class EditorSectionComponent implements OnInit {
 
 	ngOnInit() {
 		let { header, status } = this.inductionData.slide;
-		let publishData: boolean = ( status === 'publish' ) ? true : false;
+		let { createdAt, updatedAt } = this.inductionData.slide;
 
+		// convert slide save status into binary
+		let publishData: boolean = ( this.$induction.singleTempDataFn().status === 'publish' ) ? true : false;
+		// calculate slide publish state
+		let startDate = moment(createdAt);
+		let endDate = moment(updatedAt);
+		let dateDiff = moment.duration(endDate.diff(startDate));
+		if( dateDiff.asSeconds() < 1 ) {
+			publishData = true;
+		}
+
+		// create form
 		this.sectionForm = this.fb.group({
-			sectionTitle: [header, [Validators.required, this.$form.safeString]],
-			publish: [publishData]
+			sectionTitle: [this.$induction.singleTempDataFn().header, [Validators.required, this.$form.safeString]],
+			publish: [publishData] // make publish true manually,a s default is in draft mode
 		});
 
 		this.sectionForm.get('publish').valueChanges
@@ -96,6 +114,15 @@ export class EditorSectionComponent implements OnInit {
 					} else {
 						this.saveAs = this.saveAsOptions[0];
 					}
+				}
+			);
+
+		// save data temporarily
+		this.form$ = this.sectionForm.valueChanges
+			.subscribe(
+				value => {
+					this.$induction.singleTempData.header = value.sectionTitle;
+					this.$induction.singleTempData.status = value.publish ? 'publish' : 'draft';
 				}
 			);
 
@@ -130,11 +157,7 @@ export class EditorSectionComponent implements OnInit {
 		});
 
 		localDialog.afterClosed()
-			.subscribe(
-				(res) => {
-					console.log(res);
-				}
-			);
+			.subscribe(res => {});
 	}
 
 	public formSubmit({ value, valid }: { value: any, valid: boolean }): void {
@@ -151,7 +174,7 @@ export class EditorSectionComponent implements OnInit {
 				inductionId: this.inductionData._id,
 				slideIndex: this.inductionData.slideIndex,
 				slideData: {
-					template: this.inductionData._id,
+					template: this.templateData._id,
 					name: this.slideTitle,
 					variation: this.variation,
 					header: filteredValue.sectionTitle,
@@ -169,6 +192,10 @@ export class EditorSectionComponent implements OnInit {
 		} else {
 			this.sectionForm.get('sectionTitle').markAsTouched();
 		}
+	}
+
+	ngOnDestroy() {
+		this.form$.unsubscribe();
 	}
 
 }

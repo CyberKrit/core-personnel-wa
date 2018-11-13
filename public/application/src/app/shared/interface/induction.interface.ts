@@ -36,7 +36,13 @@ export interface ISingleInductionViewData {
 export interface IEditInductionResolve {
 	_id: string;
 	name: string;
-	slideCount: number;
+	slides: IEditInductionResolveSlideData[];
+}
+export interface IEditInductionResolveSlideData {
+	name: string;
+	variation: string;
+	status: any;
+	updatedAt: string;
 }
 
 // induction slide interfaces
@@ -78,6 +84,7 @@ export interface IInductionSingleResolve {
 	name: string;
 	slide: any;
 	slideIndex: number;
+	defaultTemplate: any;
 }
 
 // consent sheet
@@ -90,4 +97,11 @@ export interface IConsentSheetDataTree {
 	desc?: string;
 	fn?: Function;
 	navigate?: string;
+}
+
+// induction single temp data
+export interface ISingleTempData {
+	header: string;
+	content: string;
+	status: string;
 }

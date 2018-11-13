@@ -96,7 +96,9 @@ input[disabled] {
 }
 .form-interaction .primary-action-btn {
 	float: right;
-	width: 12rem;
+	width: 14rem;
+	padding-right: .5rem;
+	padding-left: .5rem;
 	margin-left: .8rem;
 	background-color: $palette-green;
 

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 // custom import
 import { IConsentSheetData } from '../../interface/induction.interface';
+import { CoreService } from '../../../modules/core/core.service';
 
 @Component({
 	template: `
@@ -21,13 +22,19 @@ import { IConsentSheetData } from '../../interface/induction.interface';
 	`
 })
 export class ConsentSheet {
+	private isRemoveLazy: boolean = false;
 
 	constructor(
 		private dialogRef: MatDialogRef<ConsentSheet>,
 		@Inject(MAT_DIALOG_DATA) public data: IConsentSheetData,
-		private router: Router) {}
+		private router: Router,
+		private $core: CoreService) {}
 
   public confirm() {
+  	if( this.isRemoveLazy ) return;
+
+  	this.isRemoveLazy = true;
+  	this.$core.enableProgressbar();
   	if( this.data.confirm.fn ) {
 	  	this.data.confirm.fn()
 	  		.subscribe(
@@ -35,6 +42,7 @@ export class ConsentSheet {
 	  				if( this.data.confirm.navigate ) {
 	  					this.router.navigate([this.data.confirm.navigate]);
 	  				}
+  					this.$core.removeProgressbar();
 	  				this.dialogRef.close('confirm');
 	  			}
 	  		);
@@ -44,6 +52,9 @@ export class ConsentSheet {
   }
 
   public cancel() {
+  	if( this.isRemoveLazy ) return;
+
+  	this.isRemoveLazy = true;
   	if( this.data.cancel.fn ) {
 	  	this.data.confirm.fn()
 	  		.subscribe(

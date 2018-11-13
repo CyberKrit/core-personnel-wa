@@ -1,5 +1,6 @@
 const InductionModel = require('../model/induction');
 const InductionCatModel  = require('../model/induction-cat');
+const TemplateModel  = require('../model/template');
 const UtilityFn = require('../utility');
 const mongoose = require('mongoose');
 
@@ -74,6 +75,7 @@ module.exports = {
 
 	},
 
+	// induction edit page resolve data
 	editResolve(req, res, next) {
 		
 		const inductionId = req.params.id;
@@ -82,10 +84,14 @@ module.exports = {
 			.then(induction => {
 				if( induction ) {
 					let { _id, name } = induction;
-					let slideCount = induction.slides.length;
+
+					let slides = [];
+					induction.slides.map(({ name, variation, status, updatedAt }) => {
+						slides.push({ name, variation, status, updatedAt });
+					});
 
 					let buildRes = {
-						_id, name, slideCount
+						_id, name, slides
 					};
 
 					res.status(200).send(buildRes);
@@ -96,39 +102,91 @@ module.exports = {
 			.catch(next);
 	},
 
+	// create a new slide with default data
 	slide(req, res, next) {
 		const inductionId = req.params.id;
-		InductionModel.findByIdAndUpdate(inductionId, {$push: { 'slides': { status: 'draft' }} })
-			.then(updatedInduction => {
-				if( updatedInduction ) {
-					res.send({ 
-						status: true, 
-						slideDeckId: updatedInduction._id , 
-						slideIndex: updatedInduction.slides.length 
+
+		TemplateModel.find()
+			.then(templates => {
+				if( templates.length ) {
+					let defaultTemplate;
+					// loop through template to find default one
+					templates.map(template => {
+						if( template.byDefault ) {
+							defaultTemplate = template;
+						}
 					});
+					// if default not found make first template default
+					defaultTemplate = templates[0];
+
+					InductionModel.findByIdAndUpdate(inductionId, {
+							$push: { 'slides': { 
+								name: defaultTemplate.name,
+								status: 'draft',
+								template: mongoose.Types.ObjectId(defaultTemplate._id)
+							}} 
+						})
+						.then(updatedInduction => {
+							if( updatedInduction ) {
+								res.send({ 
+									status: true, 
+									slideDeckId: updatedInduction._id , 
+									slideIndex: updatedInduction.slides.length 
+								});
+							} else {
+								next();
+							}
+						})
+						.catch(next);
+
 				} else {
-					next();
+					res.statusMessage = UtilityFn.rippleErr('No template has been found');
+					res.status(422).send({ message: 'No template has been found' });
 				}
 			})
 			.catch(next);
 
+
 	},
 
+	// get resolve data for single slide
 	inductionSingleData(req, res, next) {
 		const inductionId = req.params.id;
 		let slideIndex = parseInt(req.params.index);
 
-		InductionModel.findById(inductionId)
-			.then(induction => {
-				if( induction ) {
-					res.send({
-						_id: induction._id ,
-						name: induction.name,
-						slide: induction.slides[slideIndex],
-						slideIndex
+		TemplateModel.find()
+			.then(templates => {
+				if( templates.length ) {
+					let defaultTemplate;
+					// loop through template to find default one
+					templates.map(template => {
+						if( template.byDefault ) {
+							defaultTemplate = template;
+						}
 					});
+					// if default not found make first template default
+					defaultTemplate = templates[0];
+
+					// get data
+					InductionModel.findById(inductionId)
+						.then(induction => {
+							if( induction ) {
+								res.send({
+									_id: induction._id ,
+									name: induction.name,
+									slide: induction.slides[slideIndex],
+									slideIndex,
+									defaultTemplate
+								});
+							} else {
+								next();
+							}
+						})
+						.catch(next);
+
 				} else {
-					next();
+					res.statusMessage = UtilityFn.rippleErr('No template has been found');
+					res.status(422).send({ message: 'No template has been found' });
 				}
 			})
 			.catch(next);
