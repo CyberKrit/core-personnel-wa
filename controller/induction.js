@@ -143,7 +143,7 @@ module.exports = {
 		let updateQuery = {};
 		updateQuery['slides.' + slideIndex] = {
 			template: mongoose.Types.ObjectId(template),
-			name, variation, header, status
+			name, variation, header, status, updatedAt: new Date()
 		};
 
 		InductionModel.findByIdAndUpdate(inductionId, {
@@ -159,8 +159,23 @@ module.exports = {
 				}
 			})
 			.catch(next);
+	},
+
+	// delete slide
+	deleteSlide(req, res, next) {
+		const inductionId = req.params.induction;
+		const slideId = req.params.slide;
+
+		InductionModel.findByIdAndUpdate(inductionId, {
+				'$pull': {
+					slides: [mongoose.Types.ObjectId(slideId)]
+				}
+			})
+			.then(() => {
+				res.statusMessage = UtilityFn.ripple(true, 'success', 'Slide has been deleted');
+				res.status(200).send({ message: 'Slide has been updated'});
+			})
+			.catch(next);
 	}
 
 };
-
-// {$inc: {"answer.0.votes": 1}

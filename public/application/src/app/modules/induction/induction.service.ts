@@ -19,7 +19,7 @@ import {
 @Injectable()
 export class InductionService {
 
-	//private baseURL: string = 'http://localhost:3000/';
+	// private baseURL: string = 'http://localhost:3000/';
 	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
 
 	constructor(
@@ -176,6 +176,18 @@ export class InductionService {
 
 		return this.http
 			.put<any>(baseUrl, slideData)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+	}
+
+	// delete slide
+	public deleteSlide(inductionId, slideId): Observable<any> {
+		const baseUrl = this.baseURL + 'api/induction/slide/' + inductionId + '/' + slideId;
+
+		return this.http
+			.delete(baseUrl)
 			.pipe(
 				map(res => res),
 				catchError(err => throwError(err))

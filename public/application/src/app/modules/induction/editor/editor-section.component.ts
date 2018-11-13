@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Routes } from '@angular/router';
 import { MatDialog } from '@angular/material';
+import { Observable } from 'rxjs';
 
 // custom imports
 import { FormService } from '../../../shared/service/form.service';
@@ -42,7 +43,7 @@ import { ConsentSheet } from '../../../shared/component/modal/consent-sheet';
 				</div>
 
 				<div class="form-interaction _clr_">
-					<button mat-mini-fab type="button">
+					<button mat-mini-fab type="button" (click)=removeSlide()>
 				    <mat-icon aria-label="discard slide">delete_outline</mat-icon>
 				  </button>
 					<button class="primary-action-btn" type="submit" [disabled]="lazyForm">
@@ -79,9 +80,12 @@ export class EditorSectionComponent implements OnInit {
 		private dialog: MatDialog) {}
 
 	ngOnInit() {
+		let { header, status } = this.inductionData.slide;
+		let publishData: boolean = ( status === 'publish' ) ? true : false;
+
 		this.sectionForm = this.fb.group({
-			sectionTitle: [null, [Validators.required, this.$form.safeString]],
-			publish: [true]
+			sectionTitle: [header, [Validators.required, this.$form.safeString]],
+			publish: [publishData]
 		});
 
 		this.sectionForm.get('publish').valueChanges
@@ -98,8 +102,29 @@ export class EditorSectionComponent implements OnInit {
 	}
 
 	public removeSlide(): void {
+		// remove fn
+		let { _id } = this.inductionData;
+		let slideId = this.inductionData.slide._id;
+		let removeService = () => {
+			return this.$induction.deleteSlide(_id, slideId);
+		}
+
+		// open modal
 		let localDialog = this.dialog.open(ConsentSheet, {
-			data: { sample: 'daaata' },
+			data: { 
+				confirm: { 
+					title: 'Yes, delect this slide', 
+					desc: 'This action is not reversible',
+					fn: removeService, 
+					navigate: '/induction/edit/' + _id
+				},
+				cancel: { 
+					title: 'Keep this slide', 
+					desc: 'The slide is safe',
+					fn: null, 
+					navigate: null 
+				} 
+			},
 			autoFocus: true,
 			disableClose: true
 		});

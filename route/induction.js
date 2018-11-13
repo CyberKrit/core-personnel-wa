@@ -8,6 +8,7 @@ module.exports = (app) => {
 	app.get('/api/induction', failMsg('Inductions are unable to load'), InductionController.list);
 	app.post('/api/induction', failMsg('Induction creation failed'), InductionController.create);
 	app.put('/api/induction', failMsg('Slide creation failed'), InductionController.update);
+	app.delete('/api/induction/slide/:induction/:slide', failMsg('Slide deletion failed'), InductionController.deleteSlide);
 	
 	app.get('/api/induction/:id', InductionController.singleView);
 
@@ -19,6 +20,5 @@ module.exports = (app) => {
 
 	// get induction absic details as a resolve for induction-single page
 	app.get('/api/induction/singleResolveData/:id/:index', failMsg('Induction data failed to load'), InductionController.inductionSingleData);
-
 
 };

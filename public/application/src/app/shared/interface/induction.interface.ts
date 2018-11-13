@@ -33,34 +33,34 @@ export interface ISingleInductionViewData {
 	name: string;
 }
 
-export class IEditInductionResolve {
+export interface IEditInductionResolve {
 	_id: string;
 	name: string;
 	slideCount: number;
 }
 
 // induction slide interfaces
-export class IGETCreateSlide {
+export interface IGETCreateSlide {
 	status: boolean;
 	slideDeckId: string;
 	slideIndex: number;
 }
 
 // induction single slide edit queryparams
-export class ISingleQueryParams {
+export interface ISingleQueryParams {
 	index: number;
 	slideType: string;
 }
 
 // templatelist interface
-export class ITemplateList {
+export interface ITemplateList {
 	_id: string;
 	name: string;
 	slug: string;
 	component: ITemplateListComponent[];
 	byDefault: boolean;
 }
-export class ITemplateListComponent {
+export interface ITemplateListComponent {
 	heroText: boolean;
 	heroImage: boolean;
 	heroVideo: boolean;
@@ -73,9 +73,21 @@ export class ITemplateListComponent {
 }
 
 // induction single resolve data
-export class IInductionSingleResolve {
+export interface IInductionSingleResolve {
 	_id: string;
 	name: string;
 	slide: any;
 	slideIndex: number;
+}
+
+// consent sheet
+export interface IConsentSheetData {
+	confirm: IConsentSheetDataTree;
+	cancel: IConsentSheetDataTree;
+}
+export interface IConsentSheetDataTree {
+	title: string;
+	desc?: string;
+	fn?: Function;
+	navigate?: string;
 }
