@@ -1,10 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Routes } from '@angular/router';
+import { MatDialog } from '@angular/material';
 
 // custom imports
 import { FormService } from '../../../shared/service/form.service';
+import { InductionService } from '../induction.service';
 import { IInductionSingleResolve } from '../../../shared/interface/induction.interface';
+import { ConsentSheet } from '../../../shared/component/modal/consent-sheet';
 
 @Component({
 	selector: 'editor-section',
@@ -39,7 +42,7 @@ import { IInductionSingleResolve } from '../../../shared/interface/induction.int
 				</div>
 
 				<div class="form-interaction _clr_">
-					<button mat-mini-fab>
+					<button mat-mini-fab type="button">
 				    <mat-icon aria-label="discard slide">delete_outline</mat-icon>
 				  </button>
 					<button class="primary-action-btn" type="submit" [disabled]="lazyForm">
@@ -67,14 +70,17 @@ export class EditorSectionComponent implements OnInit {
 
 	@Input('inductionData') public inductionData: IInductionSingleResolve;
 	@Input('slideTitle') public slideTitle: string;
+	@Input('variation') public variation: string;
 
 	constructor(
 		private fb: FormBuilder,
-		private $form: FormService) {}
+		private $form: FormService,
+		private $induction: InductionService,
+		private dialog: MatDialog) {}
 
 	ngOnInit() {
 		this.sectionForm = this.fb.group({
-			sectionTitle: [null, [Validators.required, this.$form.AlphaNumericSpace]],
+			sectionTitle: [null, [Validators.required, this.$form.safeString]],
 			publish: [true]
 		});
 
@@ -87,15 +93,54 @@ export class EditorSectionComponent implements OnInit {
 						this.saveAs = this.saveAsOptions[0];
 					}
 				}
-			);	
+			);
+
+	}
+
+	public removeSlide(): void {
+		let localDialog = this.dialog.open(ConsentSheet, {
+			data: { sample: 'daaata' },
+			autoFocus: true,
+			disableClose: true
+		});
+
+		localDialog.afterClosed()
+			.subscribe(
+				(res) => {
+					console.log(res);
+				}
+			);
 	}
 
 	public formSubmit({ value, valid }: { value: any, valid: boolean }): void {
 		if( valid && !this.lazyForm ) {
 			let filteredValue = this.$form.whiteSpaceControl(value);
-			console.log(filteredValue);
+
 			this.sectionForm.disable();
 			this.lazyForm = true;
+
+			// build req object
+			let isPublished = ( filteredValue.publish ) ? 'publish' : 'draft';
+
+			let buildReq = {
+				inductionId: this.inductionData._id,
+				slideIndex: this.inductionData.slideIndex,
+				slideData: {
+					template: this.inductionData._id,
+					name: this.slideTitle,
+					variation: this.variation,
+					header: filteredValue.sectionTitle,
+					status: isPublished
+				}
+			};
+
+			this.$induction.update(buildReq)
+				.subscribe(
+					(res: Response) => {
+						this.sectionForm.enable();
+						this.lazyForm = false;
+					}
+				);
 		} else {
 			this.sectionForm.get('sectionTitle').markAsTouched();
 		}

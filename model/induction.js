@@ -7,6 +7,7 @@ const InductionSchema = new Schema({
 	slides: [{
 		template: { type: Schema.Types.ObjectId, ref: 'template' },
 		name: { type: String, default: null },
+		variation: { type: String, required: true, enum:['template', 'quiz'], default: 'template' },
 		header: { type: String, default: null },
 		content: { type: String, default: null },
 		resource: [{

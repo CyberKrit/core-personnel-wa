@@ -77,4 +77,5 @@ export class IInductionSingleResolve {
 	_id: string;
 	name: string;
 	slide: any;
+	slideIndex: number;
 }

@@ -1,6 +1,7 @@
 const InductionModel = require('../model/induction');
 const InductionCatModel  = require('../model/induction-cat');
 const UtilityFn = require('../utility');
+const mongoose = require('mongoose');
 
 module.exports = {
 
@@ -123,7 +124,8 @@ module.exports = {
 					res.send({
 						_id: induction._id ,
 						name: induction.name,
-						slide: induction.slides[--slideIndex]
+						slide: induction.slides[slideIndex],
+						slideIndex
 					});
 				} else {
 					next();
@@ -131,6 +133,34 @@ module.exports = {
 			})
 			.catch(next);
 
+	},
+
+	update(req, res, next) {
+		let { inductionId, slideIndex } = req.body;
+		let { template, name, variation, header, status } = req.body.slideData;
+
+		// set document array index dynamically
+		let updateQuery = {};
+		updateQuery['slides.' + slideIndex] = {
+			template: mongoose.Types.ObjectId(template),
+			name, variation, header, status
+		};
+
+		InductionModel.findByIdAndUpdate(inductionId, {
+				updatedAt: new Date(),
+				'$set': updateQuery
+		 	}, { new: true })
+			.then(updatedInduction => {
+				if( updatedInduction ) {
+					res.statusMessage = UtilityFn.ripple(true, 'success', 'Slide data has been updated');
+					res.status(200).send({ message: 'Slide data has been updated'});
+				} else {
+					next();
+				}
+			})
+			.catch(next);
 	}
 
 };
+
+// {$inc: {"answer.0.votes": 1}

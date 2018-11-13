@@ -12,6 +12,7 @@ import { AngularMaterialModule } from './angular-material.module';
 import { InductionService } from '../induction/induction.service';
 import { CoreService } from './core.service';
 import { ConsentBox } from '../../shared/component/modal/consent-box';
+import { ConsentSheet } from '../../shared/component/modal/consent-sheet';
 import { PromptBox } from '../../shared/component/modal/prompt-box';
 import { AuthInterceptor } from '../../shared/interceptor/auth.interceptor';
 import { ResponseHeaderInterceptor } from '../../shared/interceptor/response-header.interceptor';
@@ -22,6 +23,7 @@ import { ResponseHeaderInterceptor } from '../../shared/interceptor/response-hea
 		SidebarComponent,
 		FooterComponent,
 		ConsentBox,
+		ConsentSheet,
 		PromptBox
 	],
 	imports: [
@@ -33,6 +35,7 @@ import { ResponseHeaderInterceptor } from '../../shared/interceptor/response-hea
 	],
 	entryComponents: [
 		ConsentBox,
+		ConsentSheet,
 		PromptBox
   ],
 	exports: [
