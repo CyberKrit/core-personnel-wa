@@ -21,4 +21,7 @@ module.exports = (app) => {
 	// get induction absic details as a resolve for induction-single page
 	app.get('/api/induction/singleResolveData/:id/:index', failMsg('Induction data failed to load'), InductionController.inductionSingleData);
 
+	// editor api
+	app.post('/api/induction/slide/editor/image-only', failMsg('Slide creation failed'), InductionController.editorImageOnly);
+
 };

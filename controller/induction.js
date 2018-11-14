@@ -3,6 +3,18 @@ const InductionCatModel  = require('../model/induction-cat');
 const TemplateModel  = require('../model/template');
 const UtilityFn = require('../utility');
 const mongoose = require('mongoose');
+const path = require('path');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+  }
+});
+const upload = multer({ storage }).single('avatar');
 
 module.exports = {
 
@@ -89,6 +101,8 @@ module.exports = {
 					induction.slides.map(({ name, variation, status, updatedAt }) => {
 						slides.push({ name, variation, status, updatedAt });
 					});
+					// reverse array so item can come by their created date
+					slides = slides.reverse();
 
 					let buildRes = {
 						_id, name, slides
@@ -170,16 +184,21 @@ module.exports = {
 					// get data
 					InductionModel.findById(inductionId)
 						.then(induction => {
-							if( induction ) {
-								res.send({
-									_id: induction._id ,
-									name: induction.name,
-									slide: induction.slides[slideIndex],
-									slideIndex,
-									defaultTemplate
-								});
+							if( !induction.slides[slideIndex] ) {
+								res.statusMessage = UtilityFn.rippleErr('Invalid slide data was given');
+								res.status(422).send({ message: 'Invalid slide data was given' });
 							} else {
-								next();
+								if( induction ) {
+									res.send({
+										_id: induction._id ,
+										name: induction.name,
+										slide: induction.slides[slideIndex],
+										slideIndex,
+										defaultTemplate
+									});
+								} else {
+									next();
+								}
 							}
 						})
 						.catch(next);
@@ -234,6 +253,20 @@ module.exports = {
 				res.status(200).send({ message: 'Slide has been updated'});
 			})
 			.catch(next);
+	},
+
+	// editor image only
+	editorImageOnly(req, res, next) {
+		console.log(req.file);
+
+		upload(req, res, function(err) {
+			if( err ) {
+				res.status(501).json(err);
+			} else {
+				res.status(200).json({ data: req.file });
+			}
+		});
+
 	}
 
 };

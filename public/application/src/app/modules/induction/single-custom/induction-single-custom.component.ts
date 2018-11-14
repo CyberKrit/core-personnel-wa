@@ -17,8 +17,10 @@ export class InductionSingleCustomComponent implements OnInit {
 	@Input() public inductionData: IInductionSingleResolve;
 	@Input() public slideTitle: string;
 
+	private currentTempSlug: any;
+
 	ngOnInit() {
-		console.log();
+		this.currentTempSlug = this.templateData.slug;
 	}
 	
 }

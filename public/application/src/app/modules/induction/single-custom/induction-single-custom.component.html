@@ -1,5 +1,7 @@
 <div class="single-custom-editor">
 
-	<editor-section [templateData]="templateData" [inductionData]="inductionData" [slideTitle]="slideTitle" [variation]="'template'"></editor-section>
+	<editor-section [templateData]="templateData" [inductionData]="inductionData" [slideTitle]="slideTitle" [variation]="'template'" *ngIf="currentTempSlug === 'section'"></editor-section>
+
+	<editor-image-only *ngIf="currentTempSlug === 'image-only'"></editor-image-only>
 
 </div>

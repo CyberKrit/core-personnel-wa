@@ -16,6 +16,7 @@ import { InductionSingleCustomComponent } from './single-custom/induction-single
 
 // editor
 import { EditorSectionComponent } from './editor/editor-section.component';
+import { EditorImageOnly } from './editor/editor-image-only.component';
 
 
 import { InductionService } from './induction.service';
@@ -35,7 +36,8 @@ import { AngularMaterialModule } from '../core/angular-material.module';
 		InductionTemplateComponent,
 		InductionSingleCustomComponent,
 		// editor
-		EditorSectionComponent
+		EditorSectionComponent,
+		EditorImageOnly
 	],
 	imports: [
 		CommonModule,

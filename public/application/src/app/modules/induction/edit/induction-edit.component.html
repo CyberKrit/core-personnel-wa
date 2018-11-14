@@ -38,8 +38,12 @@
 		</div>
 
 		<div class="sildes" *ngIf="routeData?.slides.length">
-			<div class="slide" *ngFor="let slide of routeData.slides">
-				<figure class="slide-preview"></figure>
+			<div class="slide" *ngFor="let slide of routeData.slides; let i = index">
+				<figure 
+					class="slide-preview" 
+					[routerLink]="['/induction/single/' + routeData._id]"
+					[queryParams]="{ index: ((routeData.slides.length-1) - i), slideType: 'custom' }">
+				</figure>
 				<div class="slide-meta">
 					<div class="slide-title">
 						{{ slide?.name }}

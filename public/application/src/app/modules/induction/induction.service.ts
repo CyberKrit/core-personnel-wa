@@ -20,8 +20,8 @@ import {
 @Injectable()
 export class InductionService {
 
-	// private baseURL: string = 'http://localhost:3000/';
-	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
+	private baseURL: string = 'http://localhost:3000/';
+	// private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
 
 	// cache induction single slide data for real-time use
 	public singleTempData: ISingleTempData = {
@@ -200,6 +200,19 @@ export class InductionService {
 				map(res => res),
 				catchError(err => throwError(err))
 			);
+	}
+
+	//editorImageOnly
+	public editorImageOnly(formData): Observable<any> {
+		const baseUrl = this.baseURL + 'api/induction/slide/editor/image-only';
+
+		return this.http
+			.post(baseUrl, formData)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+
 	}
 
 	public singleTempDataFn(): ISingleTempData {
