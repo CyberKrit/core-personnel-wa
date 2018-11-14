@@ -19,6 +19,7 @@ const NonApi = require('./route/non-api');
 
 app.use('/', express.static(__dirname + '/public/app-assets'));
 app.use('/web-assets', express.static(__dirname + '/public/web-assets'));
+app.use('/uploads', express.static(__dirname + '/public/uploads'));
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 mongoose.Promise = global.Promise;

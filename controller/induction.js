@@ -257,13 +257,12 @@ module.exports = {
 
 	// editor image only
 	editorImageOnly(req, res, next) {
-		console.log(req.file);
 
 		upload(req, res, function(err) {
 			if( err ) {
 				res.status(501).json(err);
 			} else {
-				res.status(200).json({ data: req.file });
+				res.status(200).render('pages/test', { filename: req.file.filename });
 			}
 		});
 
