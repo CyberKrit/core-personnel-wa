@@ -1,48 +1,48 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { HttpResponse, HttpEventType } from '@angular/common/http';
 
 // custom imports
 import { InductionService } from '../induction.service';
+import { MediaService } from '../../../shared/service/media.service';
 
 @Component({
 	selector: 'editor-image-only',
 	template: `
-		<form 
-			[formGroup]="imageOnlyEditor"
-			novalidate autocomplete="false"
-			(ngSubmit)="saveData(imageOnlyEditor)">
-			<input type="file" formControlName="uploadImg" (change)="changEvt($event)">
+		<form novalidate autocomplete="false">
+			<input type="file" (change)="changEvt($event)" #fileInput>
+			<button type="buttton" (click)="fileInput.click()">Upload</button>
 			<button type="submit">Save</button>
 		</form>
+		{{ progress }}
 	`
 })
 export class EditorImageOnly implements OnInit {
-	public imageOnlyEditor: FormGroup;
-	public imageSrc: File = null;
+	public selectedFiles: File = null;
+  public progress: number = 0;
 
 	constructor(
-		public fb: FormBuilder,
-		private $induction: InductionService) {}
+		private $media: MediaService) {}
 
 	ngOnInit() {
-		this.imageOnlyEditor = this.fb.group({
-			uploadImg: []
-		});
 	}
 
 	public changEvt(event) {
-		this.imageSrc = <File>event.target.files[0];
+    this.selectedFiles = <File>event.target.files[0];
+    this.uploadData();
 	}
 
-	public saveData({ value, valid }: { value: any, valid: boolean }) {
-		const fd = new FormData();
-		fd.append('image', this.imageSrc, this.imageSrc.name);
-		this.$induction.editorImageOnly(fd)
-			.subscribe(
-				(res: Response) => {
-					console.log(res);
-				}
-			);
+	public uploadData() {
+
+		this.progress = 0;
+ 
+    this.$media.upload(this.selectedFiles).subscribe(event => {
+    	if( event.type === HttpEventType.UploadProgress ) {
+    		this.progress = Math.round(100 * event.loaded / event.total);
+    	} else if ( event.type === HttpEventType.Response ) {
+        console.log('File is completely uploaded!');
+      }
+    });
+
 	}
 
 }

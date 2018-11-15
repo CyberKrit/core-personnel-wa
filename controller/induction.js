@@ -3,18 +3,6 @@ const InductionCatModel  = require('../model/induction-cat');
 const TemplateModel  = require('../model/template');
 const UtilityFn = require('../utility');
 const mongoose = require('mongoose');
-const path = require('path');
-const multer = require('multer');
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './public/uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-  }
-});
-const upload = multer({ storage }).single('avatar');
 
 module.exports = {
 
@@ -255,17 +243,9 @@ module.exports = {
 			.catch(next);
 	},
 
-	// editor image only
+	// editor image-only
 	editorImageOnly(req, res, next) {
-
-		upload(req, res, function(err) {
-			if( err ) {
-				res.status(501).json(err);
-			} else {
-				res.status(200).render('pages/test', { filename: req.file.filename });
-			}
-		});
-
+		res.send({ status: true });
 	}
 
 };

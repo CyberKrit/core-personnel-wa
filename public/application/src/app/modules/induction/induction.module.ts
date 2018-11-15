@@ -18,9 +18,12 @@ import { InductionSingleCustomComponent } from './single-custom/induction-single
 import { EditorSectionComponent } from './editor/editor-section.component';
 import { EditorImageOnly } from './editor/editor-image-only.component';
 
-
+// services
 import { InductionService } from './induction.service';
 import { FormService } from '../../shared/service/form.service';
+import { MediaService } from '../../shared/service/media.service';
+
+// modules
 import { InductionRouteModule } from './induction-route.module';
 import { AngularMaterialModule } from '../core/angular-material.module';
 
@@ -49,7 +52,8 @@ import { AngularMaterialModule } from '../core/angular-material.module';
 	],
 	providers: [
 		InductionService,
-		FormService
+		FormService,
+		MediaService
 	]
 })
 export class InductionModule {}

@@ -15,6 +15,7 @@ const Dashboard = require('./route/dashboard');
 const InductionCat = require('./route/induction-cat');
 const Induction = require('./route/induction');
 const Template = require('./route/template');
+const Media = require('./route/media');
 const NonApi = require('./route/non-api');
 
 app.use('/', express.static(__dirname + '/public/app-assets'));
@@ -23,6 +24,7 @@ app.use('/uploads', express.static(__dirname + '/public/uploads'));
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 mongoose.Promise = global.Promise;
+global.__basedir = __dirname;
 
 // connection to mongodb 
 mongoose.connect(config.mongodbURL, { useCreateIndex: true, useNewUrlParser: true, reconnectTries: Number.MAX_VALUE, reconnectInterval: 1000 });
@@ -30,18 +32,20 @@ mongoose.connection
 	.once('open', () => console.log('mongoose is good to go!'))
 	.on('error', (error) => console.warn(error));
 
+// bodyParser
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-//app.use(express.static(path.join(__dirname, 'view')));
-
+// CORS
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-auth, Authorization, Content-Length");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-auth, Authorization, Content-Length, no-headers");
+  res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
 
+// Initiate route
 User(app);
 AbandonedSubs(app);
 Subscription(app);
@@ -49,6 +53,7 @@ Dashboard(app);
 InductionCat(app);
 Induction(app);
 Template(app);
+Media(app);
 NonApi(app);
 
 // website
