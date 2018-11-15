@@ -41,4 +41,3 @@ Thumbs.db
 # custom
 /config/dev-config.js
 /public/application/node_modules
-/public/uploads
