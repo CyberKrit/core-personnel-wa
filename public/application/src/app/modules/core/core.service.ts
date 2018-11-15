@@ -3,6 +3,9 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class CoreService {
+	public HOST: string = 'http://localhost:3000/';
+	// public HOST: string = 'https://evening-shelf-25137.herokuapp.com/';
+	
 	// current state for progressbar
 	private progressbarStateSource: Subject<boolean> = new Subject<boolean>();
 	// observable data stream

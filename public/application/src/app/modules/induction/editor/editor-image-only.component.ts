@@ -14,11 +14,13 @@ import { MediaService } from '../../../shared/service/media.service';
 			<button type="submit">Save</button>
 		</form>
 		{{ progress }}
+		<img src="http://localhost:3000/uploads/{{ storedFileName }}" alt="image" *ngIf="storedFileName">
 	`
 })
 export class EditorImageOnly implements OnInit {
 	public selectedFiles: File = null;
   public progress: number = 0;
+  public storedFileName: string;
 
 	constructor(
 		private $media: MediaService) {}
@@ -39,7 +41,7 @@ export class EditorImageOnly implements OnInit {
     	if( event.type === HttpEventType.UploadProgress ) {
     		this.progress = Math.round(100 * event.loaded / event.total);
     	} else if ( event.type === HttpEventType.Response ) {
-        console.log('File is completely uploaded!');
+        this.storedFileName = event.body.storedFileName;
       }
     });
 

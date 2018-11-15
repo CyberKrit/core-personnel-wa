@@ -2,16 +2,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpRequest, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+// custom imports
+import { CoreService } from '../../modules/core/core.service';
+
 @Injectable()
 export class MediaService {
 
-	// private baseURL: string = 'http://localhost:3000/';
-	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
+	private baseURL: string;
 
 	constructor(
-		private http: HttpClient) {}
+		private http: HttpClient,
+		private $core: CoreService) {
+			this.baseURL = $core.HOST;
+	}
 
-	public upload(file: File): Observable<HttpEvent<{}>> {
+	public upload(file: File): Observable<HttpEvent<any>> {
 		const baseurl =  this.baseURL + 'api/media/upload';
 
 		const formdata: FormData = new FormData();

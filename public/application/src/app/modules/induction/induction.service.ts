@@ -16,12 +16,12 @@ import {
 	IInductionSingleResolve,
 	ISingleTempData
 } from '../../shared/interface/induction.interface';
+import { CoreService } from '../core/core.service';
 
 @Injectable()
 export class InductionService {
 
-	// private baseURL: string = 'http://localhost:3000/';
-	private baseURL: string = 'https://evening-shelf-25137.herokuapp.com/';
+	private baseURL: string;
 
 	// cache induction single slide data for real-time use
 	public singleTempData: ISingleTempData = {
@@ -32,7 +32,10 @@ export class InductionService {
 
 	constructor(
 		private http: HttpClient,
-		private route: ActivatedRoute) {}
+		private route: ActivatedRoute,
+		private $core: CoreService) {
+			this.baseURL = $core.HOST;
+	}
 
 	public listCategory(): Observable<ICategories[]> {
 		const baseurl =  this.baseURL + 'api/induction-cat';
