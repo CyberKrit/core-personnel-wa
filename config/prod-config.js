@@ -8,5 +8,6 @@ module.exports = {
 	jwtSecret: process.env.JWT_SECRET_KEY,
 	clientTimeout: 12000,
 	// email
-	emailConfirmationExp: 3 // in days
+	emailConfirmationExp: 3, // in days
+	fileUploadPath: 'https://evening-shelf-25137.herokuapp.com/uploads/'
 };
