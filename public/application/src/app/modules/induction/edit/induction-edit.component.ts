@@ -1,19 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Data, Router, NavigationEnd } from '@angular/router';
+import { MatDialog } from '@angular/material';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Subscription } from 'rxjs';
 
 // custom import
 import { CoreService } from '../../core/core.service';
 import { InductionService } from '../induction.service';
 import { IEditInductionResolve, IGETCreateSlide, IEditInductionResolveSlideData } from '../../../shared/interface/induction.interface';
+import { ConsentSheet } from '../../../shared/component/modal/consent-sheet';
 
 @Component({
 	templateUrl: './induction-edit.component.html',
 	styleUrls: ['./induction-edit.component.scss']
 })
-export class InductionEditComponent implements OnInit {
+export class InductionEditComponent implements OnInit, OnDestroy {
 	public isPreloaded: boolean = false;
 	private routeData: IEditInductionResolve;
+	private navSubStream: Subscription;
 	// to map reposition
 	private slides: IEditInductionResolveSlideData[];
 	private rippleColorCustom: string = 'rgba(237, 28, 36, .05)';
@@ -24,7 +28,8 @@ export class InductionEditComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private coreService: CoreService,
-		private inductionService: InductionService) {}
+		private $induction: InductionService,
+		private dialog: MatDialog) {}
 
 	ngOnInit() {
 		this.route.data
@@ -36,26 +41,125 @@ export class InductionEditComponent implements OnInit {
 					this.isPreloaded = true;
 				}
 			);
+
+		// reload page after getting confirmation from dialog
+		this.navSubStream = this.router.events
+			.subscribe(
+				(event: any) => {
+					if( event instanceof NavigationEnd ) {
+						let { reload, dialogRes } = this.route.snapshot.queryParams;
+
+						if( reload === 'true' && dialogRes === 'confirm' ) {
+							this.$induction.EditInduction(this.routeData._id)
+								.subscribe(
+									(res: IEditInductionResolve) => {
+										this.routeData = res;console.log(this.routeData);
+										this.slides = this.routeData.slides;
+										this.coreService.removeProgressbar();
+										this.isPreloaded = true;
+										try {
+											this.dialog.closeAll();
+										} catch (err) {}
+									}
+								);
+						} else {
+							this.coreService.removeProgressbar();
+							try {
+								this.dialog.closeAll();
+							} catch (err) {}
+						}
+						
+					} // endif
+				} // end response
+			);
 	}
 
 	private drop(event: CdkDragDrop<IEditInductionResolveSlideData[]>) {
+		this.coreService.enableProgressbar();
 		moveItemInArray(this.slides, event.previousIndex, event.currentIndex);
-		console.log(this.slides);
+		this.$induction.reorderSlide(event.previousIndex, event.currentIndex, this.routeData._id)
+			.subscribe(
+				(res: Response) => {
+					this.coreService.removeProgressbar();
+				}
+			);
 	}
 
 	private updateSlide(inductionId, index, slideType): void {
-		console.log(inductionId, index, slideType);
 		this.router.navigate(
-			['/induction', 'single', inductionId],
-			{
+			['/induction', 'single', inductionId], {
 				queryParams: { index, slideType }
 			}
 		);
 	}
 
+	private removeSlide(slideId, index): void {
+		let { _id } = this.routeData;
+		let removeService = () => {
+			return this.$induction.deleteSlide(_id, slideId);
+		}
+
+		// open modal
+		let localDialog = this.dialog.open(ConsentSheet, {
+			data: { 
+				confirm: { 
+					title: 'Yes, delect this slide', 
+					desc: 'This action is not reversible',
+					fn: removeService, 
+					navigate: '/induction/edit/' + _id,
+					willClose: false,
+				},
+				cancel: { 
+					title: 'Keep this slide', 
+					desc: 'The slide is safe',
+					fn: null, 
+					navigate: null,
+					willClose: true,
+				} 
+			},
+			autoFocus: true,
+			disableClose: true
+		});
+
+		localDialog.afterClosed()
+			.subscribe(res => {});
+	}
+
+	private clone(slideId, index): void {
+		let { _id } = this.routeData;
+		let cloneService = () => {
+			return this.$induction.cloneSlide(_id, slideId);
+		}
+
+		// open modal
+		let localDialog = this.dialog.open(ConsentSheet, {
+			data: { 
+				confirm: { 
+					title: 'Clone this slide',
+					desc: 'You\'re about to create a duplicate slide',
+					fn: cloneService, 
+					navigate: '/induction/edit/' + _id,
+					willClose: false,
+				},
+				cancel: { 
+					title: 'Do not clone',
+					desc: 'I\'ve changed my mind',
+					fn: null, 
+					navigate: null,
+					willClose: true,
+				} 
+			},
+			autoFocus: true,
+			disableClose: true
+		});
+
+		localDialog.afterClosed()
+			.subscribe(res => {});
+	}
+
 	private customSlide(slideType: string): void {
 		this.coreService.enableProgressbar();
-		this.inductionService.createSlide(this.routeData._id)
+		this.$induction.createSlide(this.routeData._id)
 			.subscribe(
 				( data: IGETCreateSlide ) => {
 					if(!data.status) return;
@@ -64,6 +168,10 @@ export class InductionEditComponent implements OnInit {
 					this.router.navigate(['/induction/single/' + data.slideDeckId], { queryParams: { index: slideIndex, slideType  } });
 				}
 			);
+	}
+
+	ngOnDestroy(): void {
+		this.navSubStream.unsubscribe();
 	}
 
 }

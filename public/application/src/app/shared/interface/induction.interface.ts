@@ -43,6 +43,7 @@ export interface IEditInductionResolveSlideData {
 	variation: string;
 	status: any;
 	updatedAt: string;
+	_id: string;
 }
 
 // induction slide interfaces
@@ -98,6 +99,7 @@ export interface IConsentSheetDataTree {
 	desc?: string;
 	fn?: Function;
 	navigate?: string;
+	willClose?: boolean
 }
 
 // induction single temp data

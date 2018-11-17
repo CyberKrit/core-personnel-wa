@@ -224,6 +224,28 @@ export class InductionService {
 			);
 	}
 
+	public cloneSlide(inductionId, slideId): Observable<any> {
+		const baseUrl = this.baseURL + 'api/induction/slide/clone/' + inductionId + '/' + slideId;
+
+		return this.http
+			.get(baseUrl)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+	}
+
+	public reorderSlide(previousIndex, currentIndex, inductionId): Observable<any> {
+		const baseUrl = this.baseURL + 'api/induction/slide/reorder/' + previousIndex + '/' + currentIndex + '/' + inductionId;
+
+		return this.http
+			.get(baseUrl)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+	}
+
 	public singleTempDataFn(): ISingleTempData {
 		return this.singleTempData;
 	}

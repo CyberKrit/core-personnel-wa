@@ -1049,47 +1049,20 @@ button._dropdown_ {
  *** [[[ _consent-sheet_ ]]]
  */
 
-.mat-dialog-container {
-	padding: 1rem !important;
-	background-color: #fff;
-}
-
 ._consent-sheet_ {
-	padding-top: 0 !important;
+	._title_ {
+		font-size: 1.7rem !important;
+		font-weight: 500 !important;
+		color: $palette-text;
+	}
+
+	._desc_ {
+		font-size: 1.4rem !important;
+		font-weight: 400 !important;
+		color: $palette-text-light;
+	}
 }
 
 ._consent-sheet_ ._confirm_ {
-	background: $palette-err-backdrop !important;
-	border: .1rem solid $palette-err-border !important;
-
-	._title_ {
-		font-size: 1.7rem !important;
-		font-weight: 400 !important;
-		color: $palette-err-text;
-	}
-
-	._desc_ {
-		font-size: 1.3rem !important;
-		font-weight: 500 !important;
-		color: $palette-err-text;
-		opacity: .8;
-	}
-}
-
-._consent-sheet_ ._cancel_ {
-	background: $palette-success-backdrop !important;
-	border: .1rem solid $palette-success-border !important;
-
-	._title_ {
-		font-size: 1.7rem !important;
-		font-weight: 400 !important;
-		color: $palette-success-text;
-	}
-
-	._desc_ {
-		font-size: 1.3rem !important;
-		font-weight: 500 !important;
-		color: $palette-success-text;
-		opacity: .8;
-	}
+	border-bottom: .1rem solid $palette-xgray;
 }

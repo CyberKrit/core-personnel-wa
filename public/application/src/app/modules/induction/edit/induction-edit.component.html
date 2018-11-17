@@ -20,6 +20,10 @@
 				<h3 class="option-title">Quiz</h3>
 			</div>
 		</div>
+
+		<div class="null-slide" *ngIf="!routeData?.slides.length">
+			<p>Slide is not available! Get started with creating your first slide form any of the above options.</p>
+		</div>
 		
 		<div class="slide-header _clr_" *ngIf="routeData?.slides.length">
 			<ul class="slide-view _clr_">
@@ -42,12 +46,10 @@
 				class="sildes" 
 				*ngIf="routeData?.slides.length" 
 				cdkDropList (cdkDropListDropped)="drop($event)">
-				<div class="slide" *ngFor="let slide of routeData.slides; let i = index" cdkDrag>
+				<div class="slide" *ngFor="let slide of routeData?.slides; let i = index" cdkDrag>
 					<div class="slide-placeholder" *cdkDragPlaceholder></div>
 					<figure 
-						class="slide-preview" 
-						[routerLink]="['/induction/single/' + routeData._id]"
-						[queryParams]="{ index: ((routeData.slides.length-1) - i), slideType: 'custom' }">
+						class="slide-preview">
 					</figure>
 					<div class="slide-meta _clr_">
 						<div class="slide-meta-content">
@@ -70,14 +72,16 @@
 								mat-icon-button 
 								matTooltip="Clone"
 								matTooltipPosition="above">
-						    <mat-icon aria-label="Clone Slide">library_add</mat-icon>
+						    <mat-icon aria-label="Clone Slide"
+						    (click)="clone(slide._id, i)">library_add</mat-icon>
 						  </button>
 							<button 
 								class="btn-delete" 
 								mat-icon-button 
 								matTooltip="Delete"
 								matTooltipPosition="above">
-						    <mat-icon aria-label="Delete Slide">delete_forever</mat-icon>
+						    <mat-icon aria-label="Delete Slide"
+						    (click)="removeSlide(slide._id, i)">delete_forever</mat-icon>
 						  </button>
 						</div>
 					</div>

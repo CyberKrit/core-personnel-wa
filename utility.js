@@ -16,6 +16,12 @@ module.exports = {
 		// @type: success, error, warning
 		
 		return `{"type":"error","client":"${client || ''}","dev":"${dev || ''}","visible":true}`;
+	},
+
+	rippleSuccessShow(client, dev) {
+		// @type: success, error, warning
+		
+		return `{"type":"success","client":"${client || ''}","dev":"${dev || ''}","visible":true}`;
 	}
 
 };

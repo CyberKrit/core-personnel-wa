@@ -92,7 +92,7 @@ module.exports = {
 					let { _id, name } = induction;
 
 					let slides = [];
-					induction.slides.map(({ name, variation, status, updatedAt }) => {
+					induction.slides.map(({ _id, name, variation, status, updatedAt }) => {
 						let lastUpdated = '';
 
 						let startData = moment(updatedAt);
@@ -123,7 +123,7 @@ module.exports = {
 							lastUpdated = Math.trunc(getSecond) + ' second ago';
 						}
 
-						slides.push({ name, variation, status, updatedAt: lastUpdated });
+						slides.push({ _id, name, variation, status, updatedAt: lastUpdated });
 					});
 					// reverse array so item can come by their created date
 					slides = slides.reverse();
@@ -297,27 +297,93 @@ module.exports = {
 			})
 			.catch(next);
 	},
+	
 
-	// delete slide
+	// editor image-only
+	editorImageOnly(req, res, next) {
+		res.send({ status: true });
+	},
+
+
+	// *** [[ slide ]] *** //
+
 	deleteSlide(req, res, next) {
 		const inductionId = req.params.induction;
 		const slideId = req.params.slide;
 
 		InductionModel.findByIdAndUpdate(inductionId, {
 				'$pull': {
-					slides: [mongoose.Types.ObjectId(slideId)]
+					slides: { _id: mongoose.Types.ObjectId(slideId) }
 				}
 			})
-			.then(() => {
+			.then(data => {
 				res.statusMessage = UtilityFn.ripple(true, 'success', 'Slide has been deleted');
 				res.status(200).send({ message: 'Slide has been updated'});
 			})
 			.catch(next);
 	},
 
-	// editor image-only
-	editorImageOnly(req, res, next) {
-		res.send({ status: true });
+	cloneSlide(req, res, next) {
+		const inductionId = req.params.induction;
+		const slideId = req.params.slide;
+
+		InductionModel.findById(inductionId)
+			.lean()
+			.then(induction => {
+				if( induction && induction.slides.length ) {
+
+					// get index of the target slide
+					let getSlideIndex = induction.slides.findIndex(slide => slide._id.toString() === slideId );
+					// clone and assign into a variable
+					let slideData = JSON.parse(JSON.stringify(induction.slides[getSlideIndex]));
+					InductionModel.findByIdAndUpdate(inductionId, {
+						$push: {
+							slides: { 
+								name: slideData.name,
+								status: slideData.status,
+								template: mongoose.Types.ObjectId(slideData.template),
+								header: slideData.header,
+								resource: slideData.resource
+							}
+						}
+					}, { new: true })
+					.then(updatedInduction => {
+						if( updatedInduction ) {
+							res.status(200).send({ message: 'New slide has created'});
+						} else {
+							res.statusMessage = UtilityFn.rippleErr('New slide creating has failed');
+							res.status(501).send({ message: 'New slide creating has failed'});
+						}
+					})
+					.catch(next);
+				} else {
+					res.statusMessage = UtilityFn.rippleErr('Induction details is not correct');
+					res.status(403).send({ message: 'Induction details is not correct'});
+				}
+			})
+			.catch(next);
+	},
+
+	sortSlide(req, res, next) {
+		const previousIndex = req.params.previousIndex;
+		const currentIndex = req.params.currentIndex;
+		const inductionId = req.params.inductionId;
+
+		InductionModel.findById(inductionId)
+			.then(induction => {
+				let getInduction = JSON.parse(JSON.stringify(induction));
+
+				let pulledSlide = getInduction.slides[previousIndex];
+				getInduction.slides[previousIndex] = getInduction.slides[currentIndex];
+				getInduction.slides[currentIndex] = pulledSlide;
+
+				InductionModel.findByIdAndUpdate(inductionId, getInduction)
+					.then(updatedInduction => {
+						res.status(200).send({ message: 'Sorting has been saved' });
+					})
+					.catch(next);
+			})
+			.catch(next);
 	}
 
 };
