@@ -93,7 +93,37 @@ module.exports = {
 
 					let slides = [];
 					induction.slides.map(({ name, variation, status, updatedAt }) => {
-						slides.push({ name, variation, status, updatedAt });
+						let lastUpdated = '';
+
+						let startData = moment(updatedAt);
+						let now = moment(new Date());
+						let duration = moment.duration(now.diff(startData));
+
+						let getSecond = duration.asSeconds();
+						let getMinute = duration.asMinutes();
+						let getHour = duration.asHours();
+						let getDay = duration.asDays();
+						let getWeek = duration.asWeeks();
+						let getMonth = duration.asMonths();
+						let getYear = duration.asYears();
+
+						if( getYear >= 1 ) {
+							lastUpdated = Math.trunc(getYear) + ' year ago';
+						} else if ( getMonth >= 1 ) {
+							lastUpdated = Math.trunc(getMonth) + ' month ago';
+						} else if ( getWeek >= 1 ) {
+							lastUpdated = Math.trunc(getWeek) + ' week ago';
+						} else if ( getDay >= 1 ) {
+							lastUpdated = Math.trunc(getDay) + ' day ago';
+						} else if ( getHour >= 1 ) {
+							lastUpdated = Math.trunc(getHour) + ' hour ago';
+						} else if ( getMinute >= 1 ) {
+							lastUpdated = Math.trunc(getMinute) + ' minute ago';
+						} else {
+							lastUpdated = Math.trunc(getSecond) + ' second ago';
+						}
+
+						slides.push({ name, variation, status, updatedAt: lastUpdated });
 					});
 					// reverse array so item can come by their created date
 					slides = slides.reverse();
@@ -165,7 +195,7 @@ module.exports = {
 
 		TemplateModel.find()
 			.then(templates => {
-				if( templates.length ) {
+				if( typeof templates === 'object' && templates.length ) {
 					let defaultTemplate;
 					// loop through template to find default one
 					templates.map(template => {
@@ -175,34 +205,31 @@ module.exports = {
 					});
 					// if default not found make first template default
 					defaultTemplate = templates[0];
-
 					// get data
 					InductionModel.findById(inductionId)
 						.then(induction => {
-							if( !induction.slides[slideIndex] ) {
-								res.statusMessage = UtilityFn.rippleErr('Invalid slide data was given');
-								res.status(422).send({ message: 'Invalid slide data was given' });
-							} else {
-								if( induction ) {
-									if( induction.slides[slideIndex].resource[0].source ) {
-										MediaModel.findById(induction.slides[slideIndex].resource[0].source)
-											.then(media => {
-												if( media ) {
-													let { _id, src } = media;
+							if(typeof induction.slides === 'object' && induction.slides[slideIndex]) {
+								let hasResource;
 
-													res.send({
-														_id: induction._id ,
-														name: induction.name,
-														slide: induction.slides[slideIndex],
-														slideIndex,
-														defaultTemplate,
-														media: { _id, src }
-													});
-												} else {
-													next();
-												}
-											})
-									} else {
+								try {
+									MediaModel.findById(induction.slides[slideIndex].resource[0].source)
+										.then(media => {
+											if( media ) {
+												let { _id, src } = media;
+
+												res.send({
+													_id: induction._id ,
+													name: induction.name,
+													slide: induction.slides[slideIndex],
+													slideIndex,
+													defaultTemplate,
+													media: { _id, src }
+												});
+											} else {
+												next();
+											}
+										})
+								} catch (err) {
 										res.send({
 											_id: induction._id ,
 											name: induction.name,
@@ -211,11 +238,11 @@ module.exports = {
 											defaultTemplate,
 											media: null
 										});
-									}
-								} else {
-									next();
 								}
+							} else {// endif
+								next();
 							}
+							
 						})
 						.catch(next);
 

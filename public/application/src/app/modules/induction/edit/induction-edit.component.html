@@ -36,19 +36,51 @@
 				<input class="slide-search-control" type="text" placeholder="Start typing to search slides...">
 			</div>
 		</div>
-
-		<div class="sildes" *ngIf="routeData?.slides.length">
-			<div class="slide" *ngFor="let slide of routeData.slides; let i = index">
-				<figure 
-					class="slide-preview" 
-					[routerLink]="['/induction/single/' + routeData._id]"
-					[queryParams]="{ index: ((routeData.slides.length-1) - i), slideType: 'custom' }">
-				</figure>
-				<div class="slide-meta">
-					<div class="slide-title">
-						{{ slide?.name }}
+		
+		<div class="slides-outer">
+			<div 
+				class="sildes" 
+				*ngIf="routeData?.slides.length" 
+				cdkDropList (cdkDropListDropped)="drop($event)">
+				<div class="slide" *ngFor="let slide of routeData.slides; let i = index" cdkDrag>
+					<div class="slide-placeholder" *cdkDragPlaceholder></div>
+					<figure 
+						class="slide-preview" 
+						[routerLink]="['/induction/single/' + routeData._id]"
+						[queryParams]="{ index: ((routeData.slides.length-1) - i), slideType: 'custom' }">
+					</figure>
+					<div class="slide-meta _clr_">
+						<div class="slide-meta-content">
+							<div class="slide-title">
+								{{ slide?.name }}
+							</div>
+							<div class="updated-at"><span class="updated-at-title">Updated</span> {{ slide?.updatedAt }}</div>
+						</div>
+						<div class="slide-meta-control">
+							<button 
+								class="btn-edit" 
+								mat-icon-button 
+								matTooltip="Edit"
+								matTooltipPosition="above" 
+								(click)="updateSlide(routeData?._id, i, 'custom')">
+						    <mat-icon aria-label="Edit Slide">border_color</mat-icon>
+						  </button>
+							<button 
+								class="btn-clone" 
+								mat-icon-button 
+								matTooltip="Clone"
+								matTooltipPosition="above">
+						    <mat-icon aria-label="Clone Slide">library_add</mat-icon>
+						  </button>
+							<button 
+								class="btn-delete" 
+								mat-icon-button 
+								matTooltip="Delete"
+								matTooltipPosition="above">
+						    <mat-icon aria-label="Delete Slide">delete_forever</mat-icon>
+						  </button>
+						</div>
 					</div>
-					<small class="created-at">{{ slide?.updatedAt }}</small>
 				</div>
 			</div>
 		</div>

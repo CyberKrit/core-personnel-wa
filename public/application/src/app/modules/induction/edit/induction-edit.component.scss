@@ -80,11 +80,26 @@
 	color: $palette-green-light;
 }
 
+@media screen and (min-width: 700px) {
+
+	.create-slide-options .create-slide-options {
+		margin-left: -1%;
+		margin-right: -1%;
+	}
+	.create-slide-options .slide-option-ripple {
+		float: left;
+		width: 31.33%;
+		margin-left: 1%;
+		margin-right: 1%;
+	}
+
+}
+
 /*** .slide-header ***/
 
 .slide-header {
 	padding-bottom: 1rem;
-	margin-bottom: 2.4rem;
+	margin-bottom: 1.4rem;
 	border-bottom: .1rem solid $palette-border-dark;
 }
 
@@ -149,8 +164,27 @@
 	color: $palette-xdarker;
 }
 
-/*** sildes ***/
+/*** [[ sildes ]] ***/
 
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.sildes.cdk-drop-list-dragging .slide:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.slide-placeholder {
+  background: #ccc;
+  border: dotted 3px #999;
+  min-height: 60px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
 .sildes:before {
 	content: ' ';
 	display: table;
@@ -160,12 +194,21 @@
 	display: table;
 	clear: both;
 }
-.slide {
+.sildes {
 	width: 100%;
-	max-width: 32rem;
-	margin-right: auto;
-	margin-bottom: 3.2rem;
-	margin-left: auto;
+	max-width: 100%;
+	overflow: hidden;
+}
+.slide {
+	padding: 1rem;
+	margin: 0;
+	margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: $color-white;
+  border: .1rem solid $palette-semilight;
+  cursor: move;
 	-webkit-box-shadow: 0 1px 2px rgba(43,59,93,.29);
 	-moz-box-shadow: 0 1px 2px rgba(43,59,93,.29);
 	box-shadow: 0 1px 2px rgba(43,59,93,.29);
@@ -174,185 +217,99 @@
 	border-radius: .3rem;
 
 	.slide-preview {
-		height: 20rem;
+		display: flex;
+		float: left;
+		width: 14.2rem;
+		height: 8rem;
 		padding: 0;
 		margin: 0;
 		background-color: $palette-semilight;
+		-webkit-border-radius: .3rem;
+		-moz-border-radius: .3rem;
+		border-radius: .3rem;
 	}
 
 	.slide-meta {
-		padding: 1.8rem 1.2rem;
-		text-align: center;
+		display: flex;
+		flex-grow: 1;
+		width: auto;
+		padding: .8rem 0 .8rem 1.2rem;
+		text-align: left;
+		overflow: hidden;
 	}
-
-	input {
-		height: 2rem;
-		padding: 0;
-		margin: 0;
-		font-size: 1.5rem;
-		line-height: 2rem;
-		text-align: center;
-		color: $palette-text;
-		border: 0;
-		-webkit-border-radius: 0;
-		-moz-border-radius: 0;
-		border-radius: 0;
+	
+	/* slide-title */
+	.slide-title {
+		margin: 0 0 .5rem;
+		font-size: 2rem;
+		line-height: 1.1;
+		font-weight: 400;
 	}
-
-	.created-at {
+	
+	/* created-at */
+	.updated-at {
 		display: block;
-		margin-top: 1rem;
-		font-size: 1.3rem;
-		line-height: 1;
+		font-size: 1.4rem;
+		line-height: 1.4rem;
+		font-weight: 500;
 		text-overflow: ellipsis;
 		color: $palette-text-light;
 		white-space: nowrap;
 		overflow: hidden;
 		cursor: default;
 	}
+	.updated-at-title {
+		display: inline-block;
+		padding-right: .4rem;
+		font-size: 1.2rem;
+		line-height: 1.4rem;
+		text-transform: uppercase;
+		font-weight: 300;
+		vertical-align: top;
+		color: $palette-xdarker;
+	}
 }
 
-@media screen and (min-width: 520px) {
-	/*** [[[ create-slide-options ]]] ***/
+.slide-meta {
+	position: relative;
+	overflow: hidden;
+}
+.slide-meta-content {
+	width: 100%;
+	padding-left: 13.7rem;
+	margin-left: -13.7rem;
+	overflow: hidden;
+}
+.slide-meta-control {
+	float: right;
+	width: 13.2rem;
 
-	.create-slide-options {
-		margin-right: -1.5%;
-		margin-left: -1.5%;
-	}
-	.create-slide-options .slide-option-ripple {
-		float: left;
-		width: 47%;
-		margin-right: 1.5%;
-		margin-left: 1.5%;
-	}
-	.create-slide-options .slide-option-ripple:last-child {
-		width: 97%;
-	}
-	.create-slide-options .slide-option-ripple:nth-child(2n+1) {
-		clear: left;
+	button + button {
+		margin-left: .6rem;
 	}
 
-	.slide {
-		float: left;
-		width: 46%;
-		margin-right: 2%;
-		margin-left: 2%;
+	.btn-edit .mat-icon {
+		color: $palette-success-text;
 	}
-	.slide:nth-child(2n+1) {
-		clear: left;
+	.btn-edit {
+		background-color: $palette-success-backdrop;
+		border: .1rem solid $palette-success-border;
 	}
 
-	.-slide-search-control- {
-		width: auto;
-		margin-right: 10rem;
+	.btn-clone .mat-icon {
+		color: $palette-info-text;
 	}
-	.slide-view {
-		display: block;
-		float: right;
+	.btn-clone {
+		background-color: $palette-info-backdrop;
+		border: .1rem solid $palette-info-border;
 	}
 
+	.btn-delete .mat-icon {
+		color: $palette-err-text;
+	}
+	.btn-delete {
+		background-color: $palette-err-backdrop;
+		border: .1rem solid $palette-err-border;
+	}
 }
 
-@media screen and (min-width: 760px) {
-
-	/*** [[[ create-slide-options ]]] ***/
-
-	.create-slide-options {
-		margin-right: -1.5%;
-		margin-left: -1.5%;
-	}
-	.create-slide-options .slide-option-ripple {
-		width: 30.33%;
-		margin-right: 1.5%;
-		margin-left: 1.5%;
-	}
-	.create-slide-options .slide-option-ripple:last-child {
-		width: 30.33%;
-	}
-	.create-slide-options .slide-option-ripple:nth-child(2n+1) {
-		clear: none;
-	}
-	.create-slide-options .slide-option-ripple:nth-child(3n+1) {
-		clear: left;
-	}
-	
-	/*** [[[ sildes ]]] ***/
-
-	.sildes {
-		margin-right: -1.5%;
-		margin-left: -1.5%;
-	}
-	.slide {
-		float: left;
-		width: 30.33%;
-		margin-right: 1.5%;
-		margin-left: 1.5%;
-
-		.slide-preview {
-			height: 16rem;
-		}
-	}
-	.slide:nth-child(2n+1) {
-		clear: none;
-	}
-	.slide:nth-child(3n+1) {
-		clear: left;
-	}
-
-}
-
-@media screen and (min-width: 960px) {
-
-	.slide {
-		.slide-preview {
-			height: 19rem;
-		}
-	}
-
-}
-
-@media screen and (min-width: 1060px) {
-
-	.slide {
-		.slide-preview {
-			height: 20rem;
-		}
-	}
-
-}
-
-@media screen and (min-width: 1360px) {
-
-	/*** [[[ create-slide-options ]]] ***/
-
-	.create-slide-options {
-		margin-right: -1%;
-		margin-left: -1%;
-	}
-	.create-slide-options .slide-option-ripple {
-		width: 31.33%;
-		margin-right: 1%;
-		margin-left: 1%;
-	}
-
-	.sildes {
-		margin-right: -1%;
-		margin-left: -1%;
-	}
-	.slide {
-		float: left;
-		width: 23%;
-		margin-right: 1%;
-		margin-left: 1%;
-	}
-	.slide:nth-child(2n+1) {
-		clear: none;
-	}
-	.slide:nth-child(3n+1) {
-		clear: none;
-	}
-	.slide:nth-child(4n+1) {
-		clear: left;
-	}
-
-}

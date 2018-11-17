@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 // custom import
 import { CoreService } from '../../core/core.service';
 import { InductionService } from '../induction.service';
-import { IEditInductionResolve, IGETCreateSlide } from '../../../shared/interface/induction.interface';
+import { IEditInductionResolve, IGETCreateSlide, IEditInductionResolveSlideData } from '../../../shared/interface/induction.interface';
 
 @Component({
 	templateUrl: './induction-edit.component.html',
@@ -13,6 +14,8 @@ import { IEditInductionResolve, IGETCreateSlide } from '../../../shared/interfac
 export class InductionEditComponent implements OnInit {
 	public isPreloaded: boolean = false;
 	private routeData: IEditInductionResolve;
+	// to map reposition
+	private slides: IEditInductionResolveSlideData[];
 	private rippleColorCustom: string = 'rgba(237, 28, 36, .05)';
 	private rippleColorImport: string = 'rgba(7, 135, 208, .05)';
 	private rippleColorQuiz: string = 'rgba(0, 200, 83, .05)';
@@ -28,10 +31,26 @@ export class InductionEditComponent implements OnInit {
 			.subscribe(
 				(data: Data) => {
 					this.routeData = data.editData;
+					this.slides = this.routeData.slides;
 					this.coreService.removeProgressbar();
 					this.isPreloaded = true;
 				}
 			);
+	}
+
+	private drop(event: CdkDragDrop<IEditInductionResolveSlideData[]>) {
+		moveItemInArray(this.slides, event.previousIndex, event.currentIndex);
+		console.log(this.slides);
+	}
+
+	private updateSlide(inductionId, index, slideType): void {
+		console.log(inductionId, index, slideType);
+		this.router.navigate(
+			['/induction', 'single', inductionId],
+			{
+				queryParams: { index, slideType }
+			}
+		);
 	}
 
 	private customSlide(slideType: string): void {
