@@ -15,9 +15,60 @@
 </div>
 
 <div class="comp-body" *ngIf="isPreloaded" id="testDiv">
-	<ul>
-		<li *ngFor="let induction of inductionList">
-			<a [routerLink]="['/induction/view/' + induction?._id]">{{ induction?.name }}</a>
-		</li>
-	</ul>
+	<div class="inductions">
+		<div class="induction _clr_" *ngFor="let induction of inductionList">
+			<figure class="induction-figure">
+				
+			</figure>
+			<div class="induction-body">
+				<span class="category">{{ induction?.category }}</span>
+				<h2 class="induction-title">{{ induction?.name }}</h2>
+				<div class="induction-meta">
+					<div class="create-at"><span class="created-at-title">published</span> {{ induction?.createdAt }}</div>
+				</div>
+				<div class="induction-desc"></div>
+				<ul class="induction-details">
+					<li class="count-slide">
+						<span class="dt">Slide</span>
+						<span class="dd">{{ induction?.slideCount }}</span>
+					</li>
+					<li class="count-views">
+						<span class="dt">Views</span>
+						<span class="dd">{{ induction?.views }}</span>
+					</li>
+					<li class="count-completed">
+						<span class="dt">Completed</span>
+						<span class="dd">{{ induction?.completed }}</span>
+					</li>
+				</ul>
+				<ul class="induction-nav">
+					<li>
+						<button mat-icon-button [matMenuTriggerFor]="menu">
+						  <mat-icon>more_vert</mat-icon>
+						</button>
+						<mat-menu #menu="matMenu">
+							<button mat-menu-item>
+						    <mat-icon>file_copy</mat-icon>
+						    <span>Clone Induction</span>
+						  </button>
+						  <button mat-menu-item>
+						    <mat-icon>person_add</mat-icon>
+						    <span>Invite</span>
+						  </button>
+						  <button mat-menu-item>
+						    <mat-icon>import_export</mat-icon>
+						    <span>Export CSV</span>
+						  </button>
+						</mat-menu>
+					</li>
+					<li>
+						<a class="btn-view" [routerLink]="['/induction/' + induction?._id]">View</a>
+					</li>
+					<li>
+						<a class="btn-edit" [routerLink]="['/induction/edit/' + induction?._id]">Edit</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>

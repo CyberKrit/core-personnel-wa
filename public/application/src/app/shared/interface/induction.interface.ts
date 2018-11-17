@@ -25,7 +25,7 @@ export interface IListInduction {
 	name: string;
 	category: string;
 	createdAt: string;
-	updatedAt: string;
+	slideCount: number;
 }
 
 export interface ISingleInductionViewData {
@@ -85,6 +85,7 @@ export interface IInductionSingleResolve {
 	slide: any;
 	slideIndex: number;
 	defaultTemplate: any;
+	media: any;
 }
 
 // consent sheet
@@ -104,4 +105,5 @@ export interface ISingleTempData {
 	header: string;
 	content: string;
 	status: string;
+	imageOnlySrc: string;
 }

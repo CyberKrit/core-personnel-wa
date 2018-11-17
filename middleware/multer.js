@@ -10,7 +10,7 @@ function createDirectory(directory, callback) {
 				fs.mkdir(directory, callback(err));
 			}
 		} catch(err) {
-			callback(err);
+			callback();
 		}
 	});
 }

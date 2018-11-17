@@ -1,3 +1,196 @@
+@import "../../../../partial/variable";
+
 .comp-header_title {
 	padding-top: 1rem;
+}
+
+.inductions {
+	padding-bottom: 3.2rem;
+}
+.inductions .induction {
+	padding: 4.8rem 0;
+	margin: 0;
+}
+.inductions .induction:first-child {
+	padding-top: 0;
+}
+.inductions .induction:last-child {
+	padding-bottom: 0;
+}
+.inductions .induction + .induction {
+	border-top: .1rem solid $palette-gray;
+}
+
+/*** [[ figure ]]  ***/
+
+.induction-figure {
+	float: left;
+	width: 50%;
+	max-width: 360px;
+	height: 22rem;
+	padding: 0;
+	margin: 0;
+	background-color: $palette-xgray;
+	-webkit-border-radius: .5rem;
+	-webkit-border-radius: .5rem;
+	border-radius: .5rem;
+}
+
+/*** [[ body ]]  ***/
+
+.induction-body {
+	float: left;
+	width: 50%;
+	padding-left: 1.8rem;
+}
+
+/* category */
+
+.category {
+	display: block;
+	padding-bottom: 1rem;
+	font-size: 1.3rem;
+	line-height: 1;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .1rem;
+	color: $color-primary;
+}
+
+/* title */
+
+.induction-title {
+	margin: 0 0 .7rem;
+	font-size: 2rem;
+	line-height: 1.1;
+	font-weight: 500;
+	text-overflow: ellipsis;
+	color: $palette-text;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+/* induction-meta */
+
+.induction-meta {
+	padding-bottom: 1.6rem;
+}
+.create-at {
+	display: block;
+	font-size: 1.3rem;
+	line-height: 1.3rem;
+	font-weight: 500;
+	color: $palette-text-light;
+}
+.created-at-title {
+	display: inline-block;
+	padding-right: .4em;
+	text-transform: uppercase;
+	font-size: 1.2;
+	line-height: 1.3rem;
+	font-weight: 300;
+	vertical-align: top;
+}
+
+/* induction-details */
+
+.induction-details {
+	width: 100%;
+	max-width: 28rem;
+	padding-bottom: 2.3rem;
+}
+.induction-details li:before {
+	content: ' ';
+	display: table;
+}
+.induction-details li:after {
+	content: ' ';
+	display: table;
+	clear: both;
+}
+.induction-details li {
+	padding: .8rem 0 .8rem 2.9rem;
+	font-size: 1.5rem;
+	line-height: 1;
+	background: none no-repeat center left;
+	background-size: 2.3rem 2.3rem;
+}
+.induction-details li + li {
+	border-top: .1rem solid $palette-xgray;
+}
+.induction-details li .dt {
+	float: left;
+	display: block;
+	width: 12rem;
+	color: $palette-text-light;
+}
+.induction-details li .dd {
+	display: block;
+	width: auto;
+	color: $palette-text;
+	overflow: hidden;
+}
+.induction-details .count-slide {
+	background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTMgMTdoMTh2Mkgzem0wLTdoMTh2NUgzem0wLTRoMTh2MkgzeiIgZmlsbD0icmdiYSg3LCAxMzUsIDIwOCwgLjQpIi8+PHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIvPjwvc3ZnPg==);
+}
+.induction-details .count-views {
+	background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIvPjxwYXRoIGQ9Ik0xMS41IDlhMi41IDIuNSAwIDAgMCAwIDUgMi41IDIuNSAwIDAgMCAwLTV6TTIwIDRINGMtMS4xIDAtMiAuOS0yIDJ2MTJjMCAxLjEuOSAyIDIgMmgxNmMxLjEgMCAyLS45IDItMlY2YzAtMS4xLS45LTItMi0yem0tMy4yMSAxNC4yMWwtMi45MS0yLjkxYy0uNjkuNDQtMS41MS43LTIuMzkuN0M5LjAxIDE2IDcgMTMuOTkgNyAxMS41UzkuMDEgNyAxMS41IDcgMTYgOS4wMSAxNiAxMS41YzAgLjg4LS4yNiAxLjY5LS43IDIuMzlsMi45MSAyLjktMS40MiAxLjQyeiIgZmlsbD0icmdiYSg3LCAxMzUsIDIwOCwgLjQpIi8+PC9zdmc+);
+}
+.induction-details .count-completed {
+	background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xOCA3bC0xLjQxLTEuNDEtNi4zNCA2LjM0IDEuNDEgMS40MUwxOCA3em00LjI0LTEuNDFMMTEuNjYgMTYuMTcgNy40OCAxMmwtMS40MSAxLjQxTDExLjY2IDE5bDEyLTEyLTEuNDItMS40MXpNLjQxIDEzLjQxTDYgMTlsMS40MS0xLjQxTDEuODMgMTIgLjQxIDEzLjQxeiIgZmlsbD0icmdiYSg3LCAxMzUsIDIwOCwgLjQpIi8+PC9zdmc+);
+}
+
+/* nav */
+
+.induction-nav {
+	font-size: 0;
+}
+.induction-nav li {
+	position: relative;
+	display: inline-block;
+	width: 40%;
+	max-width: 8rem;
+	margin-left: -1rem;
+	vertical-align: top;
+}
+.induction-nav li + li {
+	margin-left: .5rem;
+}
+.induction-nav li:first-child {
+	width: auto;
+}
+.induction-nav li:first-child .mat-icon-button {
+	width: 3rem;
+	height: 3.2rem;
+	line-height: 3.2rem;
+}
+.induction-nav li:first-child .mat-icon {
+	color: $palette-mat;
+}
+.induction-nav a {
+	display: block;
+	font-size: 1.5rem;
+	line-height: 3.2rem;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: .1rem;
+	text-align: center;
+	color: $color-white;
+	-webkit-border-radius: .5rem;
+	-moz-border-radius: .5rem;
+	border-radius: .5rem;
+}
+.induction-nav .btn-view {
+	background-color: $palette-blue;
+}
+.induction-nav .btn-view:hover {
+	background-color: $palette-blue-light;
+	color: $palette-blue;
+}
+.induction-nav .btn-edit {
+	background-color: $palette-green;
+}
+.induction-nav .btn-edit:hover {
+	background-color: $palette-green-light;
+	color: $palette-green;
 }

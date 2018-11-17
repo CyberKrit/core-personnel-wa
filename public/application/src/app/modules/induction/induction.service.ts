@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, forkJoin } from 'rxjs';
+import { Observable, throwError, forkJoin, Subject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
@@ -23,12 +23,31 @@ export class InductionService {
 
 	private baseURL: string;
 
+	// reload induction slide data after changes been saved
+	public slideIsReadyToUpdate: boolean = false;
+	public slideUpdate: Subject<boolean> = new Subject<boolean>();
+	public slideUpdate$: Observable<boolean> = this.slideUpdate.asObservable();
+
+	public slideUpdateFn(): void {
+		this.slideIsReadyToUpdate = !this.slideIsReadyToUpdate;
+		this.slideUpdate.next(this.slideIsReadyToUpdate);
+	}
+
 	// cache induction single slide data for real-time use
 	public singleTempData: ISingleTempData = {
 		header: null,
 		content: null,
-		status: null
+		status: null,
+		imageOnlySrc: null
 	};
+
+	// editor: image-only
+	public imageOnlyEditorChanges: Subject<string> = new Subject<string>();
+	public imageOnlyEditorChanges$ = this.imageOnlyEditorChanges.asObservable();
+	public imageOnlyEditorChangesFn() {
+		this.imageOnlyEditorChanges.next(this.singleTempData.imageOnlySrc);
+	}
+
 
 	constructor(
 		private http: HttpClient,

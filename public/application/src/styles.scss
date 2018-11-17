@@ -33,7 +33,7 @@ html {
   				box-sizing: inherit;
 }
 body {
-	min-width: 24rem;
+	min-width: 90rem;
 	height: 100%;
   padding: 0;
   margin: 0;
@@ -239,7 +239,7 @@ label .desc {
 	font-size: 1.3rem;
 	line-height: 1.5;
 	font-weight: 300;
-	color: $palette-xdarker;
+	color: $palette-text-light;
 }
 input::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder {
@@ -355,6 +355,7 @@ button._busy_ {
   *** */
 
 .file-upload-wrapper-ctrl {
+	position: relative;
 	width: 100%;
 	max-width: 24rem;
 }
@@ -366,7 +367,7 @@ button._busy_ {
   background: $palette-light url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxkZWZzPjxwYXRoIGlkPSJhIiBkPSJNMjQgMjRIMFYwaDI0djI0eiIvPjwvZGVmcz48Y2xpcFBhdGggaWQ9ImIiPjx1c2UgeGxpbms6aHJlZj0iI2EiIG92ZXJmbG93PSJ2aXNpYmxlIi8+PC9jbGlwUGF0aD48cGF0aCBjbGlwLXBhdGg9InVybCgjYikiIGQ9Ik0zIDRWMWgydjNoM3YySDV2M0gzVjZIMFY0aDN6bTMgNlY3aDNWNGg3bDEuODMgMkgyMWMxLjEgMCAyIC45IDIgMnYxMmMwIDEuMS0uOSAyLTIgMkg1Yy0xLjEgMC0yLS45LTItMlYxMGgzem03IDljMi43NiAwIDUtMi4yNCA1LTVzLTIuMjQtNS01LTUtNSAyLjI0LTUgNSAyLjI0IDUgNSA1em0tMy4yLTVjMCAxLjc3IDEuNDMgMy4yIDMuMiAzLjJzMy4yLTEuNDMgMy4yLTMuMi0xLjQzLTMuMi0zLjItMy4yLTMuMiAxLjQzLTMuMiAzLjJ6IiBmaWxsPSIjZDFjZmNmIi8+PC9zdmc+) no-repeat center center;
   background-size: 50% auto;
 	cursor: pointer;
-	border: .1rem solid $palette-gray;
+	border: .1rem dashed $palette-gray;
 	-webkit-border-radius: .5rem;
 	-moz-border-radius: .5rem;
 	border-radius: .5rem;
@@ -377,9 +378,11 @@ button._busy_ {
   -webkit-user-drag: none;
   -webkit-tap-highlight-color: transparent;
 }
+.image-upload-placeholder.has-file {
+	background-image: none;
+}
 .image-upload-placeholder.has-file,
 .image-upload-placeholder.on-progress {
-	background-image: none;
 	border-color: transparent;
 }
 .image-upload-placeholder .file-upload-progress {
@@ -389,6 +392,32 @@ button._busy_ {
 	text-align: center;
 	color: $palette-gray;
 }
+.image-upload-placeholder ._loading_ {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 10;
+	width: 3rem;
+	height: 3rem;
+	margin: auto;
+}
+.image-upload-placeholder ._loading_ svg {
+	width: 3rem;
+	height: 3rem;
+}
+._image-upload-placeholder_ {
+	position: relative;
+	z-index: 20;
+	height: 21.8rem;
+	line-height: 0;
+	background: none no-repeat center center;
+	background-size: contain;
+}
+
+/*** progressbar ***/
+
 .image-upload-placeholder mat-progress-bar {
 	position: absolute !important;
 	top: auto;
@@ -397,18 +426,9 @@ button._busy_ {
 	left: 0;
 	height: .3rem !important;
 }
-.file-upload-wrapper-ctrl {
-	position: relative;
-}
-._image-upload-placeholder_ {
-	height: 21.8rem;
-	line-height: 0;
-	background: none no-repeat center center;
-	background-size: contain;
-}
-._image-upload-placeholder_ {
-	position: relative;
-}
+
+/*** button styling ***/
+
 .file-upload-wrapper-ctrl .btn-remove {
 	position: absolute;
 	top: -.5rem;
@@ -424,9 +444,9 @@ button._busy_ {
 	background-color: transparent;
 	color: $palette-green;
 	border: .2rem solid $palette-green-light;
-	-webkit-border-radius: .7rem;
-	-moz-border-radius: .7rem;
-	border-radius: .7rem;
+	-webkit-border-radius: 1rem;
+	-moz-border-radius: 1rem;
+	border-radius: 1rem;
 }
 .file-upload-wrapper .btn-outline .mat-button-focus-overlay {
 	background-color: $palette-green !important;
@@ -436,6 +456,31 @@ button._busy_ {
 }
 .file-upload-wrapper-ctrl .btn-grp {
 	padding-top: 1.2rem;
+}
+.file-upload-wrapper-ctrl .btn-grp .primary-action-btn {
+	position: relative;
+	width: 100%;
+	height: 4rem;
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-top: .7rem;
+	line-height: 4rem;
+	background-color: $palette-green;
+}
+.file-upload-wrapper-ctrl .btn-grp .primary-action-btn .lazy {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: block;
+	width: 3rem;
+	height: 3rem;
+	margin: auto;
+}
+.file-upload-wrapper-ctrl .btn-grp .primary-action-btn .lazy svg {
+	width: 3rem;
+	height: 3rem;
 }
 
 /*** _inline_ ***/
@@ -879,10 +924,10 @@ button._dropdown_ {
  * alert box
  */
 
-.cdk-overlay-pane {
-	width: 90% !important;
-	max-width: 320px !important;
-}
+// .cdk-overlay-pane {
+// 	width: 90% !important;
+// 	max-width: 320px !important;
+// }
 .modal-title {
 	padding: 0;
 	margin: 0;

@@ -46,14 +46,14 @@ app.use(function(req, res, next) {
 });
 
 // Initiate route
+Induction(app);
+InductionCat(app);
+Media(app);
 User(app);
 AbandonedSubs(app);
 Subscription(app);
 Dashboard(app);
-InductionCat(app);
-Induction(app);
 Template(app);
-Media(app);
 NonApi(app);
 
 // website

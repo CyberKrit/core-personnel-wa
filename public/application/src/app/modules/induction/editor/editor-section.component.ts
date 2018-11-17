@@ -187,10 +187,13 @@ export class EditorSectionComponent implements OnInit, OnDestroy {
 					(res: Response) => {
 						this.sectionForm.enable();
 						this.lazyForm = false;
+						this.$induction.slideUpdateFn();
 					}
 				);
 		} else {
+			this.sectionForm.enable();
 			this.sectionForm.get('sectionTitle').markAsTouched();
+			this.lazyForm = true;
 		}
 	}
 

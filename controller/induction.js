@@ -1,8 +1,10 @@
 const InductionModel = require('../model/induction');
 const InductionCatModel  = require('../model/induction-cat');
 const TemplateModel  = require('../model/template');
+const MediaModel = require('../model/media');
 const UtilityFn = require('../utility');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 module.exports = {
 
@@ -37,15 +39,19 @@ module.exports = {
 	list(req, res, next) {
 
 		InductionModel.find({})
-			.sort({ 'updatedAt': -1 })
+			.sort({ 'createdAt': -1 })
+			.populate('category')
 			.then(inductionList => {
 				let buildRes = [];
 
 				if( inductionList.length ) {
-					inductionList.map(({ _id, name, category, createdAt, updatedAt }) => {
+					inductionList.map(({ _id, name, category, createdAt, slides, views, completed }) => {
 						_id = _id.toHexString();
+						createdAt = moment(createdAt).format('LL');
+						let slideCount = slides.length;
+						category = category.name;
 						
-						buildRes.push({ _id, name, category, createdAt, updatedAt });
+						buildRes.push({ _id, name, category, createdAt, slideCount, views, completed });
 					});
 				}
 
@@ -125,7 +131,8 @@ module.exports = {
 							$push: { 'slides': { 
 								name: defaultTemplate.name,
 								status: 'draft',
-								template: mongoose.Types.ObjectId(defaultTemplate._id)
+								template: mongoose.Types.ObjectId(defaultTemplate._id),
+								resource: null
 							}} 
 						})
 						.then(updatedInduction => {
@@ -177,13 +184,34 @@ module.exports = {
 								res.status(422).send({ message: 'Invalid slide data was given' });
 							} else {
 								if( induction ) {
-									res.send({
-										_id: induction._id ,
-										name: induction.name,
-										slide: induction.slides[slideIndex],
-										slideIndex,
-										defaultTemplate
-									});
+									if( induction.slides[slideIndex].resource[0].source ) {
+										MediaModel.findById(induction.slides[slideIndex].resource[0].source)
+											.then(media => {
+												if( media ) {
+													let { _id, src } = media;
+
+													res.send({
+														_id: induction._id ,
+														name: induction.name,
+														slide: induction.slides[slideIndex],
+														slideIndex,
+														defaultTemplate,
+														media: { _id, src }
+													});
+												} else {
+													next();
+												}
+											})
+									} else {
+										res.send({
+											_id: induction._id ,
+											name: induction.name,
+											slide: induction.slides[slideIndex],
+											slideIndex,
+											defaultTemplate,
+											media: null
+										});
+									}
 								} else {
 									next();
 								}
@@ -200,16 +228,33 @@ module.exports = {
 
 	},
 
+	// update slide
 	update(req, res, next) {
 		let { inductionId, slideIndex } = req.body;
-		let { template, name, variation, header, status } = req.body.slideData;
+		let { template, name, variation, header, status, resource } = req.body.slideData;
+
+		try {
+			let { type, source, caption, alt, desc, position, size } = resource;
+		} catch (err) {
+			let type, source, caption, alt, desc, position, size;
+			type = source = caption = alt = desc = position = size = null;
+		}
 
 		// set document array index dynamically
 		let updateQuery = {};
-		updateQuery['slides.' + slideIndex] = {
-			template: mongoose.Types.ObjectId(template),
-			name, variation, header, status, updatedAt: new Date()
-		};
+		if( resource ) {
+			updateQuery['slides.' + slideIndex] = {
+				template: mongoose.Types.ObjectId(template),
+				name, variation, header, status, updatedAt: new Date(),
+				resource
+			};
+		} else {
+			updateQuery['slides.' + slideIndex] = {
+				template: mongoose.Types.ObjectId(template),
+				name, variation, header, status, updatedAt: new Date(), 
+				resource: null
+			};
+		}
 
 		InductionModel.findByIdAndUpdate(inductionId, {
 				updatedAt: new Date(),

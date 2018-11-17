@@ -29,7 +29,7 @@ const InductionRoutes: Routes = [
 				resolve: { inductions: InductionListResolve }
 			},
 			{ 
-				path: 'view/:id',
+				path: ':id',
 				component: InductionViewComponent,
 				resolve: { inductionSingle: InductionViewResolve }
 			},

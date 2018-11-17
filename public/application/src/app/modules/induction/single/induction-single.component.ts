@@ -80,6 +80,18 @@ export class inductionSingleComponent implements OnInit {
 				);
 		}
 
+		this.inductionService.slideUpdate$
+			.subscribe(
+				(res: boolean) => {
+					this.inductionService.InductionSingleResolve(this.inductionId, index)
+						.subscribe(
+							(data: IInductionSingleResolve) => {
+								this.inductionData = data;
+							}
+						);
+				}
+			);
+
 	} //ngOnInit
 
 	private pickTemplate(): void {
