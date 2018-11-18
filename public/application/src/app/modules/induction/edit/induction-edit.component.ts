@@ -27,6 +27,13 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 	// search
 	private search: string = '';
 
+	// show slide count
+	private listedSlide: number = 0;
+
+	// slide filter
+	private filterSlideStateArr: string[] = [ 'all', 'publish', 'draft'];
+	private filterSlideState: string = this.filterSlideStateArr[0];
+
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -43,7 +50,11 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 					// this is for search purpose only
 					this.routeData.slides.map(slide => {
 						slide['isVisible'] = true;
+						slide['isSearched'] = true;
 					});
+
+					// count available slide on list
+					this.listedSlideFn();
 
 					this.coreService.removeProgressbar();
 					this.isPreloaded = true;
@@ -66,7 +77,11 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 										// this is for search purpose only
 										this.routeData.slides.map(slide => {
 											slide['isVisible'] = true;
+											slide['isSearched'] = true;
 										});
+
+										// count available slide on list
+										this.listedSlideFn();
 
 										this.coreService.removeProgressbar();
 										this.isPreloaded = true;
@@ -173,22 +188,67 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 	private searchFn(key): void {
 		let regx = new RegExp(key);
 
-		this.routeData.slides.map(({ name }, index) => {
-			if( !key ) {
-				this.routeData.slides.map(slide => { slide['isVisible'] = true });
-				return;
-			}
+		if( !key ) {
+			this.routeData.slides.map(slide => {
+				slide['isSearched'] = true;
+			});
 
-			try {	
-				key = key.toLowerCase();
+			// recount listed slide
+			this.listedSlideFn();
+		} else {
+			this.routeData.slides.map(({ name }, index) => {
+				try {	
+					key = key.toLowerCase();
 
-				if( regx.test( name.toLowerCase() ) ) {
-					this.routeData.slides[index]['isVisible'] = true;
-				} else {
-					this.routeData.slides[index]['isVisible'] = false;
+					if( regx.test( name.toLowerCase() ) ) {
+						this.routeData.slides[index]['isSearched'] = true;
+					} else {
+						this.routeData.slides[index]['isSearched'] = false;
+					}
+				} catch (err) {
+					this.routeData.slides[index]['isSearched'] = false;
 				}
-			} catch (err) {
-				this.routeData.slides[index]['isVisible'] = false;
+			});
+
+			// recount listed slide
+			this.listedSlideFn();
+		} // endif
+
+	}
+
+	private filterSlide(state): void {
+
+		let index = this.filterSlideStateArr.indexOf(state);
+		this.filterSlideState = this.filterSlideStateArr[index];
+
+		if( this.filterSlideState === 'all' ) {
+			this.routeData.slides.map(slide => {
+				slide['isVisible'] = true;
+			});
+
+			// recount listed slide
+			this.listedSlideFn();
+		} else {
+			this.routeData.slides.map((slide, index) => {
+				if( this.filterSlideState === slide.status ) {
+					slide['isVisible'] = true;
+				} else {
+					slide['isVisible'] = false;
+				}
+			});
+
+			// recount listed slide
+			this.listedSlideFn();
+		}
+
+	}
+
+	private listedSlideFn(): void {
+		this.listedSlide = 0;
+
+		this.routeData.slides.map(({ isSearched, isVisible }, index) => {
+			if( isSearched && isVisible ) {
+				++this.listedSlide;
 			}
 		});
 	}

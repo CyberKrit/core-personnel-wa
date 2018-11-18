@@ -87,12 +87,13 @@ module.exports = {
 		const inductionId = req.params.id;
 
 		InductionModel.findById(inductionId)
+		.populate('slides.template')
 			.then(induction => {
 				if( induction ) {
 					let { _id, name } = induction;
 
 					let slides = [];
-					induction.slides.map(({ _id, name, variation, status, updatedAt }) => {
+					induction.slides.map(({ _id, name, variation, status, updatedAt, template }) => {
 						let lastUpdated = '';
 
 						let startData = moment(updatedAt);
@@ -123,7 +124,18 @@ module.exports = {
 							lastUpdated = Math.trunc(getSecond) + ' second ago';
 						}
 
-						slides.push({ _id, name, variation, status, updatedAt: lastUpdated });
+						// try-catch because some old data has no template property
+						// to avoid error i've implemented this in dev environment
+						try {
+							slides.push({ 
+								_id, name, variation, status, updatedAt: lastUpdated, 
+								template: { name: template.name, _id: template._id.toHexString() }
+							});
+						} catch (err) {
+							slides.push({ 
+								_id, name, variation, status, updatedAt: lastUpdated
+							});
+						}
 					});
 					// reverse array so item can come by their created date
 					slides = slides.reverse();

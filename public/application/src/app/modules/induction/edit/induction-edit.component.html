@@ -40,13 +40,43 @@
 				<input class="slide-search-control" type="text" placeholder="Start typing to search slides..." [(ngModel)]="search" (ngModelChange)="searchFn($event)">
 			</div>
 		</div>
+
+		<div class="comp-aside slide-meta-aside _clr_" *ngIf="routeData?.slides.length">
+			<div class="comp-aside_meta _start_" *ngIf="listedSlide === routeData?.slides.length">
+				<strong>{{ listedSlide }}</strong> slide in total
+			</div>
+			<div class="comp-aside_meta _start_" *ngIf="listedSlide < routeData?.slides.length">
+				<strong>{{ listedSlide }}</strong> out of {{ routeData?.slides.length }} slide is listed below
+			</div>
+			
+			<div class="comp-aside_control _end_">
+				<ul>
+					<li>
+						<a (click)="filterSlide('all')" 
+							[ngClass]="{ 'active': filterSlideState === 'all' }">All
+						</a>
+					</li>
+					<li>
+						<a (click)="filterSlide('publish')"
+							[ngClass]="{ 'active': filterSlideState === 'publish' }">Published
+						</a>
+					</li>
+					<li>
+						<a (click)="filterSlide('draft')"
+							[ngClass]="{ 'active': filterSlideState === 'draft' }">Draft
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 		
 		<div class="slides-outer">
+			<p *ngIf="">Can't find any relevant data based on your search query</p>
 			<div 
 				class="sildes" 
 				*ngIf="routeData?.slides.length" 
 				cdkDropList (cdkDropListDropped)="drop($event)">
-				<div [ngClass]="{ 'hide': slide.isVisible === false }" class="slide" *ngFor="let slide of routeData?.slides; let i = index" cdkDrag>
+				<div [ngClass]="{ 'hide': (slide.isVisible === false) || (slide.isSearched === false) }" class="slide" *ngFor="let slide of routeData?.slides; let i = index" cdkDrag>
 					<div class="slide-placeholder" *cdkDragPlaceholder></div>
 					<figure 
 						class="slide-preview">

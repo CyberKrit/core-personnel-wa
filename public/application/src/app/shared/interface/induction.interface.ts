@@ -44,6 +44,12 @@ export interface IEditInductionResolveSlideData {
 	status: any;
 	updatedAt: string;
 	_id: string;
+	isVisible?: boolean;
+	isSearched?: boolean;
+	template?: {
+		name: string;
+		_id: string;
+	}
 }
 
 // induction slide interfaces
