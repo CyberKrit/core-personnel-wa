@@ -37,7 +37,7 @@
 
 			<div class="-slide-search-control-">
 				<i class="material-icons">search</i>
-				<input class="slide-search-control" type="text" placeholder="Start typing to search slides...">
+				<input class="slide-search-control" type="text" placeholder="Start typing to search slides..." [(ngModel)]="search" (ngModelChange)="searchFn($event)">
 			</div>
 		</div>
 		
@@ -46,7 +46,7 @@
 				class="sildes" 
 				*ngIf="routeData?.slides.length" 
 				cdkDropList (cdkDropListDropped)="drop($event)">
-				<div class="slide" *ngFor="let slide of routeData?.slides; let i = index" cdkDrag>
+				<div [ngClass]="{ 'hide': slide.isVisible === false }" class="slide" *ngFor="let slide of routeData?.slides; let i = index" cdkDrag>
 					<div class="slide-placeholder" *cdkDragPlaceholder></div>
 					<figure 
 						class="slide-preview">

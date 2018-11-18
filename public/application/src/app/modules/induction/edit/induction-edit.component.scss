@@ -16,7 +16,7 @@
 .null-slide p {
 	font-size: 1.6rem;
 	line-height: 1.2;
-	font-weight: 500;
+	font-weight: 400;
 	color: $palette-err-text;
 }
 
@@ -146,6 +146,7 @@
 	top: 0;
 	bottom: 0;
 	left: 0;
+	font-size: 2.4rem;
 	line-height: 3rem;
 	color: $palette-gray;
 	-webkit-pointer-events: none;
@@ -154,6 +155,19 @@
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
+}
+.-slide-search-control- .busy {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	display: block;
+	width: 2.4rem;
+	height: 3rem;
+}
+.-slide-search-control- .busy svg {
+	width: 2.4rem;
+	height: 3rem;
 }
 /*** button ***/
 .slide-view button {
@@ -232,6 +246,10 @@
 	-webkit-border-radius: .3rem;
 	-moz-border-radius: .3rem;
 	border-radius: .3rem;
+
+	&.hide {
+		display: none;
+	}
 
 	.slide-preview {
 		display: flex;

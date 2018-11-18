@@ -24,6 +24,9 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 	private rippleColorImport: string = 'rgba(7, 135, 208, .05)';
 	private rippleColorQuiz: string = 'rgba(0, 200, 83, .05)';
 
+	// search
+	private search: string = '';
+
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -36,7 +39,12 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 			.subscribe(
 				(data: Data) => {
 					this.routeData = data.editData;
-					this.slides = this.routeData.slides;
+
+					// this is for search purpose only
+					this.routeData.slides.map(slide => {
+						slide['isVisible'] = true;
+					});
+
 					this.coreService.removeProgressbar();
 					this.isPreloaded = true;
 				}
@@ -53,8 +61,13 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 							this.$induction.EditInduction(this.routeData._id)
 								.subscribe(
 									(res: IEditInductionResolve) => {
-										this.routeData = res;console.log(this.routeData);
-										this.slides = this.routeData.slides;
+										this.routeData = res;
+
+										// this is for search purpose only
+										this.routeData.slides.map(slide => {
+											slide['isVisible'] = true;
+										});
+
 										this.coreService.removeProgressbar();
 										this.isPreloaded = true;
 										try {
@@ -76,7 +89,7 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 
 	private drop(event: CdkDragDrop<IEditInductionResolveSlideData[]>) {
 		this.coreService.enableProgressbar();
-		moveItemInArray(this.slides, event.previousIndex, event.currentIndex);
+		moveItemInArray(this.routeData.slides, event.previousIndex, event.currentIndex);
 		this.$induction.reorderSlide(event.previousIndex, event.currentIndex, this.routeData._id)
 			.subscribe(
 				(res: Response) => {
@@ -155,6 +168,29 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 
 		localDialog.afterClosed()
 			.subscribe(res => {});
+	}
+
+	private searchFn(key): void {
+		let regx = new RegExp(key);
+
+		this.routeData.slides.map(({ name }, index) => {
+			if( !key ) {
+				this.routeData.slides.map(slide => { slide['isVisible'] = true });
+				return;
+			}
+
+			try {	
+				key = key.toLowerCase();
+
+				if( regx.test( name.toLowerCase() ) ) {
+					this.routeData.slides[index]['isVisible'] = true;
+				} else {
+					this.routeData.slides[index]['isVisible'] = false;
+				}
+			} catch (err) {
+				this.routeData.slides[index]['isVisible'] = false;
+			}
+		});
 	}
 
 	private customSlide(slideType: string): void {
