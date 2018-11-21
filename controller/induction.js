@@ -96,8 +96,7 @@ module.exports = {
 					induction.slides.sort((first, second) => {
 						return placeholder = (first.order > second.order) ? false : true;
 					});
-					console.log(induction.slides);
-					// console.log(induction.slides);
+
 					induction.slides.map(slide => {
 						let { _id, name, status, updatedAt, template } = slide.slide;
 						let lastUpdated = '';
@@ -327,14 +326,18 @@ module.exports = {
 		const inductionId = req.params.induction;
 		const slideId = req.params.slide;
 
-		InductionModel.findByIdAndUpdate(inductionId, {
-				'$pull': {
-					slides: { _id: mongoose.Types.ObjectId(slideId) }
-				}
-			})
-			.then(data => {
-				res.statusMessage = UtilityFn.ripple(true, 'success', 'Slide has been deleted');
-				res.status(200).send({ message: 'Slide has been updated'});
+		SlideModel.findByIdAndRemove(req.params.slide)
+			.then(slide => {
+				InductionModel.findByIdAndUpdate(inductionId, {
+					'$pull': {
+						slides: { slide: mongoose.Types.ObjectId(slideId) }
+					}
+				})
+				.then(data => {
+					res.statusMessage = UtilityFn.ripple(true, 'success', 'Slide has been deleted');
+					res.status(200).send({ message: 'Slide has been updated'});
+				})
+				.catch(next);
 			})
 			.catch(next);
 	},
@@ -343,47 +346,56 @@ module.exports = {
 		const inductionId = req.params.induction;
 		const slideId = req.params.slide;
 
-		InductionModel.findById(inductionId)
+		SlideModel.findById(slideId)
 			.lean()
-			.then(induction => {
-				if( induction && induction.slides.length ) {
+			.then(slide => {
+				delete slide._id;
+				delete slide.createdAt;
+				delete slide.updatedAt;
 
-					// get index of the target slide
-					let getSlideIndex = induction.slides.findIndex(slide => slide._id.toString() === slideId );
-					// clone and assign into a variable
-					let slideData = JSON.parse(JSON.stringify(induction.slides[getSlideIndex]));
-					InductionModel.findByIdAndUpdate(inductionId, {
-						$push: {
-							slides: { 
-								name: slideData.name,
-								status: slideData.status,
-								template: mongoose.Types.ObjectId(slideData.template),
-								header: slideData.header,
-								resource: slideData.resource
-							}
-						}
-					}, { new: true })
-					.then(updatedInduction => {
-						if( updatedInduction ) {
-							res.status(200).send({ message: 'New slide has created'});
+				SlideModel.create(slide)
+					.then((newSlide) => {
+						if( newSlide ) {
+							InductionModel.findById(inductionId)
+								.then(induction => {
+									let slides = ++induction.slideCount;
+
+									// save slide ref in induction array
+									InductionModel.findByIdAndUpdate(inductionId, {
+										$inc: { slideCount: 1 },
+										$push: {
+											slides: {
+												slide: mongoose.Types.ObjectId(newSlide._id),
+												order: slides
+											}
+										}
+									}, { new: true })
+									.then(induction => {
+										res.statusMessage = UtilityFn.rippleSuccessShow('Slide has cloned successfully');
+										res.status(200).send({ status: true, message: 'Slide has cloned successfully' });
+									})
+									.catch(next);
+
+								})
+								.catch(next);
+
 						} else {
 							res.statusMessage = UtilityFn.rippleErr('New slide creating has failed');
 							res.status(501).send({ message: 'New slide creating has failed'});
 						}
 					})
 					.catch(next);
-				} else {
-					res.statusMessage = UtilityFn.rippleErr('Induction details is not correct');
-					res.status(403).send({ message: 'Induction details is not correct'});
-				}
 			})
 			.catch(next);
 	},
 
 	sortSlide(req, res, next) {
-		const previousIndex = req.params.previousIndex;
-		const currentIndex = req.params.currentIndex;
+		const slide01 = req.params.previousIndex;
+		const slide02 = req.params.currentIndex;
 		const inductionId = req.params.inductionId;
+		console.log(slide01, slide02, inductionId);
+		res.status(200).send({ message: 'Sorting has been saved' });
+		return;
 
 		InductionModel.findById(inductionId)
 			.then(induction => {
@@ -421,7 +433,7 @@ module.exports = {
 		}
 
 		Promise.all([templateData, inductionData, slideData])
-			.then(data => {console.log(data);
+			.then(data => {
 				res.send({ action, template: data[0], induction: data[1], slide: data[2] });
 			})
 			.catch(next);
@@ -435,13 +447,11 @@ module.exports = {
 					if( slide ) {
 						InductionModel.findById(req.query.inductionId)
 							.then(induction => {
-								let slides = 0;
-								if( Array.isArray(induction.slides) ) {
-									slides = induction.slides.length;
-								}
+								let slides = ++induction.slideCount || 0;
 
 								// save slide ref in induction array
 								InductionModel.findByIdAndUpdate(req.query.inductionId, {
+									$inc: { slideCount: 1 },
 									$push: {
 										slides: {
 											slide: mongoose.Types.ObjectId(slide._id),
@@ -465,7 +475,21 @@ module.exports = {
 				.catch(next);
 
 		} else if ( req.query.action === 'update' ) {
-			res.send({ status: true, message: 'updated' });
+			let buildReq = req.body;
+			buildReq['updatedAt'] = new Date();
+			SlideModel.findByIdAndUpdate(req.query.slideId, {
+				$set: buildReq
+			}, { new: true})
+			.then(updatedSlide => {
+				if( updatedSlide ) {
+					res.statusMessage = UtilityFn.rippleSuccessShow('Slide has been updated');
+					res.status(200).send({ status: true, message: 'slide updated' });
+				} else {
+					res.statusMessage = UtilityFn.rippleErr('Slide update has failed to save');
+					res.status(501).send({ message: 'Slide update has failed to save'});
+				}
+			})
+			.catch(next);
 		}
 		
 	},

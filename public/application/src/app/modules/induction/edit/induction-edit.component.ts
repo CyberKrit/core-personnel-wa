@@ -45,7 +45,7 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 			.subscribe(
 				(data: Data) => {
 					this.routeData = data.editData;
-
+console.log(this.routeData);
 					// this is for search purpose only
 					this.routeData.slides.map(slide => {
 						slide['isVisible'] = true;
@@ -104,7 +104,11 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 	private drop(event: CdkDragDrop<IEditInductionResolveSlideData[]>) {
 		this.coreService.enableProgressbar();
 		moveItemInArray(this.routeData.slides, event.previousIndex, event.currentIndex);
-		this.$induction.reorderSlide(event.previousIndex, event.currentIndex, this.routeData._id)
+		let swapItem01 = this.routeData.slides[event.previousIndex]._id;
+		let swapItem02 = this.routeData.slides[event.currentIndex]._id;
+		console.log(event);
+		return;
+		this.$induction.reorderSlide(swapItem01, swapItem02, this.routeData._id)
 			.subscribe(
 				(res: Response) => {
 					this.coreService.removeProgressbar();
@@ -125,10 +129,10 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	private removeSlide(slideId, index): void {
+	private removeSlide(slideId): void {
 		let { _id } = this.routeData;
 		let removeService = () => {
-			return this.$induction.deleteSlide(_id, slideId);
+			return this.$induction.deleteSlide(this.routeData._id, slideId);
 		}
 
 		// open modal

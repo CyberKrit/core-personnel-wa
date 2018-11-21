@@ -295,8 +295,8 @@ export class InductionService {
 			);
 	}
 	/* section */
-	public editorSection(formData: IEditorSectionFormData, inductionId: string, action: string): Observable<IGenEditorPostAction> {
-		const baseUrl = this.baseURL + 'api/editor/section?inductionId=' + inductionId + '&action=' + action;
+	public editorSection(formData: IEditorSectionFormData, inductionId: string, action: string, slideId: string): Observable<IGenEditorPostAction> {
+		const baseUrl = this.baseURL + 'api/editor/section?inductionId=' + inductionId + '&action=' + action + '&slideId=' + slideId;
 
 		return this.http
 			.post<IGenEditorPostAction>(baseUrl, formData)

@@ -28,11 +28,11 @@ module.exports = (app) => {
 	// create a slide
 	// app.get('/api/induction/slide/create/:id', failMsg('Slide creation failed'), InductionController.slide);
 	// // delete a slide
-	// app.delete('/api/induction/slide/:induction/:slide', failMsg('Slide deletion failed'), InductionController.deleteSlide);
+	app.delete('/api/induction/slide/:induction/:slide', failMsg('Slide deletion failed'), InductionController.deleteSlide);
 	// // clone a slide
-	// app.get('/api/induction/slide/clone/:induction/:slide', failMsg('Slide cloning failed'), InductionController.cloneSlide);
+	app.get('/api/induction/slide/clone/:induction/:slide', failMsg('Slide cloning failed'), InductionController.cloneSlide);
 	// // rearrange slide based on drag-drop
-	// app.get('/api/induction/slide/reorder/:previousIndex/:currentIndex/:inductionId', failMsg('Sorting failed to save'), InductionController.sortSlide);
+	app.get('/api/induction/slide/reorder/:previousIndex/:currentIndex/:inductionId', failMsg('Sorting failed to save'), InductionController.sortSlide);
 
 
 	// *** [[ resolve ]] *** //
