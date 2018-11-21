@@ -102,6 +102,11 @@ input[disabled] {
 	margin-left: .8rem;
 	background-color: $palette-green;
 
+	&.btn-draft {
+		background-color: $palette-yellow-dark;
+		color: $palette-text;
+	}
+
 	.lazy {
 		display: block;
 		height: 4rem;
@@ -136,3 +141,64 @@ input[disabled] {
 	}
 }
 
+
+.editor-shell {
+	/*** [[[ editor-header ]]] ***/
+	.comp-header {
+		padding: 1rem 1.6rem;
+	}
+
+	/* form */
+	.editor-header form {
+		float: left;
+		max-width: 27rem;
+	}
+	.editor-header input {
+		display: block;
+		width: 100%;
+		height: 3.7rem;
+		padding: 0 1rem;
+		font-size: 1.5rem;
+		line-height: 3.7rem;
+		font-weight: 400;
+		background-color: transparent;
+		color: $palette-text;
+		border: .1rem solid $palette-gray;
+		-webkit-border-radius: .5rem;
+		-moz-border-radius: .5rem;
+		border-radius: .5rem;
+		-webkit-transition: all .14s ease-out;
+		-moz-transition: all .14s ease-out;
+		-ms-transition: all .14s ease-out;
+		-o-transition: all .14s ease-out;
+		transition: all .14s ease-out;
+	}
+	.editor-header input:hover,
+	.editor-header input:focus {
+		background-color: $palette-light;
+	}
+
+	/* saveAs */
+	.save-as {
+		margin-top: .8rem;
+	}
+}
+
+
+/*** [[[ editor-header ]]] ***/
+
+.editor-shell {
+	.editor-body {
+		padding: 1rem 1.6rem 0;
+	}
+}
+
+
+/*** [[[ editor-control ]]] ***/
+
+.editor-shell {
+	.editor-control {
+		padding-right: 1.6rem;
+		padding-left: 1.6rem;
+	}
+}

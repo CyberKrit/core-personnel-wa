@@ -1,6 +1,7 @@
 const InductionModel = require('../model/induction');
 const InductionCatModel  = require('../model/induction-cat');
 const TemplateModel  = require('../model/template');
+const SlideModel  = require('../model/slide');
 const MediaModel = require('../model/media');
 const UtilityFn = require('../utility');
 const mongoose = require('mongoose');
@@ -83,17 +84,22 @@ module.exports = {
 
 	// induction edit page resolve data
 	editResolve(req, res, next) {
-		
 		const inductionId = req.params.id;
 
 		InductionModel.findById(inductionId)
-		.populate('slides.template')
+			.populate('slides.slide')
 			.then(induction => {
 				if( induction ) {
 					let { _id, name } = induction;
 
 					let slides = [];
-					induction.slides.map(({ _id, name, variation, status, updatedAt, template }) => {
+					induction.slides.sort((first, second) => {
+						return placeholder = (first.order > second.order) ? false : true;
+					});
+					console.log(induction.slides);
+					// console.log(induction.slides);
+					induction.slides.map(slide => {
+						let { _id, name, status, updatedAt, template } = slide.slide;
 						let lastUpdated = '';
 
 						let startData = moment(updatedAt);
@@ -128,17 +134,15 @@ module.exports = {
 						// to avoid error i've implemented this in dev environment
 						try {
 							slides.push({ 
-								_id, name, variation, status, updatedAt: lastUpdated, 
+								_id, name, status, updatedAt: lastUpdated, 
 								template: { name: template.name, _id: template._id.toHexString() }
 							});
 						} catch (err) {
 							slides.push({ 
-								_id, name, variation, status, updatedAt: lastUpdated
+								_id, name, status, updatedAt: lastUpdated
 							});
 						}
 					});
-					// reverse array so item can come by their created date
-					slides = slides.reverse();
 
 					let buildRes = {
 						_id, name, slides
@@ -201,7 +205,7 @@ module.exports = {
 	},
 
 	// get resolve data for single slide
-	inductionSingleData(req, res, next) {
+	inductionSingleData(req, res, next) {res.send({ send: true }); return;
 		const inductionId = req.params.id;
 		let slideIndex = parseInt(req.params.index);
 
@@ -396,6 +400,82 @@ module.exports = {
 					.catch(next);
 			})
 			.catch(next);
+	},
+	
+
+	/* ==[ EDITOR ]== */
+
+	editorResolve(req, res, next) {
+		const { ind, tmp, slide, action } = req.query;
+		let templateData, inductionData, slideData;
+		templateData = inductionData = slideData = null;
+
+		if( mongoose.Types.ObjectId.isValid(tmp) ) {
+			templateData = TemplateModel.findById(tmp);
+		}
+		if( mongoose.Types.ObjectId.isValid(ind) ) {
+			inductionData = InductionModel.findById(ind);
+		}
+		if( mongoose.Types.ObjectId.isValid(slide) ) {
+			slideData = SlideModel.findById(slide);
+		}
+
+		Promise.all([templateData, inductionData, slideData])
+			.then(data => {console.log(data);
+				res.send({ action, template: data[0], induction: data[1], slide: data[2] });
+			})
+			.catch(next);
+
+	},
+	
+	editorSection(req, res, next) {
+		if( req.query.action === 'create' ) {
+			SlideModel.create(req.body)
+				.then(slide => {
+					if( slide ) {
+						InductionModel.findById(req.query.inductionId)
+							.then(induction => {
+								let slides = 0;
+								if( Array.isArray(induction.slides) ) {
+									slides = induction.slides.length;
+								}
+
+								// save slide ref in induction array
+								InductionModel.findByIdAndUpdate(req.query.inductionId, {
+									$push: {
+										slides: {
+											slide: mongoose.Types.ObjectId(slide._id),
+											order: slides
+										}
+									}
+								}, { new: true })
+								.then(induction => {
+									res.status(200).send({ status: true, message: 'slide saved', data: slide });
+								})
+								.catch(next);
+
+							})
+							.catch(next);
+						
+					} else {
+						res.statusMessage = UtilityFn.rippleErr('Slide has failed to save');
+						res.status(501).send({ message: 'Slide has failed to save'});
+					}
+				})
+				.catch(next);
+
+		} else if ( req.query.action === 'update' ) {
+			res.send({ status: true, message: 'updated' });
+		}
+		
+	},
+
+
+	/* ==[ EDITOR > QUIZ ]== */
+
+	// create a quiz
+	createQuiz(req, res, next) {
+		res.send(req.body);
 	}
 
 };

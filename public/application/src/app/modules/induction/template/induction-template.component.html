@@ -1,8 +1,12 @@
-<div class="template-collection _clr_">
+<div class="comp-header _clr_" *ngIf="isPreloaded">
+	<h1 class="comp-header_title _comp-title_">Pick a template</h1>
+</div>
+
+<div class="template-collection _clr_" *ngIf="isPreloaded">
 	<ul>
-		<li *ngFor="let template of templateCollection">
-			<a class="template-overlay" (click)="thisTemplate(template)">
-				<figure class="template-thumbnail temp-{{ template?._id }}"></figure>
+		<li *ngFor="let template of nativeData.templates">
+			<a class="template-overlay" (click)="templateSelectFn(template)">
+				<figure class="template-thumbnail temp-{{ template?.slug }}"></figure>
 				<h3 class="template-title">{{ template?.name }}</h3>
 			</a>
 		</li>

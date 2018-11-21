@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export interface ICategories {
 	_id: string;
 	name: string;
@@ -114,4 +116,59 @@ export interface ISingleTempData {
 	content: string;
 	status: string;
 	imageOnlySrc: string;
+}
+
+/* ==[ TEMPLATE ]== */
+
+export interface ITemplateResolveReq {
+	inductionId: string;
+}
+export interface ITemplateResolveRes {
+	inductionId: string;
+	action: string;
+	templates: ITemplateResolveResData[]
+}
+export interface ITemplateResolveResData {
+	name: string;
+	slug: string;
+	_id: string;
+}
+
+
+/* ==[ EDITOR ]== */
+
+export interface IEditorResolveReq {
+	ind: string;
+	tmp?: string;
+	slide?: string;
+	action: string;
+}
+export interface IEditorResolveRes {
+	template: any;
+	induction: any;
+	slide: any;
+	action: any;
+}
+export interface IGenEditorPostAction {
+	status: boolean;
+	message?: string;
+	data?: any;
+}
+
+
+/* ==[ EDITOR > SECTION ]== */
+
+export interface IEditorSectionFormData {
+	name: string;
+	header: string;
+}
+
+
+// create a quiz =====
+export interface IQuizCreateReq {
+	
+}
+export interface IQuizCreateRes {
+	status: boolean;
+	message?: string;
 }

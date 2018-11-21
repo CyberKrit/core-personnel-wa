@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, forkJoin, Subject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, retry } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 // custom imports
@@ -14,7 +14,14 @@ import {
 	IEditInductionResolve,
 	ITemplateList,
 	IInductionSingleResolve,
-	ISingleTempData
+	ISingleTempData,
+	// editor
+	IEditorResolveReq, IEditorResolveRes, IGenEditorPostAction,
+	IEditorSectionFormData,
+	// quiz
+	IQuizCreateReq, IQuizCreateRes,
+	// template
+	ITemplateResolveReq, ITemplateResolveRes
 } from '../../shared/interface/induction.interface';
 import { CoreService } from '../core/core.service';
 
@@ -22,6 +29,18 @@ import { CoreService } from '../core/core.service';
 export class InductionService {
 
 	private baseURL: string;
+
+	/*** [[[ editor ]]] ***/
+	private editorFormSubmitReqSub: Subject<any> = new Subject<any>();
+	public editorFormSubmitReq$ = this.editorFormSubmitReqSub.asObservable();
+	public editorFormSubmitReq() {
+		this.editorFormSubmitReqSub.next();
+	}
+	private editorFormSubmitCompleteSub: Subject<any> = new Subject<any>();
+	public editorFormSubmitComplete$ = this.editorFormSubmitReqSub.asObservable();
+	public editorFormSubmitComplete() {
+		this.editorFormSubmitCompleteSub.next();
+	}
 
 	// reload induction slide data after changes been saved
 	public slideIsReadyToUpdate: boolean = false;
@@ -249,5 +268,69 @@ export class InductionService {
 	public singleTempDataFn(): ISingleTempData {
 		return this.singleTempData;
 	}
+
+
+	/* ==[ TEMPLATE ]== */
+
+	// resolve
+  public templateResolve(req: ITemplateResolveReq): Observable<ITemplateResolveRes> {
+		const baseUrl = this.baseURL + 'api/template/resolve/' + req.inductionId;
+
+		return this.http
+			.get<ITemplateResolveRes>(baseUrl)
+			.pipe(
+				catchError(this.handleError)
+			);
+	}
+
+	/* ==[ EDITOR ]== */
+
+	public editorResolve(queryParams: IEditorResolveReq): Observable<IEditorResolveRes> {
+		const baseUrl = this.baseURL + 'api/editor?ind=' + queryParams.ind + '&tmp=' + queryParams.tmp + '&slide=' + queryParams.slide + '&action=' + queryParams.action;
+
+		return this.http
+			.get<IEditorResolveRes>(baseUrl)
+			.pipe(
+				catchError(this.handleError)
+			);
+	}
+	/* section */
+	public editorSection(formData: IEditorSectionFormData, inductionId: string, action: string): Observable<IGenEditorPostAction> {
+		const baseUrl = this.baseURL + 'api/editor/section?inductionId=' + inductionId + '&action=' + action;
+
+		return this.http
+			.post<IGenEditorPostAction>(baseUrl, formData)
+			.pipe(
+				catchError(this.handleError)
+			);
+	}
+
+	// quiz
+	public saveQuiz(formData: IQuizCreateReq): Observable<IQuizCreateRes> {
+		const baseUrl = this.baseURL + 'api/editor/quiz';
+
+		return this.http
+			.post<IQuizCreateRes>(baseUrl, formData)
+			.pipe(
+				catchError(this.handleError)
+			);
+	}
+
+
+	/* ==[ handleError ]== */
+
+	private handleError(error: HttpErrorResponse) {
+	  if (error.error instanceof ErrorEvent) {
+	    // A client-side or network error occurred. Handle it accordingly.
+	    console.error('An error occurred:', error.error.message);
+	  } else {
+	    // The backend returned an unsuccessful response code.
+	    // The response body may contain clues as to what went wrong,
+	    console.error(`Backend returned code ${error.status}`);
+	    console.error(error.error);
+	  }
+	  // return an observable with a user-facing error message
+	  return throwError('Something bad happened; please try again later.');
+	};
 
 }

@@ -33,6 +33,18 @@ export class CoreService {
 	}
 
 	// generic error
+	public startRippleInfoMsg(msg) {
+		let buildData = {
+			type: 'success',
+			message: {
+				client: msg
+			}
+		};
+
+		this.rippleSource.next(buildData);
+	}
+
+	// generic error
 	public startRippleCustomMsg(msg) {
 		let buildData = {
 			type: 'error',

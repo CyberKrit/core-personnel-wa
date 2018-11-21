@@ -1,21 +1,21 @@
 <div *ngIf="isPreloaded">
 	
 	<div class="comp-header _clr_">
-		<h1 class="comp-header_title _comp-title_">Edit {{ editResolveData?.name }}</h1>
+		<h1 class="comp-header_title _comp-title_">{{ routeData?.name }}</h1>
 	</div>
 
 	<div class="comp-body">
 
 		<div class="create-slide-options _clr_">
-			<div (click)="customSlide('custom')" class="slide-option-ripple _custom_" matRipple [matRippleColor]="rippleColorCustom">
+			<div (click)="createSlide('custom')" class="slide-option-ripple _custom_" matRipple [matRippleColor]="rippleColorCustom">
 			  <mat-icon aria-label="Custom Slide">line_style</mat-icon>
 				<h3 class="option-title">Custom Slide</h3>
 			</div>
-			<div (click)="customSlide('import')" class="slide-option-ripple _import_" matRipple [matRippleColor]="rippleColorImport">
+			<div (click)="createSlide('import')" class="slide-option-ripple _import_" matRipple [matRippleColor]="rippleColorImport">
 			  <mat-icon aria-label="Import slide(s)">input</mat-icon>
 				<h3 class="option-title">Import slide(s)</h3>
 			</div>
-			<div (click)="customSlide('quiz')" class="slide-option-ripple _quiz_" matRipple [matRippleColor]="rippleColorQuiz">
+			<div (click)="createSlide('quiz')" class="slide-option-ripple _quiz_" matRipple [matRippleColor]="rippleColorQuiz">
 			  <mat-icon aria-label="Quiz">live_help</mat-icon>
 				<h3 class="option-title">Quiz</h3>
 			</div>
@@ -76,7 +76,7 @@
 				class="sildes" 
 				*ngIf="routeData?.slides.length" 
 				cdkDropList (cdkDropListDropped)="drop($event)">
-				<div [ngClass]="{ 'hide': (slide.isVisible === false) || (slide.isSearched === false) }" class="slide" *ngFor="let slide of routeData?.slides; let i = index" cdkDrag>
+				<div [ngClass]="{ 'hide': (slide.isVisible === false) || (slide.isSearched === false) }" class="slide" *ngFor="let slide of routeData?.slides" cdkDrag>
 					<div class="slide-placeholder" *cdkDragPlaceholder></div>
 					<figure 
 						class="slide-preview">
@@ -94,7 +94,7 @@
 								mat-icon-button 
 								matTooltip="Edit"
 								matTooltipPosition="above" 
-								(click)="updateSlide(routeData?._id, i, 'custom')">
+								(click)="updateSlide(routeData?._id, slide?.template?._id, slide._id)">
 						    <mat-icon aria-label="Edit Slide">border_color</mat-icon>
 						  </button>
 							<button 
@@ -103,7 +103,7 @@
 								matTooltip="Clone"
 								matTooltipPosition="above">
 						    <mat-icon aria-label="Clone Slide"
-						    (click)="clone(slide._id, i)">library_add</mat-icon>
+						    (click)="clone(slide._id)">library_add</mat-icon>
 						  </button>
 							<button 
 								class="btn-delete" 
@@ -111,7 +111,7 @@
 								matTooltip="Delete"
 								matTooltipPosition="above">
 						    <mat-icon aria-label="Delete Slide"
-						    (click)="removeSlide(slide._id, i)">delete_forever</mat-icon>
+						    (click)="removeSlide(slide._id)">delete_forever</mat-icon>
 						  </button>
 						</div>
 					</div>

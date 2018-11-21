@@ -9,7 +9,7 @@ import { InductionListComp } from './list/induction-list.component';
 import { InductionCreateComponent } from './create/induction-create.component';
 import { InductionViewComponent } from './view/induction-view.component';
 import { InductionEditComponent } from './edit/induction-edit.component';
-import { inductionSingleComponent } from './single/induction-single.component';
+import { InductionTemplateComponent } from './template/induction-template.component';
 
 // resolve
 import { InductionCategoriesResolve } from './categories/induction-categories.resolve';
@@ -17,7 +17,15 @@ import { InductionCreateResolve } from './create/induction-create.resolve';
 import { InductionListResolve } from './list/induction-list.resolve';
 import { InductionViewResolve } from './view/induction-view.resolve';
 import { InductionEditResolve } from './edit/induction-edit.resolve';
-import { InductionSingleResolve } from './single/induction-single.resolve';
+import { TemplateResolve } from './template/induction-template.resolve';
+import { EditorResolve } from './editor/editor-resolve.service';
+
+// editor
+import { EditorComponent } from './editor/editor.component';
+
+// guard
+import { TemplateCanActivateGuard } from './template/induction-template.guard.service';
+import { EditorCanActivateGuard } from './editor/editor-guard.service';
 
 const InductionRoutes: Routes = [
 	{ 
@@ -28,30 +36,37 @@ const InductionRoutes: Routes = [
 				component: InductionListComp,
 				resolve: { inductions: InductionListResolve }
 			},
-			{ 
-				path: ':id',
-				component: InductionViewComponent,
-				resolve: { inductionSingle: InductionViewResolve }
-			},
-			{ 
-				path: 'edit/:id',
-				component: InductionEditComponent,
-				resolve: { editData: InductionEditResolve }
-			},
-			{ 
-				path: 'single/:induction',
-				component: inductionSingleComponent,
-				resolve: { singleData: InductionSingleResolve }
-			},
 			{
 				path: 'create', 
 				component: InductionCreateComponent,
 				resolve: { categories: InductionCreateResolve }
 			},
 			{
+				path: 'editor',
+				component: EditorComponent,
+				resolve: { data: EditorResolve },
+				canActivate: [ EditorCanActivateGuard ]
+			},
+			{
 				path: 'categories',
 				component: InductionCategories,
 				resolve: { categories: InductionCategoriesResolve }
+			},
+			{ 
+				path: 'edit/:id',
+				component: InductionEditComponent,
+				resolve: { editData: InductionEditResolve }
+			},
+			{
+				path: 'template/:induction',
+				component: InductionTemplateComponent,
+				resolve: { data: TemplateResolve },
+				canActivateChild: [TemplateCanActivateGuard]
+			},
+			{ 
+				path: ':id',
+				component: InductionViewComponent,
+				resolve: { inductionSingle: InductionViewResolve }
 			},
 			{ path: '**', redirectTo: '/induction', pathMatch: 'full' }
 		] 
@@ -72,7 +87,12 @@ const InductionRoutes: Routes = [
 		InductionListResolve,
 		InductionViewResolve,
 		InductionEditResolve,
-		InductionSingleResolve
+		// editor
+		EditorResolve,
+		EditorCanActivateGuard,
+		// template
+		TemplateResolve,
+		TemplateCanActivateGuard
 	]
 })
 

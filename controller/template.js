@@ -33,6 +33,27 @@ module.exports = {
 				}
 			})
 			.catch(next);
+	},
+
+	templateResolve(req, res, next) {
+		let { inductionId } = req.params;
+		let { action } = req.query;
+
+		TemplateModel.find()
+			.then(templates => {
+				if( Array.isArray(templates) ) {
+					let buildRes = {};
+
+					buildRes['inductionId'] = inductionId;
+					buildRes['action'] = action;
+					buildRes['templates'] = templates.map(({ _id, name, slug }) => {
+						return { _id: _id.toHexString(), name, slug };
+					});
+					
+					res.status(200).send(buildRes);
+				}
+			})
+			.catch(next)
 	}
 
 };

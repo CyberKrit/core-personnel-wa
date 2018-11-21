@@ -19,7 +19,6 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 	private routeData: IEditInductionResolve;
 	private navSubStream: Subscription;
 	// to map reposition
-	private slides: IEditInductionResolveSlideData[];
 	private rippleColorCustom: string = 'rgba(237, 28, 36, .05)';
 	private rippleColorImport: string = 'rgba(7, 135, 208, .05)';
 	private rippleColorQuiz: string = 'rgba(0, 200, 83, .05)';
@@ -113,10 +112,15 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 			);
 	}
 
-	private updateSlide(inductionId, index, slideType): void {
+	private updateSlide(inductionId, templateId, slideId): void {
 		this.router.navigate(
-			['/induction', 'single', inductionId], {
-				queryParams: { index, slideType }
+			['/induction', 'editor'], {
+				queryParams: {
+					ind: inductionId,
+					tmp: templateId,
+					slide: slideId,
+					action: 'update'
+				}
 			}
 		);
 	}
@@ -253,17 +257,16 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	private customSlide(slideType: string): void {
-		this.coreService.enableProgressbar();
-		this.$induction.createSlide(this.routeData._id)
-			.subscribe(
-				( data: IGETCreateSlide ) => {
-					if(!data.status) return;
-					
-					let { slideIndex } = data;
-					this.router.navigate(['/induction/single/' + data.slideDeckId], { queryParams: { index: slideIndex, slideType  } });
+	private createSlide(howToCreate: string): void {
+		// pick a template
+		if( howToCreate.toLowerCase() === 'custom' ) {
+			this.coreService.enableProgressbar();
+			this.router.navigate(['/induction', 'template', this.routeData._id], {
+				queryParams: {
+					action: 'create'
 				}
-			);
+			});
+		}
 	}
 
 	ngOnDestroy(): void {

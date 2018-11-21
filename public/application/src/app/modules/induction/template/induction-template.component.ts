@@ -1,7 +1,9 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 
-// custom import
-import { ITemplateList } from '../../../shared/interface/induction.interface';
+// interface
+import { ITemplateResolveRes, ITemplateResolveResData } from '../../../shared/interface/induction.interface';
+import { CoreService } from '../../core/core.service';
 
 @Component({
 	selector: 'induction-temp',
@@ -9,15 +11,34 @@ import { ITemplateList } from '../../../shared/interface/induction.interface';
 	styleUrls: ['./induction-template.component.scss']
 })
 export class InductionTemplateComponent implements OnInit {
-	@Input() public templateCollection: ITemplateList;
-	@Output() public selectedTemplate: EventEmitter<ITemplateList> = new EventEmitter<ITemplateList>();
+	public isPreloaded: boolean = false;
+	private nativeData: ITemplateResolveRes;
 
-	constructor() {}
+	constructor(
+		private route: ActivatedRoute,
+		private router: Router,
+		private $core: CoreService) {}
 
-	ngOnInit() {}
+	ngOnInit() {
+		this.route.data
+			.subscribe(
+				(resolve: Data) => {
+					this.nativeData = resolve.data;
+					this.$core.removeProgressbar();
+					this.isPreloaded = true;
+				}
+			);
+	}
 
-	private thisTemplate(template) {
-		this.selectedTemplate.emit(template);
+	private templateSelectFn(template: ITemplateResolveResData): void {
+		this.router.navigate(['/induction', 'editor'], {
+			queryParams: {
+				ind: this.nativeData.inductionId,
+				tmp: template._id,
+				slide: '',
+				action: this.nativeData.action
+			}
+		});
 	}
 
 }

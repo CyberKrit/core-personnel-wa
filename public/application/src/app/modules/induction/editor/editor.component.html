@@ -1,0 +1,63 @@
+<div class="editor-shell" *ngIf="isPreloaded">
+	<div class="editor-header">	
+		<div class="comp-header _clr_">
+			<form novalidate autocomplete="false">
+				<input type="text" name="slideName" [(ngModel)]="slideName">
+			</form>
+
+			<div class="save-as _end_">
+				<span class="save-as-text">{{ saveAsState }}</span> 
+				<mat-slide-toggle 
+					name="saveAs" 
+					[(ngModel)]="saveAs"
+					(ngModelChange)="toggleSaveAsFn($event)"></mat-slide-toggle>
+			</div>
+		</div>
+	</div>
+
+	<div class="editor-body" *ngIf="nativeData?.template">
+		<editor-section 
+			*ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 0"
+			[slide]="nativeData?.slide"
+			[slideName]="slideName"
+			[inductionId]="nativeData?.induction?._id"
+			[action]="nativeData?.action"
+			[templateId]="nativeData?.template?._id"
+			[saveAs]="saveAs"
+			(formData)="getFormData($event)">
+		</editor-section>
+		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 1">2</div>
+		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 2">3</div>
+		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 3">4</div>
+		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 4">5</div>
+		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 5">6</div>
+		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 6">7</div>
+		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 7">8</div>
+		<editor-quiz *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 8"></editor-quiz>
+	</div>
+
+	<div class="editor-control">
+		<div class="form-interaction _clr_">
+			<button mat-mini-fab type="button" *ngIf="nativeData?.action !== 'create'">
+		    <mat-icon aria-label="discard slide">delete_outline</mat-icon>
+		  </button>
+
+			<button [ngClass]="{ 'btn-draft': !saveAs }" class="primary-action-btn" type="submit" [disabled]="lazy" (click)="triggerSubmitFn()">
+				<div class="idle" *ngIf="!lazy">
+					<span *ngIf="saveAs">Publish Slide</span>
+					<span *ngIf="!saveAs">Save as Draft</span>
+				</div>
+
+				<span class="lazy" *ngIf="lazy">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="8" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+				</span>
+			</button>
+
+			<div class="complementary-btn-grp">
+				<button class="preview-btn" type="button">
+					<span class="idle">Preview</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

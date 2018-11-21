@@ -10,11 +10,11 @@ import { InductionListComp } from './list/induction-list.component';
 import { InductionCreateComponent } from './create/induction-create.component';
 import { InductionViewComponent } from './view/induction-view.component';
 import { InductionEditComponent } from './edit/induction-edit.component';
-import { inductionSingleComponent } from './single/induction-single.component';
 import { InductionTemplateComponent } from './template/induction-template.component';
-import { InductionSingleCustomComponent } from './single-custom/induction-single-custom.component';
 
 // editor
+import { EditorComponent } from './editor/editor.component';
+import { EditorQuizComponent } from './editor/editor-quiz.component';
 import { EditorSectionComponent } from './editor/editor-section.component';
 import { EditorImageOnly } from './editor/editor-image-only.component';
 
@@ -35,10 +35,10 @@ import { AngularMaterialModule } from '../core/angular-material.module';
 		InductionCreateComponent,
 		InductionViewComponent,
 		InductionEditComponent,
-		inductionSingleComponent,
 		InductionTemplateComponent,
-		InductionSingleCustomComponent,
 		// editor
+		EditorComponent,
+		EditorQuizComponent,
 		EditorSectionComponent,
 		EditorImageOnly
 	],

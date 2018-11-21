@@ -73,7 +73,7 @@ import { IInductionSingleResolve, ITemplateList } from '../../../shared/interfac
 
 						<button mat-button class="btn-outline" type="button" *ngIf="!fileSrc">Select from gallery</button>
 
-						<button class="primary-action-btn" type="submit" [disabled]="!fileSrc && progress !== 100">
+						<button class="primary-action-btn" type="submit">
 							<div class="idle" *ngIf="!lazyForm">
 								<span *ngIf="imageOnlyEditorForm.get('publish').value === true">Publish Slide</span>
 								<span *ngIf="imageOnlyEditorForm.get('publish').value === false">Save as Draft</span>

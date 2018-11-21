@@ -9,5 +9,16 @@ module.exports = {
 	clientTimeout: 12000,
 	// email
 	emailConfirmationExp: 3, // in days
-	fileUploadPath: 'https://evening-shelf-25137.herokuapp.com/uploads/'
+	fileUploadPath: 'https://evening-shelf-25137.herokuapp.com/uploads/',
+	templateSlugs: [
+		'section', 
+		'text-only', 
+		'image-only', 
+		'image-with-caption', 
+		'image-left-content-right', 
+		'image-right-content-left', 
+		'content-with-3-images', 
+		'video', 
+		'quiz'
+	]
 };
