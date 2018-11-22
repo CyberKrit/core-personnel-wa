@@ -45,7 +45,7 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 			.subscribe(
 				(data: Data) => {
 					this.routeData = data.editData;
-console.log(this.routeData);
+
 					// this is for search purpose only
 					this.routeData.slides.map(slide => {
 						slide['isVisible'] = true;
@@ -104,14 +104,23 @@ console.log(this.routeData);
 	private drop(event: CdkDragDrop<IEditInductionResolveSlideData[]>) {
 		this.coreService.enableProgressbar();
 		moveItemInArray(this.routeData.slides, event.previousIndex, event.currentIndex);
-		let swapItem01 = this.routeData.slides[event.previousIndex]._id;
-		let swapItem02 = this.routeData.slides[event.currentIndex]._id;
-		console.log(event);
-		return;
-		this.$induction.reorderSlide(swapItem01, swapItem02, this.routeData._id)
+
+		let buildReq = {
+			inductionId: this.routeData._id,
+			slideId: this.routeData.slides[event.currentIndex]._id,
+			from: event.previousIndex,
+			to: event.currentIndex
+		}
+
+		this.$induction.reorderSlide(buildReq)
 			.subscribe(
-				(res: Response) => {
-					this.coreService.removeProgressbar();
+				(res: Response) => {console.log(res);
+					this.router.navigate(['/induction', 'edit', this.routeData._id], {
+						queryParams: {
+							reload: 'true',
+							dialogRes: 'confirm'
+						}
+					});
 				}
 			);
 	}

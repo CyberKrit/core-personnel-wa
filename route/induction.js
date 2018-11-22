@@ -32,7 +32,7 @@ module.exports = (app) => {
 	// // clone a slide
 	app.get('/api/induction/slide/clone/:induction/:slide', failMsg('Slide cloning failed'), InductionController.cloneSlide);
 	// // rearrange slide based on drag-drop
-	app.get('/api/induction/slide/reorder/:previousIndex/:currentIndex/:inductionId', failMsg('Sorting failed to save'), InductionController.sortSlide);
+	app.post('/api/induction/slide/reorder', failMsg('Sorting failed to save'), InductionController.sortSlide);
 
 
 	// *** [[ resolve ]] *** //

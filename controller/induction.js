@@ -390,26 +390,58 @@ module.exports = {
 	},
 
 	sortSlide(req, res, next) {
-		const slide01 = req.params.previousIndex;
-		const slide02 = req.params.currentIndex;
-		const inductionId = req.params.inductionId;
-		console.log(slide01, slide02, inductionId);
-		res.status(200).send({ message: 'Sorting has been saved' });
-		return;
+		let { inductionId, slideId, from, to } = req.body;
 
 		InductionModel.findById(inductionId)
+			.populate('slides.slide')
 			.then(induction => {
-				let getInduction = JSON.parse(JSON.stringify(induction));
+				if( Array.isArray(induction.slides) ) {
+					let slideArr = induction.slides;
+					let slideCount = slideArr.length;
+					// how many placed does targeted slide has been moved
+					let shifted = Math.abs(from - to);
+					// sort array
+					slideArr.sort((first, second) => {
+						return placeholder = (first.order > second.order) ? false : true;
+					});
 
-				let pulledSlide = getInduction.slides[previousIndex];
-				getInduction.slides[previousIndex] = getInduction.slides[currentIndex];
-				getInduction.slides[currentIndex] = pulledSlide;
+					if( Math.sign(from - to) === 1 ) { 
+						// equal to drop item position
+						slideArr[from].order = slideArr[to].order;
 
-				InductionModel.findByIdAndUpdate(inductionId, getInduction)
-					.then(updatedInduction => {
-						res.status(200).send({ message: 'Sorting has been saved' });
-					})
-					.catch(next);
+						// negative means downward
+						for( let i = (from - 1); i >= to; i-- ) {
+							slideArr[i].order -= 1;
+						}
+
+						// sort again in DSC
+						slideArr.sort((first, second) => {
+							return placeholder = (first.order > second.order) ? false : true;
+						});
+
+					} else {
+						// equal to drop item position
+						slideArr[from].order = slideArr[to].order;
+
+						// negative means downward
+						for( let i = (from + 1); i <= to; i++ ) {
+							slideArr[i].order += 1;
+						}
+
+						// sort again in DSC
+						slideArr.sort((first, second) => {
+							return placeholder = (first.order > second.order) ? false : true;
+						});
+
+					} // endif
+
+					induction.save()
+						.then(updatedInduction => {
+							res.status(200).send({ status: true, message: 'Sorting between slides has been done' });
+						})
+						.catch(next);
+
+				}
 			})
 			.catch(next);
 	},

@@ -254,11 +254,11 @@ export class InductionService {
 			);
 	}
 
-	public reorderSlide(previousIndex, currentIndex, inductionId): Observable<any> {
-		const baseUrl = this.baseURL + 'api/induction/slide/reorder/' + previousIndex + '/' + currentIndex + '/' + inductionId;
+	public reorderSlide(buildReq): Observable<any> {
+		const baseUrl = this.baseURL + 'api/induction/slide/reorder/';
 
 		return this.http
-			.get(baseUrl)
+			.post(baseUrl, buildReq)
 			.pipe(
 				map(res => res),
 				catchError(err => throwError(err))
