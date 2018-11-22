@@ -26,6 +26,7 @@ import { EditorComponent } from './editor/editor.component';
 // guard
 import { TemplateCanActivateGuard } from './template/induction-template.guard.service';
 import { EditorCanActivateGuard } from './editor/editor-guard.service';
+import { EditorCanDeactivate } from './editor/editor-deactivate-guard.service';
 
 const InductionRoutes: Routes = [
 	{ 
@@ -45,7 +46,8 @@ const InductionRoutes: Routes = [
 				path: 'editor',
 				component: EditorComponent,
 				resolve: { data: EditorResolve },
-				canActivate: [ EditorCanActivateGuard ]
+				canActivate: [ EditorCanActivateGuard ],
+				canDeactivate: [ EditorCanDeactivate ]
 			},
 			{
 				path: 'categories',
@@ -90,6 +92,7 @@ const InductionRoutes: Routes = [
 		// editor
 		EditorResolve,
 		EditorCanActivateGuard,
+		EditorCanDeactivate,
 		// template
 		TemplateResolve,
 		TemplateCanActivateGuard

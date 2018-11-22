@@ -39,6 +39,7 @@ export interface IEditInductionResolve {
 	_id: string;
 	name: string;
 	slides: IEditInductionResolveSlideData[];
+	quizTemplateId?: string;
 }
 export interface IEditInductionResolveSlideData {
 	name: string;
@@ -110,6 +111,16 @@ export interface IConsentSheetDataTree {
 	willClose?: boolean
 }
 
+// consent boc
+export interface IConsentBoxData {
+	confirm: IConsentSheetDataTree;
+	cancel: IConsentSheetDataTree;
+}
+export interface IConsentBoxDataTree {
+	title: string;
+	desc?: string;
+}
+
 // induction single temp data
 export interface ISingleTempData {
 	header: string;
@@ -161,6 +172,11 @@ export interface IGenEditorPostAction {
 export interface IEditorSectionFormData {
 	name: string;
 	header: string;
+}
+export interface ICompareValuesSection {
+	status?: string;
+	name?: string;
+	header?: string;
 }
 
 

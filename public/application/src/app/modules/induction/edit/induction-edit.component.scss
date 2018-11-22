@@ -141,11 +141,20 @@
 	-moz-border-radius: 0;
 	border-radius: 0;
 }
-.-slide-search-control- .material-icons {
+.-slide-search-control-.pointer .search-control {
+	cursor: pointer;
+}
+.-slide-search-control- .search-control {
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	left: 0;
+	display: block;
+	width: 3rem;
+	height: 3rem;
+	text-align: center;
+}
+.-slide-search-control- .material-icons {
 	font-size: 2.4rem;
 	line-height: 3rem;
 	color: $palette-gray;

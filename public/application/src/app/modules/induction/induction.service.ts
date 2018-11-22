@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, forkJoin, Subject } from 'rxjs';
+import { Observable, throwError, forkJoin, Subject, of } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 

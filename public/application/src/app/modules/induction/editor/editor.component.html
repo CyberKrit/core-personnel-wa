@@ -2,6 +2,13 @@
 	<div class="editor-header">	
 		<div class="comp-header _clr_">
 			<form novalidate autocomplete="false">
+				<div 
+					class="btn-goto-induction"
+					matTooltip="Back to Induction"
+					matTooltipPosition="above"
+					(click)="BacktoInduction()">
+					<i class="material-icons">arrow_back</i>
+				</div>
 				<input type="text" name="slideName" [(ngModel)]="slideName">
 			</form>
 
@@ -24,7 +31,8 @@
 			[action]="nativeData?.action"
 			[templateId]="nativeData?.template?._id"
 			[saveAs]="saveAs"
-			(formData)="getFormData($event)">
+			(formData)="getFormData($event)"
+			(detectChange)="detectChange($event)">
 		</editor-section>
 		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 1">2</div>
 		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 2">3</div>
@@ -38,7 +46,9 @@
 
 	<div class="editor-control">
 		<div class="form-interaction _clr_">
-			<button mat-mini-fab type="button" *ngIf="nativeData?.action !== 'create'">
+			<button mat-mini-fab type="button" 
+				*ngIf="nativeData?.action !== 'create'"
+				(click)="removeSlide()">
 		    <mat-icon aria-label="discard slide">delete_outline</mat-icon>
 		  </button>
 

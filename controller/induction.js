@@ -86,73 +86,87 @@ module.exports = {
 	editResolve(req, res, next) {
 		const inductionId = req.params.id;
 
-		InductionModel.findById(inductionId)
-			.populate('slides.slide')
-			.then(induction => {
-				if( induction ) {
-					let { _id, name } = induction;
+		TemplateModel.findOne({ slug: 'quiz' })
+			.then(quizTemplate => {
 
-					let slides = [];
-					induction.slides.sort((first, second) => {
-						return placeholder = (first.order > second.order) ? false : true;
-					});
-
-					induction.slides.map(slide => {
-						let { _id, name, status, updatedAt, template } = slide.slide;
-						let lastUpdated = '';
-
-						let startData = moment(updatedAt);
-						let now = moment(new Date());
-						let duration = moment.duration(now.diff(startData));
-
-						let getSecond = duration.asSeconds();
-						let getMinute = duration.asMinutes();
-						let getHour = duration.asHours();
-						let getDay = duration.asDays();
-						let getWeek = duration.asWeeks();
-						let getMonth = duration.asMonths();
-						let getYear = duration.asYears();
-
-						if( getYear >= 1 ) {
-							lastUpdated = Math.trunc(getYear) + ' year ago';
-						} else if ( getMonth >= 1 ) {
-							lastUpdated = Math.trunc(getMonth) + ' month ago';
-						} else if ( getWeek >= 1 ) {
-							lastUpdated = Math.trunc(getWeek) + ' week ago';
-						} else if ( getDay >= 1 ) {
-							lastUpdated = Math.trunc(getDay) + ' day ago';
-						} else if ( getHour >= 1 ) {
-							lastUpdated = Math.trunc(getHour) + ' hour ago';
-						} else if ( getMinute >= 1 ) {
-							lastUpdated = Math.trunc(getMinute) + ' minute ago';
-						} else {
-							lastUpdated = Math.trunc(getSecond) + ' second ago';
-						}
-
-						// try-catch because some old data has no template property
-						// to avoid error i've implemented this in dev environment
-						try {
-							slides.push({ 
-								_id, name, status, updatedAt: lastUpdated, 
-								template: { name: template.name, _id: template._id.toHexString() }
-							});
-						} catch (err) {
-							slides.push({ 
-								_id, name, status, updatedAt: lastUpdated
-							});
-						}
-					});
-
-					let buildRes = {
-						_id, name, slides
-					};
-
-					res.status(200).send(buildRes);
-				} else {
-					res.status(500).send({ message: 'Induction edit data has failed to load' });
+				if( !quizTemplate ) {
+					res.status(422).send({ message: 'quiz template is not found' });
+					return;
 				}
+
+				// het induction details
+				InductionModel.findById(inductionId)
+					.populate('slides.slide')
+					.then(induction => {
+						if( induction ) {
+							let { _id, name } = induction;
+
+							let slides = [];
+							induction.slides.sort((first, second) => {
+								return placeholder = (first.order > second.order) ? false : true;
+							});
+
+							induction.slides.map(slide => {
+								let { _id, name, status, updatedAt, template } = slide.slide;
+								let lastUpdated = '';
+
+								let startData = moment(updatedAt);
+								let now = moment(new Date());
+								let duration = moment.duration(now.diff(startData));
+
+								let getSecond = duration.asSeconds();
+								let getMinute = duration.asMinutes();
+								let getHour = duration.asHours();
+								let getDay = duration.asDays();
+								let getWeek = duration.asWeeks();
+								let getMonth = duration.asMonths();
+								let getYear = duration.asYears();
+
+								if( getYear >= 1 ) {
+									lastUpdated = Math.trunc(getYear) + ' year ago';
+								} else if ( getMonth >= 1 ) {
+									lastUpdated = Math.trunc(getMonth) + ' month ago';
+								} else if ( getWeek >= 1 ) {
+									lastUpdated = Math.trunc(getWeek) + ' week ago';
+								} else if ( getDay >= 1 ) {
+									lastUpdated = Math.trunc(getDay) + ' day ago';
+								} else if ( getHour >= 1 ) {
+									lastUpdated = Math.trunc(getHour) + ' hour ago';
+								} else if ( getMinute >= 1 ) {
+									lastUpdated = Math.trunc(getMinute) + ' minute ago';
+								} else {
+									lastUpdated = Math.trunc(getSecond) + ' second ago';
+								}
+
+								// try-catch because some old data has no template property
+								// to avoid error i've implemented this in dev environment
+								try {
+									slides.push({
+										_id, name, status, updatedAt: lastUpdated, 
+										template: { name: template.name, _id: template._id.toHexString() }
+									});
+								} catch (err) {
+									slides.push({
+										_id, name, status, updatedAt: lastUpdated
+									});
+								}
+							});
+
+							let buildRes = {
+								_id, name, slides, quizTemplateId: quizTemplate.slug
+							};
+
+							res.status(200).send(buildRes);
+						} else {
+							res.status(500).send({ message: 'Induction edit data has failed to load' });
+						}
+					})
+					.catch(next);
+
 			})
 			.catch(next);
+
+		
 	},
 
 	// create a new slide with default data

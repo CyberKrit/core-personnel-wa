@@ -41,6 +41,9 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 		private dialog: MatDialog) {}
 
 	ngOnInit() {
+		// needs to close if returns from editor after delete slide
+		this.dialog.closeAll();
+
 		this.route.data
 			.subscribe(
 				(data: Data) => {
@@ -114,7 +117,7 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 
 		this.$induction.reorderSlide(buildReq)
 			.subscribe(
-				(res: Response) => {console.log(res);
+				(res: Response) => {
 					this.router.navigate(['/induction', 'edit', this.routeData._id], {
 						queryParams: {
 							reload: 'true',
@@ -202,6 +205,13 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 			.subscribe(res => {});
 	}
 
+	private clearSearch(searchText): void {
+		if( searchText !== '' ) {
+			this.search = '';
+			this.searchFn('');
+		}
+	}
+
 	private searchFn(key): void {
 		let regx = new RegExp(key);
 
@@ -276,6 +286,15 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 			this.coreService.enableProgressbar();
 			this.router.navigate(['/induction', 'template', this.routeData._id], {
 				queryParams: {
+					action: 'create'
+				}
+			});
+		} else if ( howToCreate.toLowerCase() === 'quiz' ) {
+			this.router.navigate(['/induction', 'editor'], {
+				queryParams: {
+					ind: this.routeData._id,
+					tmp: this.routeData.quizTemplateId,
+					slide: '',
 					action: 'create'
 				}
 			});

@@ -35,8 +35,11 @@
 			  </button>
 			</ul>
 
-			<div class="-slide-search-control-">
-				<i class="material-icons">search</i>
+			<div class="-slide-search-control-" [ngClass]="{ 'pointer': search !== '' }">
+				<span class="search-control" (click)="clearSearch(search)">
+					<i class="material-icons" *ngIf="!search">search</i>
+					<i class="material-icons" *ngIf="search">clear</i>
+				</span>
 				<input class="slide-search-control" type="text" placeholder="Start typing to search slides..." [(ngModel)]="search" (ngModelChange)="searchFn($event)">
 			</div>
 		</div>

@@ -150,8 +150,10 @@ input[disabled] {
 
 	/* form */
 	.editor-header form {
+		position: relative;
 		float: left;
 		max-width: 27rem;
+		padding-left: 4.2rem;
 	}
 	.editor-header input {
 		display: block;
@@ -178,9 +180,43 @@ input[disabled] {
 		background-color: $palette-light;
 	}
 
+	/* btn-goto-induction */
+	.editor-header .btn-goto-induction {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		width: 3.7rem;
+		height: 3.7rem;
+		text-align: center;
+		background-color: $palette-semilight;
+		cursor: pointer;
+		-webkit-border-radius: .3rem;
+		-moz-border-radius: .3rem;
+		border-radius: .3rem;
+
+		.material-icons {
+			display: block;
+			width: 100%;
+			font-size: 2.7rem;
+			line-height: 3.7rem;
+			text-align: center;
+			color: $palette-text-light;
+			-webkit-transition: all .14s ease-out;
+			-moz-transition: all .14s ease-out;
+			-ms-transition: all .14s ease-out;
+			-o-transition: all .14s ease-out;
+			transition: all .14s ease-out;
+		}
+
+		&:hover .material-icons {
+			color: $palette-text;
+		}
+	}
+
 	/* saveAs */
 	.save-as {
-		margin-top: .8rem;
+		margin-top: .9rem;
 	}
 }
 
