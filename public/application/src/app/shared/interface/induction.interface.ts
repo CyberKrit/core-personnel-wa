@@ -170,13 +170,30 @@ export interface IGenEditorPostAction {
 /* ==[ EDITOR > SECTION ]== */
 
 export interface IEditorSectionFormData {
-	name: string;
+	name?: string;
 	header: string;
 }
 export interface ICompareValuesSection {
 	status?: string;
 	name?: string;
 	header?: string;
+}
+
+/* ==[ EDITOR > IMAGE-CAPTION ]== */
+
+export interface IEditorImageCaptionFormData {
+	name?: string;
+	template?: string;
+	status?: string;
+	caption: string;
+	uploadFile: string;
+	mediaId: string;
+}
+export interface ICompareValuesImageCaption {
+	status?: string;
+	name?: string;
+	caption?: string;
+	uploadFile?: string;
 }
 
 

@@ -33,7 +33,7 @@ var upload = multer({
 	storage: storage,
 
 	fileFilter: function (req, file, cb) {
-	  var filetypes = /jpg|jpeg|png|gif|psd/;
+	  var filetypes = /jpg|jpeg|png|gif/;
 	  var mimetype = filetypes.test(file.mimetype);
 	  var extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 

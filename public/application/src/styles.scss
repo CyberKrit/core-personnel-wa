@@ -429,6 +429,9 @@ button._busy_ {
 
 /*** button styling ***/
 
+.file-upload-wrapper {
+	padding-bottom: 3rem;
+}
 .file-upload-wrapper-ctrl .btn-remove {
 	position: absolute;
 	top: -.5rem;
@@ -928,6 +931,9 @@ button._dropdown_ {
 // 	width: 90% !important;
 // 	max-width: 320px !important;
 // }
+.cdk-overlay-container {
+	z-index: 99999999999;
+}
 .modal-title {
 	padding: 0;
 	margin: 0;

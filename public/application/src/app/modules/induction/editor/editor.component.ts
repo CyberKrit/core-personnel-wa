@@ -105,7 +105,7 @@ export class EditorComponent implements OnInit, ICanDeactivateGuard {
 					this.$induction.editorFormSubmitComplete();
 					this.lazy = false;
 
-					if( this.nativeData.action === 'create' ) {
+					if( this.nativeData.action === 'create' && res.hasOwnProperty('data') ) {
 						this.router.navigate(['/induction', 'editor'], {
 							queryParams: {
 								ind: this.nativeData.induction._id,

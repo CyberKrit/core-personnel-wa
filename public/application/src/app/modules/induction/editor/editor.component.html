@@ -34,9 +34,22 @@
 			(formData)="getFormData($event)"
 			(detectChange)="detectChange($event)">
 		</editor-section>
+		
 		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 1">2</div>
 		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 2">3</div>
-		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 3">4</div>
+
+		<editor-image-with-caption 
+			*ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 3"
+			[slide]="nativeData?.slide"
+			[slideName]="slideName"
+			[inductionId]="nativeData?.induction?._id"
+			[action]="nativeData?.action"
+			[templateId]="nativeData?.template?._id"
+			[saveAs]="saveAs"
+			(formData)="getFormData($event)"
+			(detectChange)="detectChange($event)">
+		</editor-image-with-caption>
+
 		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 4">5</div>
 		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 5">6</div>
 		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 6">7</div>

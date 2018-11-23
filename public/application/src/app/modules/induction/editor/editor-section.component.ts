@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { Observable, Subscription } from 'rxjs';
 
 // custom imports
-// import { FormService } from '../../../shared/service/form.service';
+import { FormService } from '../../../shared/service/form.service';
 import { InductionService } from '../induction.service';
 import { CoreService } from '../../core/core.service';
 import { IEditorSectionFormData, IGenEditorPostAction, ICompareValuesSection } from '../../../shared/interface/induction.interface';
@@ -44,7 +44,7 @@ export class EditorSectionComponent implements OnInit, OnChanges, OnDestroy {
 
 	// form
 	public sectionEditorForm: FormGroup;
-	public header: string | null;
+	public header: string | null = null;
 	public subFormSubmit: Subscription;
 	public subFormSubmitSuccess: Subscription;
 	private formValueChanges: Subscription;
@@ -56,7 +56,8 @@ export class EditorSectionComponent implements OnInit, OnChanges, OnDestroy {
 	constructor(
 		private fb: FormBuilder,
 		private $induction: InductionService,
-		private $core: CoreService) {}
+		private $core: CoreService,
+		private $form: FormService) {}
 
 	public ngOnInit(): void {
 		this.detectChange.emit(false);
@@ -110,11 +111,12 @@ export class EditorSectionComponent implements OnInit, OnChanges, OnDestroy {
 
 	public sectionEditorFormSubmit({ value, valid }: { value: any, valid: boolean }) {
 		if( valid ) {
+			let filteredValue = this.$form.whiteSpaceControl(value);
 			this.sectionEditorForm.disable();
 			value['name'] = this.slideName;
 			value['template'] = this.templateId;
 			value['status'] = this.saveAs ? 'publish' : 'draft';
-			this.formData.emit(this.emitEvent(value));
+			this.formData.emit(this.emitEvent(filteredValue));
 		} else {
 			this.sectionEditorForm.enable();
 			this.sectionEditorForm.get('header').markAsTouched();

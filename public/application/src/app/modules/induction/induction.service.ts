@@ -18,6 +18,8 @@ import {
 	// editor
 	IEditorResolveReq, IEditorResolveRes, IGenEditorPostAction,
 	IEditorSectionFormData,
+	// image-caption
+	IEditorImageCaptionFormData,
 	// quiz
 	IQuizCreateReq, IQuizCreateRes,
 	// template
@@ -297,6 +299,16 @@ export class InductionService {
 	/* section */
 	public editorSection(formData: IEditorSectionFormData, inductionId: string, action: string, slideId: string): Observable<IGenEditorPostAction> {
 		const baseUrl = this.baseURL + 'api/editor/section?inductionId=' + inductionId + '&action=' + action + '&slideId=' + slideId;
+
+		return this.http
+			.post<IGenEditorPostAction>(baseUrl, formData)
+			.pipe(
+				catchError(this.handleError)
+			);
+	}
+	/* image-caption editor */
+	public editorImageCaption(formData: IEditorImageCaptionFormData, inductionId: string, slideId: string): Observable<IGenEditorPostAction> {
+		const baseUrl = this.baseURL + 'api/editor/imageCaption?inductionId=' + inductionId + '&slideId=' + slideId;
 
 		return this.http
 			.post<IGenEditorPostAction>(baseUrl, formData)

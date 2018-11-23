@@ -17,6 +17,7 @@ import { EditorComponent } from './editor/editor.component';
 import { EditorQuizComponent } from './editor/editor-quiz.component';
 import { EditorSectionComponent } from './editor/editor-section.component';
 import { EditorImageOnly } from './editor/editor-image-only.component';
+import { EditorImageWithCaption } from './editor/editor-image-with-caption.component';
 
 // services
 import { InductionService } from './induction.service';
@@ -40,7 +41,8 @@ import { AngularMaterialModule } from '../core/angular-material.module';
 		EditorComponent,
 		EditorQuizComponent,
 		EditorSectionComponent,
-		EditorImageOnly
+		EditorImageOnly,
+		EditorImageWithCaption
 	],
 	imports: [
 		CommonModule,

@@ -20,13 +20,12 @@ module.exports = (app) => {
 	// resolve
 	app.get('/api/editor', failMsg('Template has failed to load'), InductionController.editorResolve);
 	app.post('/api/editor/section', failMsg('Template has failed to act accordingly'), InductionController.editorSection);
+	app.post('/api/editor/imageCaption', failMsg('Template has failed to act accordingly'), InductionController.editorImageCaption);
 
 
 
 	// *** [[ slide ]] *** //
 
-	// create a slide
-	// app.get('/api/induction/slide/create/:id', failMsg('Slide creation failed'), InductionController.slide);
 	// // delete a slide
 	app.delete('/api/induction/slide/:induction/:slide', failMsg('Slide deletion failed'), InductionController.deleteSlide);
 	// // clone a slide
@@ -39,8 +38,6 @@ module.exports = (app) => {
 
 	// edit resolve data
 	app.get('/api/induction/edit/:id', failMsg('Induction edit data has failed to load'), InductionController.editResolve);
-	// induction-single page resolve
-	// app.get('/api/induction/singleResolveData/:id/:index', failMsg('Induction data failed to load'), InductionController.inductionSingleData);
 
 
 };

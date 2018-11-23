@@ -475,7 +475,7 @@ module.exports = {
 			inductionData = InductionModel.findById(ind);
 		}
 		if( mongoose.Types.ObjectId.isValid(slide) ) {
-			slideData = SlideModel.findById(slide);
+			slideData = SlideModel.findById(slide).populate('resource.source');
 		}
 
 		Promise.all([templateData, inductionData, slideData])
@@ -486,6 +486,7 @@ module.exports = {
 
 	},
 	
+	// section
 	editorSection(req, res, next) {
 		if( req.query.action === 'create' ) {
 			SlideModel.create(req.body)
@@ -540,6 +541,80 @@ module.exports = {
 		
 	},
 
+	// image with caption
+	editorImageCaption(req, res, next) {
+		let { template, name, status } = req.body;
+
+		let buildSlide = {
+			template,
+			name,
+			resource: [{
+				type: 'image',
+				source: req.body.mediaId,
+				caption: req.body.caption
+			}],
+			status
+		};
+
+		if( req.query.slideId ) {
+
+			buildSlide['updatedAt'] = new Date();
+			SlideModel.findByIdAndUpdate(req.query.slideId, {
+					$set: buildSlide
+				}, { new: true})
+				.then(updatedSlide => {
+					if( updatedSlide ) {
+						res.statusMessage = UtilityFn.rippleSuccessShow('Slide has been updated');
+						res.status(200).send({ status: true, message: 'Slide has been updated' });
+					} else {
+						res.statusMessage = UtilityFn.rippleErr('Slide has failed to update');
+						res.status(501).send({ message: 'Slide has failed to update'});
+					}
+				})
+				.catch(next);
+
+		} else {
+
+			SlideModel.create(buildSlide)
+				.then(slide => {
+					if( slide ) {
+						InductionModel.findById(req.query.inductionId)
+							.then(induction => {
+								let slides = ++induction.slideCount || 0;
+
+								// save slide ref in induction array
+								InductionModel.findByIdAndUpdate(req.query.inductionId, {
+									$inc: { slideCount: 1 },
+									$push: {
+										slides: {
+											slide: mongoose.Types.ObjectId(slide._id),
+											order: slides
+										}
+									}
+								}, { new: true })
+								.then(updatedInduction => {
+									if( updatedInduction ) {
+										res.status(200).send({ status: true, message: 'slide saved', data: slide });
+									} else {
+										res.statusMessage = UtilityFn.rippleErr('Slide has failed to save');
+										res.status(501).send({ message: 'Slide has failed to save'});
+									}
+								})
+								.catch(next);
+
+						})
+						.catch(next);
+
+					} else {
+						res.statusMessage = UtilityFn.rippleErr('Slide has failed to save');
+						res.status(501).send({ message: 'Slide has failed to save'});
+					}
+				})
+				.catch(next);
+
+		}
+
+	},
 
 	/* ==[ EDITOR > QUIZ ]== */
 
