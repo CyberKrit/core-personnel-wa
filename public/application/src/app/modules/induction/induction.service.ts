@@ -18,8 +18,14 @@ import {
 	// editor
 	IEditorResolveReq, IEditorResolveRes, IGenEditorPostAction,
 	IEditorSectionFormData,
+	// text-only
+	IEditorTextOnlyFormData,
+	// image only
+	IEditorImageOnlyFormData,
 	// image-caption
 	IEditorImageCaptionFormData,
+	// imageLContentR
+	IEditorImageLContentRFormData,
 	// quiz
 	IQuizCreateReq, IQuizCreateRes,
 	// template
@@ -306,9 +312,39 @@ export class InductionService {
 				catchError(this.handleError)
 			);
 	}
+	/* text-only editor */
+	public editorTextOnly(formData: IEditorTextOnlyFormData, inductionId: string, slideId: string): Observable<IGenEditorPostAction> {
+		const baseUrl = this.baseURL + 'api/editor/textOnly?inductionId=' + inductionId + '&slideId=' + slideId;
+
+		return this.http
+			.post<IGenEditorPostAction>(baseUrl, formData)
+			.pipe(
+				catchError(this.handleError)
+			);
+	}
+	/* image-only editor */
+	public editorImageOnly(formData: IEditorImageOnlyFormData, inductionId: string, slideId: string): Observable<IGenEditorPostAction> {
+		const baseUrl = this.baseURL + 'api/editor/imageOnly?inductionId=' + inductionId + '&slideId=' + slideId;
+
+		return this.http
+			.post<IGenEditorPostAction>(baseUrl, formData)
+			.pipe(
+				catchError(this.handleError)
+			);
+	}
 	/* image-caption editor */
 	public editorImageCaption(formData: IEditorImageCaptionFormData, inductionId: string, slideId: string): Observable<IGenEditorPostAction> {
 		const baseUrl = this.baseURL + 'api/editor/imageCaption?inductionId=' + inductionId + '&slideId=' + slideId;
+
+		return this.http
+			.post<IGenEditorPostAction>(baseUrl, formData)
+			.pipe(
+				catchError(this.handleError)
+			);
+	}
+	/* imageLContentR editor */
+	public editorImageLContentR(formData: IEditorImageLContentRFormData, inductionId: string, slideId: string): Observable<IGenEditorPostAction> {
+		const baseUrl = this.baseURL + 'api/editor/imageLContentR?inductionId=' + inductionId + '&slideId=' + slideId;
 
 		return this.http
 			.post<IGenEditorPostAction>(baseUrl, formData)

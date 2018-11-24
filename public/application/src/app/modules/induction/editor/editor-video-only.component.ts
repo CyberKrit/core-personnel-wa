@@ -11,7 +11,7 @@ import { MediaService } from '../../../shared/service/media.service';
 import { ICompareValuesImageOnly, IGenEditorPostAction, IEditorImageOnlyFormData } from '../../../shared/interface/induction.interface';
 
 @Component({
-	selector: 'editor-image-only',
+	selector: 'editor-video-only',
 	template: `
 		<form 
 			novalidate autocomplete="false" 
@@ -19,7 +19,7 @@ import { ICompareValuesImageOnly, IGenEditorPostAction, IEditorImageOnlyFormData
 
 				<div class="file-upload-wrapper">
 					<label>
-						Upload an image
+						Upload an video
 						<span class="desc">Click the gray box below to upload your image</span>
 					</label>
 
@@ -57,7 +57,7 @@ import { ICompareValuesImageOnly, IGenEditorPostAction, IEditorImageOnlyFormData
 								This field is required
 							</li>
 							<li class="err-item" *ngIf="unknownFormat">
-								Upload has failed. Please upload a valid image format.
+								Upload has failed. Please upload a valid video format.
 							</li>
 						</ul>
 					</div>
@@ -67,7 +67,7 @@ import { ICompareValuesImageOnly, IGenEditorPostAction, IEditorImageOnlyFormData
 	`,
 	styleUrls: ['./editor.component.scss']
 })
-export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
+export class EditorVideoOnly implements OnInit, OnDestroy, OnChanges {
   // get data from parent
 	@Input() public action: string;
 	@Input() public slide: any;

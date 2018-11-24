@@ -8,67 +8,79 @@ import { FormService } from '../../../shared/service/form.service';
 import { InductionService } from '../induction.service';
 import { MediaService } from '../../../shared/service/media.service';
 // import interface
-import { ICompareValuesImageOnly, IGenEditorPostAction, IEditorImageOnlyFormData } from '../../../shared/interface/induction.interface';
+import { ICompareValuesImageLContentR, IGenEditorPostAction, IEditorImageLContentRFormData } from '../../../shared/interface/induction.interface';
 
 @Component({
-	selector: 'editor-image-only',
+	selector: 'editor-image-n-content-right',
 	template: `
 		<form 
 			novalidate autocomplete="false" 
 			[formGroup]="imageWithCaptionForm" (ngSubmit)="formSubmit(imageWithCaptionForm)">
-
-				<div class="file-upload-wrapper">
-					<label>
-						Upload an image
-						<span class="desc">Click the gray box below to upload your image</span>
-					</label>
-
-					<input 
-						class="_visuallyhidden_" type="file" 
-						formControlName="uploadFile" #fileInput
-						(change)="uploadFileHasChanged($event)">
-
-					<div class="file-upload-wrapper-ctrl">
-						<div class="image-upload-placeholder" matRipple (click)="fileInput.click()">
-							<div 
-								class="_image-upload-placeholder_"
-								[ngStyle]="{ 'background-image': 'url(' + fileSrc + ')'}"
-								*ngIf="fileSrc">
-							</div>
-
-							<mat-progress-bar 
-								mode="determinate" 
-								[value]="progress" *ngIf="progress && progress !== 100"></mat-progress-bar>
-
-							<div class="_loading_" *ngIf="progress === 100 && fileSrc">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="7" stroke="#bab8b9" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
-							</div>
-						</div>
-
-						<div class="btn-grp">
-							<button class="btn-remove" type="button" mat-icon-button 
-								(click)="removeFile()" *ngIf="fileSrc">
-						    <mat-icon aria-label="discard file">cancel</mat-icon>
-						  </button>
-						</div>
-
-						<ul class="err-list">
-							<li class="err-item" *ngIf="!fileSrc && isSubmittedOnce">
-								This field is required
-							</li>
-							<li class="err-item" *ngIf="unknownFormat">
-								Upload has failed. Please upload a valid image format.
-							</li>
-						</ul>
-					</div>
+			<div class="editor-image-with-caption">
+				<div class="control-wrapper">
+					<label for="caption">Write a caption for the following image</label>
+					<textarea type="text" id="caption" formControlName="content"></textarea>
+					<ul class="err-list" *ngIf="imageWithCaptionForm.get('content').touched">
+						<li 
+							class="err-item"
+							*ngIf="imageWithCaptionForm.get('content').errors?.required">
+							This field is required
+						</li>
+					</ul>
 				</div>
-			
+			</div>
+
+			<div class="file-upload-wrapper">
+				<label>
+					Upload an image
+					<span class="desc">Click the gray box below to upload your image</span>
+				</label>
+
+				<input 
+					class="_visuallyhidden_" type="file" 
+					formControlName="uploadFile" #fileInput
+					(change)="uploadFileHasChanged($event)">
+
+				<div class="file-upload-wrapper-ctrl">
+					<div class="image-upload-placeholder" matRipple (click)="fileInput.click()">
+						<div 
+							class="_image-upload-placeholder_"
+							[ngStyle]="{ 'background-image': 'url(' + fileSrc + ')'}"
+							*ngIf="fileSrc">
+						</div>
+
+						<mat-progress-bar 
+							mode="determinate" 
+							[value]="progress" *ngIf="progress && progress !== 100"></mat-progress-bar>
+
+						<div class="_loading_" *ngIf="progress === 100 && fileSrc">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="7" stroke="#bab8b9" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+						</div>
+					</div>
+
+					<div class="btn-grp">
+						<button class="btn-remove" type="button" mat-icon-button 
+							(click)="removeFile()" *ngIf="fileSrc">
+					    <mat-icon aria-label="discard file">cancel</mat-icon>
+					  </button>
+					</div>
+
+					<ul class="err-list">
+						<li class="err-item" *ngIf="!fileSrc && isSubmittedOnce">
+							This field is required
+						</li>
+						<li class="err-item" *ngIf="unknownFormat">
+							Upload has failed. Please upload a valid image format.
+						</li>
+					</ul>
+				</div>
+			</div>
 		</form>
 	`,
 	styleUrls: ['./editor.component.scss']
 })
-export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
-  // get data from parent
+export class EditorImageNContentRight implements OnInit, OnDestroy, OnChanges {
+	// get data from parent
 	@Input() public action: string;
 	@Input() public slide: any;
 	@Input() public slideName: string;
@@ -84,6 +96,7 @@ export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
 	private subFormSubmit: Subscription;
 	private formValueChanges: Subscription;
 	private subFormSubmitSuccess: Subscription;
+	private content: string | null = null;
 	public progress: number = 0;
 	public fileSrc: string | null = null;
 	public fileId: string | null = null;
@@ -91,8 +104,8 @@ export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
 	public isSubmittedOnce: boolean = false;
 
 	// compare values
-	private previousValueSet: ICompareValuesImageOnly = {};
-	private currentValueSet: ICompareValuesImageOnly = {};
+	private previousValueSet: ICompareValuesImageLContentR = {};
+	private currentValueSet: ICompareValuesImageLContentR = {};
 
 	constructor(
 		private fb: FormBuilder,
@@ -106,7 +119,10 @@ export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
 
 		if( this.slide ) {
 			if( 'name' in this.slide ) 
+				this.content = this.slide.content;
+
 				this.previousValueSet['name'] = this.slideName;
+				this.previousValueSet['content'] = this.slide.content;
 				this.previousValueSet['uploadFile'] = this.slide.resource[0].source.src;
 				this.fileSrc = this.slide.resource[0].source.src || null;
 				this.fileId = this.slide.resource[0].source._id || null;
@@ -114,13 +130,15 @@ export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
 		}
 
 		this.imageWithCaptionForm = this.fb.group({
+			content: [this.content, [Validators.required]],
 			uploadFile: null
 		});
 
 		// track changes
 		this.formValueChanges = this.imageWithCaptionForm.valueChanges
 			.subscribe(
-				(res: ICompareValuesImageOnly) => {
+				(res: ICompareValuesImageLContentR) => {
+					this.currentValueSet['content'] = res.content;
 					this.currentValueSet['uploadFile'] = res.uploadFile;
 					this.detectChange.emit(true);
 				}
@@ -209,15 +227,17 @@ export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
 			this.formData.emit(this.emitEvent(filteredValue));
 		} else {
 			this.imageWithCaptionForm.enable();
+			this.imageWithCaptionForm.get('content').markAsTouched();
+			this.imageWithCaptionForm.get('uploadFile').markAsTouched();
 		}
 	}
 
-	private emitEvent(value: IEditorImageOnlyFormData): Observable<IGenEditorPostAction> {
+	private emitEvent(value: IEditorImageLContentRFormData): Observable<IGenEditorPostAction> {
 		let slideId:string = '';
 		try {
 			slideId = this.slide._id;
 		} catch (err) {}
-		return this.$induction.editorImageOnly(value, this.inductionId, slideId);
+		return this.$induction.editorImageLContentR(value, this.inductionId, slideId);
 	}
 
 	public ngOnDestroy(): void {

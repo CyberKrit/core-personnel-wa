@@ -6,22 +6,22 @@ import { Observable, Subscription } from 'rxjs';
 import { FormService } from '../../../shared/service/form.service';
 import { InductionService } from '../induction.service';
 import { CoreService } from '../../core/core.service';
-import { IEditorSectionFormData, IGenEditorPostAction, ICompareValuesSection } from '../../../shared/interface/induction.interface';
+import { IEditorTextOnlyFormData, IGenEditorPostAction, ICompareValuesTextOnly } from '../../../shared/interface/induction.interface';
 
 @Component({
-	selector: 'editor-quiz',
+	selector: 'editor-text-only',
 	template: `
 		<form 
 			novalidate autocomplete="false" 
 			[formGroup]="sectionEditorForm" (ngSubmit)="sectionEditorFormSubmit(sectionEditorForm)">
 			<div class="_editor-section_">
 				<div class="control-wrapper">
-					<label for="sectionTitle">Section title</label>
-					<input type="text" id="sectionTitle" formControlName="header">
-					<ul class="err-list" *ngIf="sectionEditorForm.get('header').touched">
+					<label for="sectionTitle">Enter content here</label>
+					<textarea type="text" id="sectionTitle" formControlName="content"></textarea>
+					<ul class="err-list" *ngIf="sectionEditorForm.get('content').touched">
 						<li 
 							class="err-item"
-							*ngIf="sectionEditorForm.get('header').errors?.required">
+							*ngIf="sectionEditorForm.get('content').errors?.required">
 							This field is required
 						</li>
 					</ul>
@@ -31,7 +31,7 @@ import { IEditorSectionFormData, IGenEditorPostAction, ICompareValuesSection } f
 	`,
 	styleUrls: ['./editor.component.scss']
 })
-export class EditorQuizComponent implements OnInit, OnChanges, OnDestroy {
+export class EditorTextOnlyComponent implements OnInit, OnChanges, OnDestroy {
 	// get data from parent
 	@Input() public action: string;
 	@Input() public slide: any;
@@ -44,14 +44,14 @@ export class EditorQuizComponent implements OnInit, OnChanges, OnDestroy {
 
 	// form
 	public sectionEditorForm: FormGroup;
-	public header: string | null = null;
+	public content: string | null = null;
 	public subFormSubmit: Subscription;
 	public subFormSubmitSuccess: Subscription;
 	private formValueChanges: Subscription;
 
 	// compare values
-	private previousValueSet: ICompareValuesSection = {};
-	private currentValueSet: ICompareValuesSection = {};
+	private previousValueSet: ICompareValuesTextOnly = {};
+	private currentValueSet: ICompareValuesTextOnly = {};
 
 	constructor(
 		private fb: FormBuilder,
@@ -65,22 +65,22 @@ export class EditorQuizComponent implements OnInit, OnChanges, OnDestroy {
 		// define value for formControl
 		if( this.slide ) {
 			if( 'name' in this.slide ) 
-				this.header = this.slide.header;
+				this.content = this.slide.content;
 				this.previousValueSet['name'] = this.slideName;
-				this.previousValueSet['header'] = this.slide.header;
+				this.previousValueSet['content'] = this.slide.content;
 				this.previousValueSet['status'] = this.saveAs ? 'publish' : 'draft';
 		}
 
 		// configure form
 		this.sectionEditorForm = this.fb.group({
-			header: [this.header, [Validators.required]]
+			content: [this.content, [Validators.required]]
 		});
 
 		// track changes
 		this.formValueChanges = this.sectionEditorForm.valueChanges
 			.subscribe(
-				(res: { header: string }) => {
-					this.currentValueSet['header'] = res.header;
+				(res: { content: string }) => {
+					this.currentValueSet['content'] = res.content;
 					this.detectChange.emit(true);
 				}
 			);
@@ -113,22 +113,22 @@ export class EditorQuizComponent implements OnInit, OnChanges, OnDestroy {
 		if( valid ) {
 			let filteredValue = this.$form.whiteSpaceControl(value);
 			this.sectionEditorForm.disable();
-			value['name'] = this.slideName;
-			value['template'] = this.templateId;
-			value['status'] = this.saveAs ? 'publish' : 'draft';
+			filteredValue['name'] = this.slideName;
+			filteredValue['template'] = this.templateId;
+			filteredValue['status'] = this.saveAs ? 'publish' : 'draft';
 			this.formData.emit(this.emitEvent(filteredValue));
 		} else {
 			this.sectionEditorForm.enable();
-			this.sectionEditorForm.get('header').markAsTouched();
+			this.sectionEditorForm.get('content').markAsTouched();
 		}
 	}
 
-	private emitEvent(value: IEditorSectionFormData): Observable<IGenEditorPostAction> {
+	private emitEvent(value: IEditorTextOnlyFormData): Observable<IGenEditorPostAction> {
 		let slideId:string = '';
 		try {
 			slideId = this.slide._id;
 		} catch (err) {}
-		return this.$induction.editorSection(value, this.inductionId, this.action, slideId);
+		return this.$induction.editorTextOnly(value, this.inductionId, slideId);
 	}
 
 	ngOnDestroy(): void {

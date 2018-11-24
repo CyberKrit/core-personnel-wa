@@ -20,7 +20,10 @@ module.exports = (app) => {
 	// resolve
 	app.get('/api/editor', failMsg('Template has failed to load'), InductionController.editorResolve);
 	app.post('/api/editor/section', failMsg('Template has failed to act accordingly'), InductionController.editorSection);
+	app.post('/api/editor/textOnly', failMsg('Template has failed to act accordingly'), InductionController.editorTextOnly);
+	app.post('/api/editor/imageOnly', failMsg('Template has failed to act accordingly'), InductionController.editorImageOnly);
 	app.post('/api/editor/imageCaption', failMsg('Template has failed to act accordingly'), InductionController.editorImageCaption);
+	app.post('/api/editor/imageLContentR', failMsg('Template has failed to act accordingly'), InductionController.editorImageLContentR);
 
 
 

@@ -35,7 +35,17 @@
 			(detectChange)="detectChange($event)">
 		</editor-section>
 		
-		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 1">2</div>
+		<editor-text-only 
+			*ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 1"
+			[slide]="nativeData?.slide"
+			[slideName]="slideName"
+			[inductionId]="nativeData?.induction?._id"
+			[action]="nativeData?.action"
+			[templateId]="nativeData?.template?._id"
+			[saveAs]="saveAs"
+			(formData)="getFormData($event)"
+			(detectChange)="detectChange($event)">
+		</editor-text-only>
 		
 		<editor-image-only 
 			*ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 2"
@@ -61,11 +71,65 @@
 			(detectChange)="detectChange($event)">
 		</editor-image-with-caption>
 
-		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 4">5</div>
-		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 5">6</div>
-		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 6">7</div>
-		<div *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 7">8</div>
-		<editor-quiz *ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 8"></editor-quiz>
+		<editor-image-n-content-right 
+			*ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 4"
+			[slide]="nativeData?.slide"
+			[slideName]="slideName"
+			[inductionId]="nativeData?.induction?._id"
+			[action]="nativeData?.action"
+			[templateId]="nativeData?.template?._id"
+			[saveAs]="saveAs"
+			(formData)="getFormData($event)"
+			(detectChange)="detectChange($event)">
+		</editor-image-n-content-right>
+
+		<editor-image-n-content-left 
+			*ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 5"
+			[slide]="nativeData?.slide"
+			[slideName]="slideName"
+			[inductionId]="nativeData?.induction?._id"
+			[action]="nativeData?.action"
+			[templateId]="nativeData?.template?._id"
+			[saveAs]="saveAs"
+			(formData)="getFormData($event)"
+			(detectChange)="detectChange($event)">
+		</editor-image-n-content-left>
+
+		<editor-content-with-three-images
+			*ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 6"
+			[slide]="nativeData?.slide"
+			[slideName]="slideName"
+			[inductionId]="nativeData?.induction?._id"
+			[action]="nativeData?.action"
+			[templateId]="nativeData?.template?._id"
+			[saveAs]="saveAs"
+			(formData)="getFormData($event)"
+			(detectChange)="detectChange($event)">
+		</editor-content-with-three-images>
+
+		<editor-video-only
+			*ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 7"
+			[slide]="nativeData?.slide"
+			[slideName]="slideName"
+			[inductionId]="nativeData?.induction?._id"
+			[action]="nativeData?.action"
+			[templateId]="nativeData?.template?._id"
+			[saveAs]="saveAs"
+			(formData)="getFormData($event)"
+			(detectChange)="detectChange($event)">
+		</editor-video-only>
+
+		<editor-quiz 
+			*ngIf="templateSlugs.indexOf(nativeData?.template?.slug) === 8"
+			[slide]="nativeData?.slide"
+			[slideName]="slideName"
+			[inductionId]="nativeData?.induction?._id"
+			[action]="nativeData?.action"
+			[templateId]="nativeData?.template?._id"
+			[saveAs]="saveAs"
+			(formData)="getFormData($event)"
+			(detectChange)="detectChange($event)">
+			</editor-quiz>
 	</div>
 
 	<div class="editor-control">

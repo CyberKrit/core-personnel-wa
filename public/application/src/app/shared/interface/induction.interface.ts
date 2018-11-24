@@ -179,6 +179,38 @@ export interface ICompareValuesSection {
 	header?: string;
 }
 
+
+/* ==[ EDITOR > TEXT-ONLY ]== */
+
+export interface IEditorTextOnlyFormData {
+	name?: string;
+	template?: string;
+	status?: string;
+	uploadFile: string;
+	content: string;
+}
+export interface ICompareValuesTextOnly {
+	status?: string;
+	name?: string;
+	content?: string;
+}
+
+
+/* ==[ EDITOR > IMAGE-ONLY ]== */
+
+export interface IEditorImageOnlyFormData {
+	name?: string;
+	template?: string;
+	status?: string;
+	uploadFile: string;
+	mediaId: string;
+}
+export interface ICompareValuesImageOnly {
+	status?: string;
+	name?: string;
+	uploadFile?: string;
+}
+
 /* ==[ EDITOR > IMAGE-CAPTION ]== */
 
 export interface IEditorImageCaptionFormData {
@@ -193,6 +225,23 @@ export interface ICompareValuesImageCaption {
 	status?: string;
 	name?: string;
 	caption?: string;
+	uploadFile?: string;
+}
+
+/* ==[ EDITOR > IMAGE-LEFT-CONTENT-RIGHT ]== */
+
+export interface IEditorImageLContentRFormData {
+	name?: string;
+	template?: string;
+	status?: string;
+	content: string;
+	uploadFile: string;
+	mediaId: string;
+}
+export interface ICompareValuesImageLContentR {
+	status?: string;
+	name?: string;
+	content?: string;
 	uploadFile?: string;
 }
 
