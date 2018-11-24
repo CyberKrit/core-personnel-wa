@@ -837,6 +837,75 @@ module.exports = {
 
 	},
 
+	// quiz
+	editorQuiz(req, res, next) {console.log(req.body);
+		let { template, name, status, quiz } = req.body;
+
+		let buildSlide = {
+			template,
+			name,
+			status,
+			quiz
+		};
+
+		if( req.query.slideId ) {
+
+			buildSlide['updatedAt'] = new Date();
+			SlideModel.findByIdAndUpdate(req.query.slideId, {
+					$set: buildSlide
+				}, { new: true})
+				.then(updatedSlide => {
+					if( updatedSlide ) {
+						res.statusMessage = UtilityFn.rippleSuccessShow('Slide has been updated');
+						res.status(200).send({ status: true, message: 'Slide has been updated' });
+					} else {
+						res.statusMessage = UtilityFn.rippleErr('Slide has failed to update');
+						res.status(501).send({ message: 'Slide has failed to update'});
+					}
+				})
+				.catch(next);
+
+		} else {
+
+			SlideModel.create(buildSlide)
+				.then(slide => {
+					if( slide ) {
+						InductionModel.findById(req.query.inductionId)
+							.then(induction => {
+								let slides = ++induction.slideCount || 0;
+
+								// save slide ref in induction array
+								InductionModel.findByIdAndUpdate(req.query.inductionId, {
+									$inc: { slideCount: 1 },
+									$push: {
+										slides: {
+											slide: mongoose.Types.ObjectId(slide._id),
+											order: slides
+										}
+									}
+								}, { new: true })
+								.then(updatedInduction => {
+									if( updatedInduction ) {
+										res.status(200).send({ status: true, message: 'slide saved', data: slide });
+									} else {
+										res.statusMessage = UtilityFn.rippleErr('Slide has failed to save');
+										res.status(501).send({ message: 'Slide has failed to save'});
+									}
+								})
+								.catch(next);
+
+						})
+						.catch(next);
+
+					} else {
+						res.statusMessage = UtilityFn.rippleErr('Slide has failed to save');
+						res.status(501).send({ message: 'Slide has failed to save'});
+					}
+				})
+				.catch(next);
+		}
+	},
+
 	/* ==[ EDITOR > QUIZ ]== */
 
 	// create a quiz

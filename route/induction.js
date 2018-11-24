@@ -24,6 +24,7 @@ module.exports = (app) => {
 	app.post('/api/editor/imageOnly', failMsg('Template has failed to act accordingly'), InductionController.editorImageOnly);
 	app.post('/api/editor/imageCaption', failMsg('Template has failed to act accordingly'), InductionController.editorImageCaption);
 	app.post('/api/editor/imageLContentR', failMsg('Template has failed to act accordingly'), InductionController.editorImageLContentR);
+	app.post('/api/editor/quiz', failMsg('Template has failed to act accordingly'), InductionController.editorQuiz);
 
 
 

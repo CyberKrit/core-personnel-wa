@@ -228,6 +228,7 @@ export interface ICompareValuesImageCaption {
 	uploadFile?: string;
 }
 
+
 /* ==[ EDITOR > IMAGE-LEFT-CONTENT-RIGHT ]== */
 
 export interface IEditorImageLContentRFormData {
@@ -243,6 +244,28 @@ export interface ICompareValuesImageLContentR {
 	name?: string;
 	content?: string;
 	uploadFile?: string;
+}
+
+/* ==[ EDITOR > Quiz ]== */
+
+export interface IEditorQuizFormData {
+	name?: string;
+	template?: string;
+	status?: string;
+	content: string;
+	question: string;
+	mediaId: string;
+}
+export interface ICompareQuiz {
+	status?: string;
+	name?: string;
+	content?: string;
+	question?: string;
+	option?: ICompareQuizOption[];
+}
+export interface ICompareQuizOption {
+	option: string;
+	isTrue: boolean;
 }
 
 

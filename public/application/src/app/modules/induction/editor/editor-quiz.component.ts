@@ -6,28 +6,63 @@ import { Observable, Subscription } from 'rxjs';
 import { FormService } from '../../../shared/service/form.service';
 import { InductionService } from '../induction.service';
 import { CoreService } from '../../core/core.service';
-import { IEditorSectionFormData, IGenEditorPostAction, ICompareValuesSection } from '../../../shared/interface/induction.interface';
+import { IEditorQuizFormData, IGenEditorPostAction, ICompareQuiz } from '../../../shared/interface/induction.interface';
 
 @Component({
 	selector: 'editor-quiz',
 	template: `
 		<form 
 			novalidate autocomplete="false" 
-			[formGroup]="sectionEditorForm" (ngSubmit)="sectionEditorFormSubmit(sectionEditorForm)">
+			[formGroup]="sectionEditorForm">
 			<div class="_editor-section_">
 				<div class="control-wrapper">
-					<label for="sectionTitle">Section title</label>
-					<input type="text" id="sectionTitle" formControlName="header">
-					<ul class="err-list" *ngIf="sectionEditorForm.get('header').touched">
+					<label for="sectionTitle">Your Question</label>
+					<input type="text" id="sectionTitle" formControlName="question">
+					<ul class="err-list" *ngIf="sectionEditorForm.get('question').touched">
 						<li 
 							class="err-item"
-							*ngIf="sectionEditorForm.get('header').errors?.required">
+							*ngIf="sectionEditorForm.get('question').errors?.required">
 							This field is required
 						</li>
 					</ul>
 				</div>
 			</div>
 		</form>
+
+		<div class="control-wrapper control-wrapper-quiz-answers">
+			<label for="addOption">Possible answers</label>
+			<div class="display-option-ctrls">
+				<div class="display-option-ctrl" *ngFor="let option of quizOptions, let i = index">
+					<button type="button" 
+						(click)="validOption(i)" 
+						class="btn-select btn-select-{{ option.isTrue }}">
+					</button>
+					<button 
+						class="btn-remove" 
+						mat-icon-button 
+						matTooltip="Remove"
+						matTooltipPosition="above">
+				    <mat-icon aria-label="Clone Slide"
+				    (click)="removeOption(i)">delete_forever</mat-icon>
+				  </button>
+					{{ option.option }}
+				</div>
+			</div>
+			<div class="entry-an-option">
+				<input type="text" id="addOption" [(ngModel)]="listenOption" #inputOption (ngModelChange)="optionHasChanged(inputOption.value)">
+				<ul class="err-list">
+					<li class="err-item" *ngIf="errEmpty">
+						Please enter an option first
+					</li>
+					<li class="err-item" *ngIf="errRepeat">
+						This option is already in use
+					</li>
+				</ul>
+				<div class="file-upload-wrapper-ctrl">
+					<button class="btn-outline" type="button" (click)="addOptions(inputOption)">Add an Option</button>
+				</div>
+			</div>
+		</div>
 	`,
 	styleUrls: ['./editor.component.scss']
 })
@@ -44,14 +79,20 @@ export class EditorQuizComponent implements OnInit, OnChanges, OnDestroy {
 
 	// form
 	public sectionEditorForm: FormGroup;
-	public header: string | null = null;
+	public question: string | null = null;
 	public subFormSubmit: Subscription;
 	public subFormSubmitSuccess: Subscription;
 	private formValueChanges: Subscription;
 
 	// compare values
-	private previousValueSet: ICompareValuesSection = {};
-	private currentValueSet: ICompareValuesSection = {};
+	private previousValueSet: ICompareQuiz = {};
+	private currentValueSet: ICompareQuiz = {};
+
+	// quiz
+	public listenOption: string | null = null;
+	public quizOptions: Array<{ option: string, isTrue: boolean }> = [];
+	public errRepeat: boolean = false;
+	public errEmpty: boolean = false;
 
 	constructor(
 		private fb: FormBuilder,
@@ -65,22 +106,26 @@ export class EditorQuizComponent implements OnInit, OnChanges, OnDestroy {
 		// define value for formControl
 		if( this.slide ) {
 			if( 'name' in this.slide ) 
-				this.header = this.slide.header;
+				this.question = this.slide.quiz.question;
+				this.slide.quiz.options.map(({ option, isTrue }) => {
+					this.quizOptions.push({ option, isTrue });
+				});
 				this.previousValueSet['name'] = this.slideName;
-				this.previousValueSet['header'] = this.slide.header;
+				this.previousValueSet['question'] = this.slide.quiz.question;
+				this.previousValueSet['option'] = this.quizOptions;
 				this.previousValueSet['status'] = this.saveAs ? 'publish' : 'draft';
 		}
 
 		// configure form
 		this.sectionEditorForm = this.fb.group({
-			header: [this.header, [Validators.required]]
+			question: [this.question, [Validators.required]]
 		});
 
 		// track changes
 		this.formValueChanges = this.sectionEditorForm.valueChanges
 			.subscribe(
-				(res: { header: string }) => {
-					this.currentValueSet['header'] = res.header;
+				(res: { question: string }) => {
+					this.currentValueSet['question'] = res.question;
 					this.detectChange.emit(true);
 				}
 			);
@@ -109,26 +154,84 @@ export class EditorQuizComponent implements OnInit, OnChanges, OnDestroy {
 		}
 	}
 
+	public optionHasChanged(value): void {
+		this.errRepeat = false;
+		this.errEmpty = false;
+	}
+
+	public addOptions(input): void {
+		if( !input.value ) {
+			this.errEmpty = true;
+			return;
+		}
+
+		let checkAvability: Array<any>;
+		checkAvability = this.quizOptions.filter(item => item.option === input.value);
+
+		if( checkAvability.length ) {
+			this.errRepeat = true;
+			return;
+		}
+
+		this.quizOptions.push({ 
+			option: input.value,
+			isTrue: false 
+		});
+
+		input.value = null;
+
+		this.currentValueSet['option'] = this.quizOptions;
+		this.detectChange.emit(true);
+	}
+
+	public validOption(index): void {
+		if( typeof index !== 'number' ) return;
+
+		this.quizOptions.map((item, getIndex) => {
+			if( getIndex !==  index) {
+				this.quizOptions[getIndex].isTrue = false;
+			}
+		});
+
+		this.quizOptions[index].isTrue = true;
+		this.currentValueSet['option'] = this.quizOptions;
+		this.detectChange.emit(true);
+	}
+
+	public removeOption(index): void {
+		if( typeof index !== 'number' ) return;
+
+		this.quizOptions.splice(index, 1);
+		this.currentValueSet['option'] = this.quizOptions;
+		this.detectChange.emit(true);
+	}
+
 	public sectionEditorFormSubmit({ value, valid }: { value: any, valid: boolean }) {
-		if( valid ) {
+		if( valid && this.quizOptions ) {
 			let filteredValue = this.$form.whiteSpaceControl(value);
 			this.sectionEditorForm.disable();
-			value['name'] = this.slideName;
-			value['template'] = this.templateId;
-			value['status'] = this.saveAs ? 'publish' : 'draft';
+			filteredValue['name'] = this.slideName;
+			filteredValue['template'] = this.templateId;
+			filteredValue['status'] = this.saveAs ? 'publish' : 'draft';
+			filteredValue['quiz'] = {
+				question: filteredValue.question,
+				options: this.quizOptions,
+				control: 'reveal'
+			};
+
 			this.formData.emit(this.emitEvent(filteredValue));
 		} else {
 			this.sectionEditorForm.enable();
-			this.sectionEditorForm.get('header').markAsTouched();
+			this.sectionEditorForm.get('question').markAsTouched();
 		}
 	}
 
-	private emitEvent(value: IEditorSectionFormData): Observable<IGenEditorPostAction> {
+	private emitEvent(value: IEditorQuizFormData): Observable<IGenEditorPostAction> {
 		let slideId:string = '';
 		try {
 			slideId = this.slide._id;
 		} catch (err) {}
-		return this.$induction.editorSection(value, this.inductionId, this.action, slideId);
+		return this.$induction.editorQuiz(value, this.inductionId, slideId);
 	}
 
 	ngOnDestroy(): void {

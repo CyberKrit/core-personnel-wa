@@ -239,3 +239,66 @@ input[disabled] {
 		padding-left: 1.6rem;
 	}
 }
+
+.control-wrapper-quiz-answers {
+	.entry-an-option {
+		width: 100%;
+		max-width: 48rem;
+	}
+
+	.file-upload-wrapper-ctrl {
+		padding-top: 1rem;
+	}
+
+	.display-option-ctrls {
+		padding-bottom: 1.6rem;
+
+		.display-option-ctrl {
+			position: relative;
+			padding: 1.6rem 0 1.6rem 3.4rem;
+			font-size: 1.5rem;
+			line-height: 2.1rem;
+
+			button.btn-select {
+				position: absolute;
+				top: 1.4rem;
+				left: 0;
+				display: block;
+				width: 2.4rem;
+				height: 2.4rem;
+				padding: 0;
+				background-color: $palette-err-backdrop;
+				border: .1rem dotted $palette-err-border;
+				cursor: pointer;
+				-webkit-border-radius: 100%;
+				-moz-border-radius: 100%;
+				border-radius: 100%;
+
+				&.btn-select-true {
+					background-color: $palette-success-backdrop;
+					border: .1rem dotted $palette-success-border;
+				}
+			}
+
+			button.btn-remove {
+				position: absolute;
+				top: 1.1rem;
+				right: 0;
+				width: 3rem;
+				height: 3rem;
+				padding: 0;
+				line-height: 3rem;
+				background-color: $palette-err-backdrop;
+				border: .1rem solid $palette-err-border;
+
+				.mat-icon {
+					font-size: 2rem;
+					color: $palette-err-text;
+				}
+			}
+		}
+		.display-option-ctrl + .display-option-ctrl {
+			border-top: .1rem solid $palette-semilight;
+		}
+	}
+}

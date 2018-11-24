@@ -27,7 +27,7 @@ import {
 	// imageLContentR
 	IEditorImageLContentRFormData,
 	// quiz
-	IQuizCreateReq, IQuizCreateRes,
+	IEditorQuizFormData,
 	// template
 	ITemplateResolveReq, ITemplateResolveRes
 } from '../../shared/interface/induction.interface';
@@ -352,13 +352,12 @@ export class InductionService {
 				catchError(this.handleError)
 			);
 	}
-
 	// quiz
-	public saveQuiz(formData: IQuizCreateReq): Observable<IQuizCreateRes> {
-		const baseUrl = this.baseURL + 'api/editor/quiz';
+	public editorQuiz(formData: IEditorQuizFormData, inductionId: string, slideId: string): Observable<IGenEditorPostAction> {
+		const baseUrl = this.baseURL + 'api/editor/quiz?inductionId=' + inductionId + '&slideId=' + slideId;
 
 		return this.http
-			.post<IQuizCreateRes>(baseUrl, formData)
+			.post<IGenEditorPostAction>(baseUrl, formData)
 			.pipe(
 				catchError(this.handleError)
 			);
