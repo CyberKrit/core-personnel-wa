@@ -17,7 +17,7 @@ const SlideSchema = new Schema({
 	}],
 	status: { type: String, enum:['draft', 'publish'], required: true, default: 'draft' },
 	quiz: {
-		question: { type: String, required: true },
+		question: { type: String, default: null },
 		options: [{
 			option: { type: String, required: true, default: '' },
 			isTrue: { type: Boolean, required: true, default: false }
