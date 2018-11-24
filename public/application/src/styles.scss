@@ -432,6 +432,9 @@ button._busy_ {
 .file-upload-wrapper {
 	padding-bottom: 3rem;
 }
+.file-upload-wrapper-ctrl .btn-grp {
+	padding: 0 !important;
+}
 .file-upload-wrapper-ctrl .btn-remove {
 	position: absolute;
 	top: -.5rem;

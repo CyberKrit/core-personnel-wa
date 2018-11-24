@@ -1,301 +1,232 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { HttpResponse, HttpEventType} from '@angular/common/http';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import * as moment from 'moment';
+import { Observable, Subscription } from 'rxjs';
 
-// custom imports
+// import service
 import { FormService } from '../../../shared/service/form.service';
 import { InductionService } from '../induction.service';
 import { MediaService } from '../../../shared/service/media.service';
-import { IInductionSingleResolve, ITemplateList } from '../../../shared/interface/induction.interface';
+// import interface
+import { ICompareValuesImageCaption, IGenEditorPostAction, IEditorImageCaptionFormData } from '../../../shared/interface/induction.interface';
 
 @Component({
 	selector: 'editor-image-only',
 	template: `
-		<form novalidate autocomplete="false" 
-			[formGroup]="imageOnlyEditorForm" (ngSubmit)="imageOnlyEditorFormSubmit(imageOnlyEditorForm)">
-			<div class="comp-aside _clr_">
-				<div class="_end_">
-					<span class="save-as-text">{{ saveAs }}</span> <mat-slide-toggle formControlName="publish"></mat-slide-toggle>
-				</div>
-			</div>
+		<form 
+			novalidate autocomplete="false" 
+			[formGroup]="imageWithCaptionForm" (ngSubmit)="formSubmit(imageWithCaptionForm)">
 
-			<div class="file-upload-wrapper">
-				<label>
-					Upload an image
-					<span class="desc">Click the gray box below to upload your image</span>
-				</label>
+				<div class="file-upload-wrapper">
+					<label>
+						Upload an image
+						<span class="desc">Click the gray box below to upload your image</span>
+					</label>
 
-				<div class="file-upload-wrapper-ctrl">
-					<div [ngClass]="{ 'has-file': fileSrc && progress === 100, 'on-progress': progress && progress !== 100 }"
-						class="image-upload-placeholder"
-						matRipple (click)="fileInput.click()">
+					<input 
+						class="_visuallyhidden_" type="file" 
+						formControlName="uploadFile" #fileInput
+						(change)="uploadFileHasChanged($event)">
 
-						<div class="_loading_" *ngIf="progress === 100 && fileSrc">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="7" stroke="#bab8b9" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
-						</div>
-
-						<div 
-							class="_image-upload-placeholder_"
-							[ngStyle]="{ 'background-image': 'url(' + fileSrc + ')'}"
-							*ngIf="fileSrc">
-						</div>
-
-						<mat-progress-bar 
-							mode="determinate" 
-							[value]="progress" 
-							*ngIf="progress && progress !== 100"></mat-progress-bar>
-					</div>
-					<ul class="err-list">
-						<li class="err-item" *ngIf="isFileUploadActionFailed">
-							Upload has failed. Please upload a valid image format.
-						</li>
-						<li class="err-item" *ngIf="!fileSrc && lazyForm">
-							Please upload an image.
-						</li>
-						<li class="err-item" *ngIf="submitWarning && !lazyForm">
-							Please upload an image.
-						</li>
-					</ul>
-
-					<div class="btn-grp">
-						<button class="btn-remove" type="button" mat-icon-button 
-							(click)="removeFile()"
-							*ngIf="fileSrc && lazyForm === false">
-					    <mat-icon aria-label="discard file">cancel</mat-icon>
-					  </button>
-
-						<input class="_visuallyhidden_" type="file" (change)="changEvt($event)" #fileInput>
-
-						<button mat-button class="btn-outline" type="button" *ngIf="fileSrc">Edit image</button>
-
-						<button mat-button class="btn-outline" type="button" *ngIf="!fileSrc">Select from gallery</button>
-
-						<button class="primary-action-btn" type="submit">
-							<div class="idle" *ngIf="!lazyForm">
-								<span *ngIf="imageOnlyEditorForm.get('publish').value === true">Publish Slide</span>
-								<span *ngIf="imageOnlyEditorForm.get('publish').value === false">Save as Draft</span>
+					<div class="file-upload-wrapper-ctrl">
+						<div class="image-upload-placeholder" matRipple (click)="fileInput.click()">
+							<div 
+								class="_image-upload-placeholder_"
+								[ngStyle]="{ 'background-image': 'url(' + fileSrc + ')'}"
+								*ngIf="fileSrc">
 							</div>
-							<span class="lazy" *ngIf="lazyForm">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="8" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
-							</span>
-						</button>
+
+							<mat-progress-bar 
+								mode="determinate" 
+								[value]="progress" *ngIf="progress && progress !== 100"></mat-progress-bar>
+
+							<div class="_loading_" *ngIf="progress === 100 && fileSrc">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="7" stroke="#bab8b9" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+							</div>
+						</div>
+
+						<div class="btn-grp">
+							<button class="btn-remove" type="button" mat-icon-button 
+								(click)="removeFile()" *ngIf="fileSrc">
+						    <mat-icon aria-label="discard file">cancel</mat-icon>
+						  </button>
+						</div>
+
+						<ul class="err-list">
+							<li class="err-item" *ngIf="!fileSrc && isSubmittedOnce">
+								This field is required
+							</li>
+							<li class="err-item" *ngIf="unknownFormat">
+								Upload has failed. Please upload a valid image format.
+							</li>
+						</ul>
 					</div>
 				</div>
-			</div>
+			
 		</form>
 	`,
 	styleUrls: ['./editor.component.scss']
 })
-export class EditorImageOnly implements OnInit, OnDestroy {
-  // file
-	public selectedFiles: File = null;
-  public progress: number = 0;
-  public fileSrc: string = null;
-  public fileId: string = null;
-  public isFileUploadActionFailed: boolean = false;
-  public detectChangesSubscription: any;
+export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
+  // get data from parent
+	@Input() public action: string;
+	@Input() public slide: any;
+	@Input() public slideName: string;
+	@Input() public inductionId: string;
+	@Input() public templateId: string;
+	@Input() public saveAs: boolean;
+	@Output() public detectChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() public formData: EventEmitter<Observable<any>> = new EventEmitter<Observable<any>>();
+	@ViewChild('fileInput') fileInput: ElementRef;
 
-  // form
-  public imageOnlyEditorForm: FormGroup;
-	private saveAsOptions: string[] = [ 'Draft', 'Publish' ];
-	public saveAs: string = this.saveAsOptions[1];
-	public lazyForm: boolean = false;
-	@ViewChild('fileInput') public fileInput: ElementRef;
-	private form$: Subscription;
-	public submitWarning: boolean = false;
+	// form
+	public imageWithCaptionForm: FormGroup;
+	private subFormSubmit: Subscription;
+	private formValueChanges: Subscription;
+	private subFormSubmitSuccess: Subscription;
+	private caption: string | null = null;
+	public progress: number = 0;
+	public fileSrc: string | null = null;
+	public fileId: string | null = null;
+	public unknownFormat: boolean = false;
+	public isSubmittedOnce: boolean = false;
 
-	// input
-	@Input('slideTitle') public slideTitle: string;
-	@Input('variation') public variation: string;
-	@Input('inductionData') public inductionData: IInductionSingleResolve;
-	@Input('templateData') public templateData: ITemplateList;
+	// compare values
+	private previousValueSet: ICompareValuesImageCaption = {};
+	private currentValueSet: ICompareValuesImageCaption = {};
 
 	constructor(
-		private $media: MediaService,
 		private fb: FormBuilder,
+		private $form: FormService,
 		private $induction: InductionService,
-		private $form: FormService) {}
+		private $media: MediaService) {}
 
+	public ngOnInit(): void {
+		this.detectChange.emit(false);
+		// define value for formControl
 
-	ngOnInit() {
-		this.detectChangesSubscription = this.$induction.imageOnlyEditorChanges$
-			.subscribe(
-				(data: string) => {
-					this.fileSrc = data;
-				}
-			);
+		if( this.slide ) {
+			if( 'name' in this.slide ) 
+				this.caption = this.slide.resource[0].caption;
 
-		if( this.inductionData.media ) {
-			this.publicLoadFile(this.inductionData.media);
+				this.previousValueSet['name'] = this.slideName;
+				this.previousValueSet['uploadFile'] = this.slide.resource[0].source.src;
+				this.fileSrc = this.slide.resource[0].source.src || null;
+				this.fileId = this.slide.resource[0].source._id || null;
+				this.previousValueSet['status'] = this.saveAs ? 'publish' : 'draft';
 		}
 
-		let { status } = this.inductionData.slide;
-		let { createdAt, updatedAt } = this.inductionData.slide;
-
-		// convert slide save status into binary
-		let publishData: boolean = ( this.$induction.singleTempDataFn().status === 'publish' ) ? true : false;
-		// calculate slide publish state
-		let startDate = moment(createdAt);
-		let endDate = moment(updatedAt);
-		let dateDiff = moment.duration(endDate.diff(startDate));
-		if( dateDiff.asSeconds() < 1 ) {
-			publishData = true;
-		}
-
-		this.imageOnlyEditorForm = this.fb.group({
-			publish: [publishData]
+		this.imageWithCaptionForm = this.fb.group({
+			uploadFile: null
 		});
 
-		this.imageOnlyEditorForm.get('publish').valueChanges
+		// track changes
+		this.formValueChanges = this.imageWithCaptionForm.valueChanges
 			.subscribe(
-				value => {
-					if( value ) {
-						this.saveAs = this.saveAsOptions[1];
-					} else {
-						this.saveAs = this.saveAsOptions[0];
-					}
+				(res: ICompareValuesImageCaption) => {
+					this.currentValueSet['uploadFile'] = res.uploadFile;
+					this.detectChange.emit(true);
 				}
 			);
 
-		// save data temporarily
-		this.form$ = this.imageOnlyEditorForm.valueChanges
-			.subscribe(
-				value => {
-					this.$induction.singleTempData.status = value.publish ? 'publish' : 'draft';
-				}
-			);
+		// fetch form data to parent component for intended action
+		this.subFormSubmit = this.$induction.editorFormSubmitReq$
+			.subscribe(() => {
+				this.isSubmittedOnce = true;
+				this.formSubmit(this.imageWithCaptionForm);
+			});
+
+		// after submit enable form
+		this.subFormSubmitSuccess = this.$induction.editorFormSubmitComplete$
+			.subscribe(() => {
+				this.imageWithCaptionForm.enable();
+				this.detectChange.emit(false);
+			});
 	}
 
-	// laod data if image source exists
-	publicLoadFile(media: { _id: string, src: string }): void {
-		this.$induction.singleTempData.imageOnlySrc = media.src;
-		// this.progress = 100;
-		this.$induction.imageOnlyEditorChangesFn();
-	}
+	public ngOnChanges(changes: SimpleChanges): void {
+		if( changes.hasOwnProperty('slideName') ) {
+			this.currentValueSet['name'] = changes.slideName.currentValue;
+			this.detectChange.emit(true);
+		}
 
-	public changEvt(event) {
-		try {
-    	this.selectedFiles = <File>event.target.files[0];
-    	if( this.selectedFiles ) this.uploadData();
-		} catch(err) {
-			// reset input field, because user may reupload a file immediate after deleting it
-			this.fileInput.nativeElement.value = '';
+		if( changes.hasOwnProperty('saveAs') ) {
+			this.currentValueSet['status'] = changes.saveAs.currentValue ? 'publish' : 'draft';
+			this.detectChange.emit(true);
 		}
 	}
 
-	public uploadData() {
+	public uploadFileHasChanged(event): void {
+		try {
+    	let thisFile = <File>event.target.files[0];
+    	if( thisFile ) this.uploadData(thisFile);
+		} catch(err) {
+			// reset input field, because user may reupload a file immediate after deleting it
+			this.imageWithCaptionForm.get('uploadFile').setValue(null);
+		}
+	}
+
+	public uploadData(file) {
+		this.progress = 0;
 
  		try {
-			this.progress = 0;
-
-	    this.$media.upload(this.selectedFiles).subscribe(
+	    this.$media.upload(file).subscribe(
 	    	event => {
-	    		this.isFileUploadActionFailed = false;
+	      	this.unknownFormat = false;
 
 		    	if( event.type === HttpEventType.UploadProgress ) {
 		    		this.progress = Math.round(100 * event.loaded / event.total);
 		    	} else if ( event.type === HttpEventType.Response ) {
-		    		console.log('=====================');
-		    		console.log(this.$induction.singleTempData.imageOnlySrc);
-		    		console.log(event.body.src);
-		    		console.log('=====================');
-		    		if( this.$induction.singleTempData.imageOnlySrc !== event.body.src ) {
-			        this.$induction.singleTempData.imageOnlySrc = event.body.src;
-			        // reflect changes to filesrc variable
-			        this.$induction.imageOnlyEditorChangesFn();
-			        this.fileId = event.body._id;
-		    		}
+		    		this.fileSrc = event.body.src;
+		    		this.fileId = event.body._id;
 		      }
 	      },
 	      catchError => {
-	      	this.isFileUploadActionFailed = true;
+	      	this.unknownFormat = true;
 		    	this.fileSrc = null;
 		    	// reset file upload form field
-		    	this.fileInput.nativeElement.value = '';
+					this.imageWithCaptionForm.get('uploadFile').setValue(null);
 	      }
 	    );
  		} catch (err) {
  			console.log('upload failed: ', err);
  		}
-
 	}
 
 	public removeFile() {
 		this.fileSrc = null;
-		this.lazyForm = false;
-		this.changEvt(null);
+		this.imageWithCaptionForm.get('uploadFile').setValue(null);
 	}
 
-	public imageOnlyEditorFormSubmit({ value, valid }: { value: any, valid: boolean }): void {
-
-		if( valid && !this.lazyForm && this.fileSrc ) {console.log('imageOnlyEditorFormSubmit');
+	public formSubmit({ value, valid }: { value: any, valid: boolean }): void {
+		if( valid && this.fileSrc && this.fileId ) {
 			let filteredValue = this.$form.whiteSpaceControl(value);
+			this.imageWithCaptionForm.disable();
 
-			this.imageOnlyEditorForm.disable();
-			this.lazyForm = true;
-			this.submitWarning = false;
+			// set data from aprent
+			filteredValue['name'] = this.slideName;
+			filteredValue['template'] = this.templateId;
+			filteredValue['status'] = this.saveAs ? 'publish' : 'draft';
+			filteredValue['mediaId'] = this.fileId;
 
-			// build req object
-			let isPublished = ( filteredValue.publish ) ? 'publish' : 'draft';
-			let buildSlide;
-			
-			if( this.fileId ) {
-				buildSlide = {
-					inductionId: this.inductionData._id,
-					slideIndex: this.inductionData.slideIndex,
-					slideData: {
-						template: this.templateData._id,
-						name: this.slideTitle,
-						variation: this.variation,
-						header: null,
-						resource: {
-							type: 'image',
-							source: this.fileId,
-							caption: null,
-							alt: null,
-							desc: null,
-							position: null,
-							size: null
-						},
-						status: isPublished
-					}
-				};
-			} else {
-				buildSlide = {
-					inductionId: this.inductionData._id,
-					slideIndex: this.inductionData.slideIndex,
-					slideData: {
-						template: this.templateData._id,
-						name: this.slideTitle,
-						variation: this.variation,
-						header: null,
-						resource: null,
-						status: isPublished
-					}
-				};
-			}
-
-			this.$induction.update(buildSlide)
-				.subscribe(
-					(res: Response) => {
-						this.imageOnlyEditorForm.enable();
-						this.lazyForm = false;
-						this.$induction.slideUpdateFn();
-					}
-				);
+			this.formData.emit(this.emitEvent(filteredValue));
 		} else {
-			this.imageOnlyEditorForm.enable();
-			this.lazyForm = false;
-			this.submitWarning = true;
+			this.imageWithCaptionForm.enable();
 		}
 	}
 
-	ngOnDestroy() {
-		this.form$.unsubscribe();
-		this.detectChangesSubscription.unsubscribe();
+	private emitEvent(value: IEditorImageCaptionFormData): Observable<IGenEditorPostAction> {
+		let slideId:string = '';
+		try {
+			slideId = this.slide._id;
+		} catch (err) {}
+		return this.$induction.editorImageCaption(value, this.inductionId, slideId);
+	}
+
+	public ngOnDestroy(): void {
+		this.subFormSubmit.unsubscribe();
+		this.formValueChanges.unsubscribe();
+		this.subFormSubmitSuccess.unsubscribe();
 	}
 
 }
