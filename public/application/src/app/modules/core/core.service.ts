@@ -1,10 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, throwError, Observable } from 'rxjs';
 
 @Injectable()
 export class CoreService {
-	// public HOST: string = 'http://localhost:3000/';
-	public HOST: string = 'https://evening-shelf-25137.herokuapp.com/';
+	public HOST: string = 'http://localhost:3000/';
+	// public HOST: string = 'https://evening-shelf-25137.herokuapp.com/';
+
+	private token: string | null = null;
+
+	public setToken(token) {
+		this.token = token;
+	}
+	public getToken(): string {
+		return this.token;
+	}
 	
 	// current state for progressbar
 	private progressbarStateSource: Subject<boolean> = new Subject<boolean>();

@@ -1,5 +1,6 @@
 const InductionController = require('../controller/induction');
 const { failMsg } = require('../middleware/failMsg');
+const { auth } = require('../middleware/auth');
 
 module.exports = (app) => {
 

@@ -1,4 +1,5 @@
 const UserModel = require('../model/user');
+const localforage = require('localforage');
 
 let auth = (req, res, next) => {
 	const token = req.header('x-auth');

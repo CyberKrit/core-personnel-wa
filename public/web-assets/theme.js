@@ -721,14 +721,30 @@ localforage.config({
                 var token = xhr.getResponseHeader('x-auth');
                 if( token ) {
 
-                  localforage.setItem('dataSet', { token: token }, function(err) {
-                    if( err === null ) {
-                      window.location.replace('/dashboard');
-                    } else {
-                      self.enableControls();
+                	localforage.clear()
+                		.then(() => {
+		                  localforage.setItem('dataSet', { token: token })
+		                  	.then(() => {console.log(token);
+		                  		window.location.replace('/dashboard');
+		                  	})
+		                		.catch( err => {
+		                			self.enableControls();
+		                      customErrMsg.trigger('Something went wrong! Please try again.');
+		                		});
+
+                		})
+                		.catch( err => {
+                			self.enableControls();
                       customErrMsg.trigger('Something went wrong! Please try again.');
-                    }
-                  });
+                		});
+                  // localforage.setItem('dataSet', { token: token }, function(err) {
+                  //   if( err === null ) {
+                  //     window.location.replace('/dashboard');
+                  //   } else {
+                  //     self.enableControls();
+                  //     customErrMsg.trigger('Something went wrong! Please try again.');
+                  //   }
+                  // });
 
                 } else {
                   self.enableControls();

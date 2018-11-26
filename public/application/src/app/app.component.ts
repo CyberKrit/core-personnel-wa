@@ -3,6 +3,7 @@ import { CoreService } from './modules/core/core.service';
 import { Router, NavigationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import * as localForage from "localforage";
 
 @Component({
   selector: 'app-root',

@@ -147,6 +147,10 @@ module.exports = {
 			  res.status(403).send(err);
 			});
 			
-	} // login
+	},// login
+
+	isAuth(req, res, next) {
+		
+	}
 
 };

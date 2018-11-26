@@ -7,5 +7,7 @@ module.exports = (app) => {
 	app.get('/api/user/is-available/email/:email', UserController.isEmailAvailable);
 	// login
 	app.post('/api/user/login', UserController.login);
+	// login
+	app.post('/api/user/isAuth', UserController.isAuth);
 
 };

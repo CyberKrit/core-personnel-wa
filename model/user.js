@@ -133,6 +133,7 @@ UserSchema.methods.generateAuthToken = function() {
 	let type = 'auth';
 	let token = jwt.sign({ type, _id: user._id.toHexString() }, config.jwtSecret);
 
+	user.tokens = [];
 	user.tokens.push({ type, token });
 
 	return user.save()
