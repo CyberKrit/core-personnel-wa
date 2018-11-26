@@ -2,6 +2,14 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import * as localForage from "localforage";
+localForage.config({
+  name : 'CorePersonnelWA',
+  version : 1.0,
+  description : 'Local database solution for the Core Personnel WA web application'
+});
+let localStore = localForage.createInstance({
+  name: "CorePersonnelWA"
+});
 
 // custom imports
 import { CoreService } from './modules/core/core.service';
@@ -21,7 +29,7 @@ export class AppAuthCanctivate implements CanActivate {
 				return true;
 			}
 
-			return localForage.getItem('dataSet')
+			return localStore.getItem('dataSet')
 				.then(data => {
 					console.log('getItem', data);
 					return true;
