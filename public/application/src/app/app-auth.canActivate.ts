@@ -21,9 +21,9 @@ export class AppAuthCanctivate implements CanActivate {
 				return true;
 			}
 
-			return localForage.getItem('token')
-				.then(token => {
-					console.log('getItem', token);
+			return localForage.getItem('dataSet')
+				.then(data => {
+					console.log('getItem', data);
 					return true;
 				})
 				.catch(() => {
