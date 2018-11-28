@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, HostListener, OnInit } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { Router, ActivatedRoute, Data, NavigationEnd, NavigationStart, RouterEvent } from '@angular/router';
  import * as html2canvas from 'html2canvas';
 
 // custom imports
@@ -12,20 +12,36 @@ import { IListInduction } from '../../../shared/interface/induction.interface';
 	styleUrls: ['./induction-list.component.scss']
 })
 export class InductionListComp implements OnInit {
+	private startURL: string;
+	private endURL: string;
+
 	@ViewChild('btnDropDown') btnDropDown: ElementRef;
 	@ViewChild('btnDropDownList') btnDropDownList: ElementRef;
 	title: string = 'Induction';
 	private btnDropDownActive: boolean = false;
 
-	//
 	private inductionList: IListInduction[];
 	public isPreloaded: boolean = false;
 
 	constructor(
 		private route: ActivatedRoute,
-		private coreService: CoreService) {}
+		private coreService: CoreService,
+		private router: Router) {}
 
 	ngOnInit() {
+
+		this.router.events
+			.subscribe(
+				(event: RouterEvent) => {
+					if( event instanceof NavigationStart ) {
+						this.startURL = event.url.toString();
+					}
+					if( event instanceof NavigationEnd ) {
+						this.endURL = event.url.toString();
+						this.completeProgressbar();
+					}
+				}
+			);
 
 		this.route.data
 			.subscribe(
@@ -36,6 +52,12 @@ export class InductionListComp implements OnInit {
 				}
 			);
 
+	}
+
+	private completeProgressbar(): void {
+		if( this.startURL && this.endURL && this.startURL === this.endURL ) {
+			this.coreService.removeProgressbar();
+		}
 	}
 
 	public btnDropDownEvt(el) {

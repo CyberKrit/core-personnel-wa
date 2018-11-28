@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import * as localForage from "localforage";
-localForage.config({
-  name : 'CorePersonnelWA',
-  version : 1.0,
-  description : 'Local database solution for the Core Personnel WA web application'
-});
+
+/////////////////////////////////////
+// localForage.config({
+//   name : 'CorePersonnelWA',
+//   version : 1.0,
+//   description : 'Local database solution for the Core Personnel WA web application'
+// });
+// localForage.setItem('dataSet', {
+// 	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXV0aCIsIl9pZCI6IjViZmJjNWZjYjQ1MzUzMWZjODk3MWM0NSIsImlhdCI6MTU0MzI4ODgzOX0.eQv6hz-clAc4BnGiYd8uAg6GILExiig8HIeZWkyr3Qc'
+// });
+////////////////////////////////////
+
 let localStore = localForage.createInstance({
   name: "CorePersonnelWA"
 });
@@ -18,26 +25,39 @@ import { CoreService } from './modules/core/core.service';
 export class AppAuthCanctivate implements CanActivate {
 
 	constructor(
-		private $core: CoreService) {}
+		private $core: CoreService,
+		private router: Router) {}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
 			// if token exist it's okay then
 			// x-auth header will get attached inside interceptor
-			let token = this.$core.getToken();console.log('token', token);
+			let token = this.$core.getToken();
 			if( token ) {
 				return true;
 			}
 
 			return localStore.getItem('dataSet')
-				.then(data => {
-					console.log('getItem', data);
-					return true;
+				.then((data: { token: string }) => {
+					if( data && data.hasOwnProperty('token') ) {
+						if( typeof data.token === 'string' ) {
+							this.$core.setToken(data.token);
+							return true;
+						}
+					} else {
+						return this.authFailed();
+					}
+					
 				})
 				.catch(() => {
-					return false;
+					return this.authFailed();
 				});
 
+	}
+
+	private authFailed(): boolean {
+		this.router.navigate(['/login']);
+		return false;
 	}
 
 }

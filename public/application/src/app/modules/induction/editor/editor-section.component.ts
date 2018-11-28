@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
+import * as html2canvas from 'html2canvas';
 
 // custom imports
 import { FormService } from '../../../shared/service/form.service';
@@ -28,10 +29,24 @@ import { IEditorSectionFormData, IGenEditorPostAction, ICompareValuesSection } f
 				</div>
 			</div>
 		</form>
+
+		<div class="slide-deck" #slideDeck>
+			<div class="slide slide-section">
+				<div 
+					class="inner-slide-wrapper"
+					[ngStyle]="{ height: styleInfo?.height + 'px' }">
+					<div 
+						class="inner-wrapper-section">
+						<h1>{{ header }}</h1>
+					</div>
+				</div>
+			</div>
+		</div>
 	`,
 	styleUrls: ['./editor.component.scss']
 })
 export class EditorSectionComponent implements OnInit, OnChanges, OnDestroy {
+	@ViewChild('slideDeck') public slideDeck: ElementRef;
 	// get data from parent
 	@Input() public action: string;
 	@Input() public slide: any;
@@ -53,11 +68,16 @@ export class EditorSectionComponent implements OnInit, OnChanges, OnDestroy {
 	private previousValueSet: ICompareValuesSection = {};
 	private currentValueSet: ICompareValuesSection = {};
 
+	//thumbnail
+	public image_data_url: string;
+	public styleInfo: { height: number } = { height: 0 };
+
 	constructor(
 		private fb: FormBuilder,
 		private $induction: InductionService,
 		private $core: CoreService,
-		private $form: FormService) {}
+		private $form: FormService,
+		private cd: ChangeDetectorRef) {}
 
 	public ngOnInit(): void {
 		this.detectChange.emit(false);
@@ -113,10 +133,25 @@ export class EditorSectionComponent implements OnInit, OnChanges, OnDestroy {
 		if( valid ) {
 			let filteredValue = this.$form.whiteSpaceControl(value);
 			this.sectionEditorForm.disable();
-			value['name'] = this.slideName;
-			value['template'] = this.templateId;
-			value['status'] = this.saveAs ? 'publish' : 'draft';
-			this.formData.emit(this.emitEvent(filteredValue));
+			filteredValue['name'] = this.slideName;
+			filteredValue['template'] = this.templateId;
+			filteredValue['status'] = this.saveAs ? 'publish' : 'draft';
+
+			if( typeof this.slideDeck.nativeElement.clientWidth === 'number' ) {
+				let clientW = this.slideDeck.nativeElement.clientWidth;
+				this.styleInfo['height'] = clientW * 0.5625;
+				this.cd.detectChanges();
+			}
+
+			// generate thumbnail
+			html2canvas(this.slideDeck.nativeElement)
+				.then(canvas => {
+    			document.body.appendChild(canvas);
+    			filteredValue['thumbnail'] = canvas.toDataURL();
+    			canvas.remove();
+					this.formData.emit(this.emitEvent(filteredValue));
+				});
+
 		} else {
 			this.sectionEditorForm.enable();
 			this.sectionEditorForm.get('header').markAsTouched();
@@ -124,7 +159,7 @@ export class EditorSectionComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private emitEvent(value: IEditorSectionFormData): Observable<IGenEditorPostAction> {
-		let slideId:string = '';
+		let slideId:string = '';console.log(value);
 		try {
 			slideId = this.slide._id;
 		} catch (err) {}

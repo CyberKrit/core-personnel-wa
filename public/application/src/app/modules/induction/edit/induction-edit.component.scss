@@ -267,7 +267,8 @@
 		height: 8rem;
 		padding: 0;
 		margin: 0;
-		background-color: $palette-semilight;
+		background: none no-repeat center center;
+		background-size: contain;
 		-webkit-border-radius: .3rem;
 		-moz-border-radius: .3rem;
 		border-radius: .3rem;

@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // custom imports
+import { HTMLPipe } from '../../shared/pipe/html';
 import { InductionComponent } from './induction.component';
 import { InductionCategories } from './categories/induction-categories.component';
 import { InductionListComp } from './list/induction-list.component';
@@ -35,6 +36,7 @@ import { AngularMaterialModule } from '../core/angular-material.module';
 
 @NgModule({
 	declarations: [
+		HTMLPipe,
 		InductionComponent,
 		InductionListComp,
 		InductionCategories,

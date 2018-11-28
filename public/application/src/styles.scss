@@ -1084,3 +1084,116 @@ button._dropdown_ {
 ._consent-sheet_ ._confirm_ {
 	border-bottom: .1rem solid $palette-xgray;
 }
+
+
+.slide-deck {
+	border: .2rem solid $palette-semilight;
+}
+.inner-slide-wrapper {
+	position: relative;
+	padding: 1.6rem;
+	overflow: hidden;
+}
+
+/* ===[[ TEXT ONLY ]]=== */
+
+.slide-text-only .inner-slide-wrapper {
+	padding: 0 !important;
+}
+.inner-wrapper-text-only {
+	height: 100%;
+	padding: 1.6rem;
+	padding-right: 1rem;
+	overflow-y: auto;
+}
+.inner-wrapper-text-only p {
+	font-size: 1.5rem;
+	line-height: 1.5;
+	font-weight: 400;
+	margin: 1.6rem 0;
+	color: $palette-text-light;
+}
+.inner-wrapper-text-only p:first-child {
+	margin-top: 0;
+}
+
+/* ===[[ SECTION ]]=== */
+
+.inner-wrapper-section {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	left: 0;
+	-webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+.inner-wrapper-section h1 {
+	margin-top: -2.7rem;
+	font-size: 5rem;
+	line-height: 1.1;
+	font-weight: 700;
+	text-align: center;
+	color: $palette-blue;
+}
+
+@media screen and (min-width: 1200px) {
+	.inner-wrapper-section h1 {
+		font-size: 5.2rem;
+	}
+}
+
+@media screen and (min-width: 1400px) {
+	.inner-wrapper-section h1 {
+		font-size: 5.6rem;
+	}
+}
+
+/* ===[[ IMAGE ONLY ]]=== */
+
+.inner-wrapper-image-only {
+	height: 100%;
+	background: none no-repeat center center;
+	background-size: contain;
+}
+
+/* ===[[ IMAGE WITH CAPTION ]]=== */
+
+.image-n-caption {
+	height: 100%;
+	overflow: hidden;
+
+	.image-n-caption--figure-wrapper {
+		height: 77%;
+		margin-top: 3%;
+	}
+	.image-n-caption--figure {
+		display: block;
+		width: auto;
+		max-width: 100%;
+		height: 100%;
+		max-height: none;
+		margin: 0 auto;
+	}
+
+	.image-n-caption--caption-wrapper {
+		position: relative;
+		height: 20%;
+		padding-bottom: 1rem;
+		text-align: center;
+
+		h2 {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			left: 0;
+			font-size: 2.4rem;
+			line-height: 1.1;
+			font-weight: 500;
+			text-align: center;
+			color: $palette-blue;
+			-webkit-transform: translateY(-50%);
+			transform: translateY(-50%);
+		}
+	}
+
+}

@@ -82,7 +82,8 @@
 				<div [ngClass]="{ 'hide': (slide.isVisible === false) || (slide.isSearched === false) }" class="slide" *ngFor="let slide of routeData?.slides" cdkDrag>
 					<div class="slide-placeholder" *cdkDragPlaceholder></div>
 					<figure 
-						class="slide-preview">
+						class="slide-preview"
+						[ngStyle]="{ 'background-image': 'url(' + slide.thumbnail + ')' }">
 					</figure>
 					<div class="slide-meta _clr_">
 						<div class="slide-meta-content">

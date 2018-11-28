@@ -15,6 +15,10 @@
 </div>
 
 <div class="comp-body" *ngIf="isPreloaded" id="testDiv">
+	<div class="comp-body-null" *ngIf="!inductionList.length">
+		Get started with creating your first induction
+	</div>
+
 	<div class="inductions">
 		<div class="induction _clr_" *ngFor="let induction of inductionList">
 			<figure class="induction-figure">

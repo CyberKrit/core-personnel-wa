@@ -63,7 +63,7 @@ export class EditorComponent implements OnInit, ICanDeactivateGuard {
 		this.route.data
 			.subscribe(
 				(resolve: Data) => {
-					this.nativeData = resolve.data;
+					this.nativeData = resolve.data;console.log(this.nativeData);
 					this.runAfterInit();
 				}
 			);

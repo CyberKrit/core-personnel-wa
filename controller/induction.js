@@ -12,6 +12,7 @@ module.exports = {
 	create(req, res, next) {
 
 		let buildInduction = {
+			user: req.user._id,
 			name: req.body.inductionName,
 			category: req.body.inductionCat
 		};
@@ -39,7 +40,7 @@ module.exports = {
 
 	list(req, res, next) {
 
-		InductionModel.find({})
+		InductionModel.find({ user: req.user._id })
 			.sort({ 'createdAt': -1 })
 			.populate('category')
 			.then(inductionList => {
@@ -62,23 +63,55 @@ module.exports = {
 
 	},
 
-	singleView(req, res) {
+	singleView(req, res, next) {
 		const inductionId = req.params.id;
+		let templateArr = [];
 
-		InductionModel.findById(inductionId)
-			.then(induction => {
-				if( induction ) {
-					let { _id, name } = induction;
-					let buildRes = {
-						_id, name
-					};
+		TemplateModel.find()
+			.then(templates => {
+				if( Array.isArray(templates) ) {
+					if( templates.length ) {
+						// cache template slug-n-_id into array
+						templates.map(({ _id, slug }) => {
+							templateArr.push({ _id, slug });
+						});
 
-					res.status(200).send(buildRes);
+						InductionModel.findById(inductionId)
+							.populate({
+								path: 'slides.slide',
+								populate: {
+									path: 'resource.source'
+								}
+							})
+							.then(induction => {
+								if( induction ) {
+									let { _id, name, slides } = induction;
+									let buildRes = {
+										_id, name, slides
+									};
+									
+									if( slides.length > 1 ) {
+										slides.sort((first, second) => {
+											return placeholder = (first.order < second.order) ? false : true;
+										});
+									}
+
+									slides.map(({ slide }, index) => {
+										let getTemplate = templateArr.findIndex(item => item._id.toString() === slide.template.toString());
+										if( getTemplate >= 0 ) {
+											slide.template = templates[getTemplate];
+										}
+									});
+
+									res.status(200).send(buildRes);
+								}
+							})
+							.catch(next);
+
+					}
 				}
 			})
-			.catch(err => {
-			  res.status(422).send(err);
-			});
+			.catch(next);
 
 	},
 
@@ -96,18 +129,26 @@ module.exports = {
 
 				// het induction details
 				InductionModel.findById(inductionId)
-					.populate('slides.slide')
+					//.populate('slides.slide')
+					.populate({
+						path: 'slides.slide',
+						// populate: {
+						// 	path: 'template'
+						// }
+					})
 					.then(induction => {
 						if( induction ) {
 							let { _id, name } = induction;
 
 							let slides = [];
-							induction.slides.sort((first, second) => {
-								return placeholder = (first.order > second.order) ? false : true;
-							});
+							if( induction.slides.length > 1 ) {
+								induction.slides.sort((first, second) => {
+									return placeholder = (first.order > second.order) ? false : true;
+								});
+							}
 
 							induction.slides.map(slide => {
-								let { _id, name, status, updatedAt, template } = slide.slide;
+								let { _id, name, status, updatedAt, thumbnail, template } = slide.slide;
 								let lastUpdated = '';
 
 								let startData = moment(updatedAt);
@@ -142,12 +183,12 @@ module.exports = {
 								// to avoid error i've implemented this in dev environment
 								try {
 									slides.push({
-										_id, name, status, updatedAt: lastUpdated, 
+										_id, name, status, thumbnail, updatedAt: lastUpdated, 
 										template: { name: template.name, _id: template._id.toHexString() }
 									});
 								} catch (err) {
 									slides.push({
-										_id, name, status, updatedAt: lastUpdated
+										_id, name, status, thumbnail, updatedAt: lastUpdated
 									});
 								}
 							});
@@ -488,13 +529,41 @@ module.exports = {
 	
 	// section
 	editorSection(req, res, next) {
-		if( req.query.action === 'create' ) {
-			SlideModel.create(req.body)
+		let { template, name, status, header, thumbnail } = req.body;
+
+		let buildSlide = {
+			template,
+			name,
+			status,
+			header,
+			thumbnail
+		};
+
+		if( req.query.slideId ) {
+
+			buildSlide['updatedAt'] = new Date();
+			SlideModel.findByIdAndUpdate(req.query.slideId, {
+					$set: buildSlide
+				}, { new: true})
+				.then(updatedSlide => {
+					if( updatedSlide ) {
+						res.statusMessage = UtilityFn.rippleSuccessShow('Slide has been updated');
+						res.status(200).send({ status: true, message: 'Slide has been updated' });
+					} else {
+						res.statusMessage = UtilityFn.rippleErr('Slide has failed to update');
+						res.status(501).send({ message: 'Slide has failed to update'});
+					}
+				})
+				.catch(next);
+
+		} else {
+
+			SlideModel.create(buildSlide)
 				.then(slide => {
 					if( slide ) {
 						InductionModel.findById(req.query.inductionId)
 							.then(induction => {
-								let slides = ++induction.slideCount || 0;
+								let slides = (induction.slideCount + 1) || 0;
 
 								// save slide ref in induction array
 								InductionModel.findByIdAndUpdate(req.query.inductionId, {
@@ -506,14 +575,19 @@ module.exports = {
 										}
 									}
 								}, { new: true })
-								.then(induction => {
-									res.status(200).send({ status: true, message: 'slide saved', data: slide });
+								.then(updatedInduction => {
+									if( updatedInduction ) {
+										res.status(200).send({ status: true, message: 'slide saved', data: slide });
+									} else {
+										res.statusMessage = UtilityFn.rippleErr('Slide has failed to save');
+										res.status(501).send({ message: 'Slide has failed to save'});
+									}
 								})
 								.catch(next);
 
-							})
-							.catch(next);
-						
+						})
+						.catch(next);
+
 					} else {
 						res.statusMessage = UtilityFn.rippleErr('Slide has failed to save');
 						res.status(501).send({ message: 'Slide has failed to save'});
@@ -521,29 +595,66 @@ module.exports = {
 				})
 				.catch(next);
 
-		} else if ( req.query.action === 'update' ) {
-			let buildReq = req.body;
-			buildReq['updatedAt'] = new Date();
-			SlideModel.findByIdAndUpdate(req.query.slideId, {
-				$set: buildReq
-			}, { new: true})
-			.then(updatedSlide => {
-				if( updatedSlide ) {
-					res.statusMessage = UtilityFn.rippleSuccessShow('Slide has been updated');
-					res.status(200).send({ status: true, message: 'slide updated' });
-				} else {
-					res.statusMessage = UtilityFn.rippleErr('Slide update has failed to save');
-					res.status(501).send({ message: 'Slide update has failed to save'});
-				}
-			})
-			.catch(next);
 		}
-		
+
 	},
+	// editorSection(req, res, next) {
+	// 	if( req.query.action === 'create' ) {
+	// 		SlideModel.create(req.body)
+	// 			.then(slide => {
+	// 				if( slide ) {
+	// 					InductionModel.findById(req.query.inductionId)
+	// 						.then(induction => {
+	// 							let slides = (induction.slideCount + 1) || 0;
+
+	// 							// save slide ref in induction array
+	// 							InductionModel.findByIdAndUpdate(req.query.inductionId, {
+	// 								$inc: { slideCount: 1 },
+	// 								$push: {
+	// 									slides: {
+	// 										slide: mongoose.Types.ObjectId(slide._id),
+	// 										order: slides
+	// 									}
+	// 								}
+	// 							}, { new: true })
+	// 							.then(induction => {
+	// 								res.status(200).send({ status: true, message: 'slide saved', data: slide });
+	// 							})
+	// 							.catch(next);
+
+	// 						})
+	// 						.catch(next);
+						
+	// 				} else {
+	// 					res.statusMessage = UtilityFn.rippleErr('Slide has failed to save');
+	// 					res.status(501).send({ message: 'Slide has failed to save'});
+	// 				}
+	// 			})
+	// 			.catch(next);
+
+	// 	} else if ( req.query.action === 'update' ) {
+	// 		let buildReq = req.body;
+	// 		buildReq['updatedAt'] = new Date();
+	// 		SlideModel.findByIdAndUpdate(req.query.slideId, {
+	// 			$set: buildReq
+	// 		}, { new: true})
+	// 		.then(updatedSlide => {
+	// 			if( updatedSlide ) {
+	// 				res.statusMessage = UtilityFn.rippleSuccessShow('Slide has been updated');
+	// 				res.status(200).send({ status: true, message: 'slide updated' });
+	// 			} else {
+	// 				res.statusMessage = UtilityFn.rippleErr('Slide update has failed to save');
+	// 				res.status(501).send({ message: 'Slide update has failed to save'});
+	// 			}
+	// 		})
+	// 		.catch(next);
+	// 	}
+		
+	// },
 
 	// image with caption
 	editorImageCaption(req, res, next) {
-		let { template, name, status } = req.body;console.log(req.body);
+		let { template, name, status, thumbnail } = req.body;
 
 		let buildSlide = {
 			template,
@@ -553,7 +664,8 @@ module.exports = {
 				source: req.body.mediaId,
 				caption: req.body.caption
 			}],
-			status
+			status,
+			thumbnail
 		};
 
 		if( req.query.slideId ) {
@@ -618,13 +730,14 @@ module.exports = {
 
 	// text only
 	editorTextOnly(req, res, next) {
-		let { template, name, status, content } = req.body;
+		let { template, name, status, content, thumbnail } = req.body;
 
 		let buildSlide = {
 			template,
 			name,
 			status,
-			content
+			content,
+			thumbnail
 		};
 
 		if( req.query.slideId ) {
@@ -689,7 +802,7 @@ module.exports = {
 
 	// image only
 	editorImageOnly(req, res, next) {
-		let { template, name, status } = req.body;
+		let { template, name, status, thumbnail } = req.body;
 
 		let buildSlide = {
 			template,
@@ -698,7 +811,8 @@ module.exports = {
 				type: 'image',
 				source: req.body.mediaId
 			}],
-			status
+			status,
+			thumbnail
 		};
 
 		if( req.query.slideId ) {
@@ -838,7 +952,7 @@ module.exports = {
 	},
 
 	// quiz
-	editorQuiz(req, res, next) {console.log(req.body);
+	editorQuiz(req, res, next) {
 		let { template, name, status, quiz } = req.body;
 
 		let buildSlide = {

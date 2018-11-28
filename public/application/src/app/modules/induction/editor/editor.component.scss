@@ -302,3 +302,12 @@ input[disabled] {
 		}
 	}
 }
+
+.slide-deck {
+	position: absolute;
+	top: 0;
+	left: -150%;
+	z-index: -1;
+	width: 100%;
+	border: 0;
+}

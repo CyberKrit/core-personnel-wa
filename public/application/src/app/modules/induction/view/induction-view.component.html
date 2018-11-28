@@ -1,11 +1,82 @@
+<div #test></div>
 <div *ngIf="isPreloaded">
-	
+
 	<div class="comp-header _clr_">
 		<h1 class="comp-header_title _comp-title_">{{ inductionSingleData?.name }}</h1>
 	</div>
 
-	<div class="com-body">
-		This page is under construction
+	<div class="comp-body">
+		<div class="comp-body-null" *ngIf="!inductionSingleData?.slides.length">
+			Slides are unavailable right now. Get started with creating your first slide.
+		</div>
+
+		<div class="slide-deck" *ngIf="inductionSingleData?.slides.length" #slideDeck>
+			<div class="slide slide-{{ slide.slide.template.slug }}"
+				*ngFor="let slide of inductionSingleData?.slides, let i = index">
+				<div 
+					class="inner-slide-wrapper"
+					*ngIf="i === activeSlide"
+					[ngStyle]="{ height: styleInfo?.height + 'px' }">
+					<div class="image-n-caption"
+						*ngIf="slide.slide?.template?.slug === 'image-with-caption' && slide.slide?.resource.length">
+						<div class="image-n-caption--figure-wrapper">
+							<img class="image-n-caption--figure" src="{{ slide.slide?.resource[0]?.source?.src }}" alt="">
+						</div>
+						<div class="image-n-caption--caption-wrapper">
+							<h2>{{ slide.slide?.resource[0]?.caption }}</h2>
+						</div>
+					</div>
+					<div 
+						class="inner-wrapper-section" 
+						*ngIf="slide.slide?.template?.slug === 'section'">
+						<h1>{{ slide?.slide?.header }}</h1>
+					</div>
+					<div 
+						class="inner-wrapper-text-only" 
+						*ngIf="slide.slide?.template?.slug === 'text-only'"></div>
+					<div 
+						class="inner-wrapper-image-only" 
+						*ngIf="slide.slide?.template?.slug === 'image-only' && slide.slide?.resource.length" 
+						[ngStyle]="{ 'background-image': 'url(' + slide.slide?.resource[0]?.source?.src + ')' }">
+					</div>
+					<div 
+						class="inner-wrapper-quiz" 
+						*ngIf="slide.slide?.template?.slug === 'quiz'">
+						<h1>{{ slide?.slide?.quiz?.question }}</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="slide-nav" *ngIf="inductionSingleData?.slides.length">
+		<button class="btn-next" 
+			type="button" 
+			(click)="slideNav('next')"
+			[disabled]="activeSlide === ( inductionSingleData?.slides.length - 1 )">
+			<span 
+				*ngIf="activeSlide < ( inductionSingleData?.slides.length - 1 )">
+					Next
+			</span>
+			<span 
+				*ngIf="activeSlide === ( inductionSingleData?.slides.length - 1 )">
+					End
+			</span>
+		</button>
+
+		<button class="btn-prev" 
+			type="button" 
+			(click)="slideNav('prev')"
+			[disabled]="activeSlide === 0">
+			<span 
+				*ngIf="activeSlide > 0">
+					Previous
+			</span>
+			<span 
+				*ngIf="activeSlide === 0">
+					Start
+			</span>
+		</button>
 	</div>
 
 </div>

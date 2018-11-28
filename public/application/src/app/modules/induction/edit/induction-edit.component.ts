@@ -48,7 +48,7 @@ export class InductionEditComponent implements OnInit, OnDestroy {
 			.subscribe(
 				(data: Data) => {
 					this.routeData = data.editData;
-
+console.log(this.routeData);
 					// this is for search purpose only
 					this.routeData.slides.map(slide => {
 						slide['isVisible'] = true;

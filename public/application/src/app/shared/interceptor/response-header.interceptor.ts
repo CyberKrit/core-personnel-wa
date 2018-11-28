@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpEventType, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 // custom imports
 import { CoreService } from '../../modules/core/core.service';
@@ -10,7 +11,8 @@ import { CoreService } from '../../modules/core/core.service';
 export class ResponseHeaderInterceptor implements HttpInterceptor {
 
 	constructor(
-		private coreService: CoreService) {}
+		private coreService: CoreService,
+		private router: Router) {}
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		return next.handle(req).pipe(
@@ -30,6 +32,9 @@ export class ResponseHeaderInterceptor implements HttpInterceptor {
 						this.coreService.startRippleGeneric();
 					}
 					this.coreService.removeProgressbar();
+					if (err.status) {
+						this.router.navigate(['/login']);
+					}
 					return throwError(err);
 				})
 			);

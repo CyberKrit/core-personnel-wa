@@ -33,6 +33,7 @@ export interface IListInduction {
 export interface ISingleInductionViewData {
 	_id: string;
 	name: string;
+	slides: any;
 }
 
 export interface IEditInductionResolve {

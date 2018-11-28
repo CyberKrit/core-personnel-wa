@@ -4,6 +4,7 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 // custom imports
 import { AppComponent } from './app.component';
 import { AppAuthCanctivate } from './app-auth.canActivate';
+import { LoginComp } from './modules/user/login/login.comp';
 
 const AppRoute: Routes = [
 	{ 
@@ -18,8 +19,7 @@ const AppRoute: Routes = [
 	},
 	{ 
 		path: 'login',
-		redirectTo: '/login', 
-		pathMatch: 'full'
+		component: LoginComp
 	},
 	{ 
 		path: '**', 

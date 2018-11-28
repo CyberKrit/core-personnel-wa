@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
     // show progressbar on every route change attempt
     this.router.events
       .pipe(filter(event => event instanceof NavigationStart))
-      .subscribe((event:NavigationStart) => {
+      .subscribe((event: NavigationStart) => {
         if( event ) this.isProgressBarActive = true;
       });
 

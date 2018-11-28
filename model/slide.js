@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const SlideSchema = new Schema({
 	template: { type: Schema.Types.ObjectId, ref: 'template' },
+	thumbnail: { type: String, default: '', required: true },
 	name: { type: String, default: null },
 	header: { type: String, default: null },
 	content: { type: String, default: null },

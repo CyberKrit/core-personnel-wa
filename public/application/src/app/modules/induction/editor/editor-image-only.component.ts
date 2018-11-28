@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { HttpResponse, HttpEventType} from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
+import * as html2canvas from 'html2canvas';
 
 // import service
 import { FormService } from '../../../shared/service/form.service';
@@ -64,10 +65,26 @@ import { ICompareValuesImageOnly, IGenEditorPostAction, IEditorImageOnlyFormData
 				</div>
 			
 		</form>
+
+		<div class="slide-deck" #slideDeck>
+			<div class="slide slide-section">
+				<div 
+					class="inner-slide-wrapper"
+					[ngStyle]="{ height: styleInfo?.height + 'px' }">
+					<div 
+						class="inner-wrapper-image-only" 
+						[ngStyle]="{ 'background-image': 'url(' + fileSrc + ')' }">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<img src="{{ thumbnail1 }}">
 	`,
 	styleUrls: ['./editor.component.scss']
 })
 export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
+	@ViewChild('slideDeck') public slideDeck: ElementRef;
   // get data from parent
 	@Input() public action: string;
 	@Input() public slide: any;
@@ -93,12 +110,15 @@ export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
 	// compare values
 	private previousValueSet: ICompareValuesImageOnly = {};
 	private currentValueSet: ICompareValuesImageOnly = {};
+	public styleInfo: { height: number } = { height: 0 };
+	public thumbnail1: string = '';
 
 	constructor(
 		private fb: FormBuilder,
 		private $form: FormService,
 		private $induction: InductionService,
-		private $media: MediaService) {}
+		private $media: MediaService,
+		private cd: ChangeDetectorRef) {}
 
 	public ngOnInit(): void {
 		this.detectChange.emit(false);
@@ -206,7 +226,22 @@ export class EditorImageOnly implements OnInit, OnDestroy, OnChanges {
 			filteredValue['status'] = this.saveAs ? 'publish' : 'draft';
 			filteredValue['mediaId'] = this.fileId;
 
-			this.formData.emit(this.emitEvent(filteredValue));
+			if( typeof this.slideDeck.nativeElement.clientWidth === 'number' ) {
+				let clientW = this.slideDeck.nativeElement.clientWidth;
+				this.styleInfo['height'] = clientW * 0.5625;
+				this.cd.detectChanges();
+			}
+
+			// generate thumbnail
+			html2canvas(this.slideDeck.nativeElement)
+				.then(canvas => {
+    			document.body.appendChild(canvas);
+    			filteredValue['thumbnail'] = canvas.toDataURL();
+    			canvas.remove();
+    			this.thumbnail1 = filteredValue['thumbnail'];
+					this.formData.emit(this.emitEvent(filteredValue));
+				});
+			
 		} else {
 			this.imageWithCaptionForm.enable();
 		}
