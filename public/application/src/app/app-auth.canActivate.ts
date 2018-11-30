@@ -10,7 +10,7 @@ import * as localForage from "localforage";
 //   description : 'Local database solution for the Core Personnel WA web application'
 // });
 // localForage.setItem('dataSet', {
-// 	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXV0aCIsIl9pZCI6IjViZmJjNWZjYjQ1MzUzMWZjODk3MWM0NSIsImlhdCI6MTU0MzI4ODgzOX0.eQv6hz-clAc4BnGiYd8uAg6GILExiig8HIeZWkyr3Qc'
+// 	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXV0aCIsIl9pZCI6IjViZmJjNWZjYjQ1MzUzMWZjODk3MWM0NSIsImlhdCI6MTU0MzU2OTk0M30.g9t2hIXR2ipriWzjKvrVXDgCwLnS8xZvo7qEds9I45I'
 // });
 ////////////////////////////////////
 

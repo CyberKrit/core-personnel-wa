@@ -33,7 +33,7 @@ export class ResponseHeaderInterceptor implements HttpInterceptor {
 					}
 					this.coreService.removeProgressbar();
 					if (err.status) {
-						this.router.navigate(['/login']);
+						// this.router.navigate(['/login']);
 					}
 					return throwError(err);
 				})
