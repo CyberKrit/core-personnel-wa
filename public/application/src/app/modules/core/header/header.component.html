@@ -3,8 +3,15 @@
 		<div class="header_collapsible-menu" (click)="toggleSidebar()"></div>
 
 		<div class="header_user">
-			<figure class="header_user-figure"></figure>
-			<i class="header_user-symbol"></i>
+			<button [matMenuTriggerFor]="menu">
+				<figure class="header_user-figure"></figure>
+				<i class="header_user-symbol"></i>
+			</button>
+			<mat-menu #menu="matMenu">
+			  <button mat-menu-item (click)="viewProfile()">Profile</button>
+			  <button mat-menu-item (click)="viewProfile()">Change Subscription</button>
+			  <button mat-menu-item (click)="logout()">Logout</button>
+			</mat-menu>
 		</div>
 
 		<div class="header_utilities">

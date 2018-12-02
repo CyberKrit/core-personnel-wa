@@ -32,7 +32,7 @@ export class ResponseHeaderInterceptor implements HttpInterceptor {
 						this.coreService.startRippleGeneric();
 					}
 					this.coreService.removeProgressbar();
-					if (err.status) {
+					if (err.status === 401) {
 						this.router.navigate(['/login']);
 					}
 					return throwError(err);

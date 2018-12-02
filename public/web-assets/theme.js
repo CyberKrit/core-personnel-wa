@@ -595,14 +595,55 @@ localforage.config({
 				emailTest: false,
 				pwdTest: false,
 				pwdMinLength: 8,
-        loginURL: '/api/user/login'
+        loginURL: '/api/user/login',
+        isAuthTrueURL: '/api/login',
+        isAuthTrue: null
 			},
 
 			init: function(config) {
 				$.extend(this.config, config);
 
+				this.checkLoginState();
 				this.testCtrl();
 				this.submit();
+			},
+
+			checkLoginState: function() {
+				var self = this;
+
+				$('#login-from-diff-acct').on('click', function() {
+          $('.loginTrue-area').addClass('_visuallyhidden_');
+					$('.-form--login, .app__main--form-compliment').removeClass('_visuallyhidden_');
+				});
+
+				localforage.getItem('dataSet')
+					.then(data => {
+						if( data.hasOwnProperty('token') ) {
+							if( data.token ) {
+								$.ajax({
+									method: 'GET',
+              		dataType: 'json',
+              		url: self.config.isAuthTrueURL,
+              		headers: { 'x-auth': data.token },
+              		success: function(data, status, xhr) {
+              			if( data.status ) {
+              				self.isAuthTrue = true;
+	              			$('.loginTrue-area').removeClass('_visuallyhidden_');
+	              			$('.-form--login, .app__main--form-compliment').addClass('_visuallyhidden_');
+              			}
+              		},
+		              error: function(jqXhr) {
+              			self.isAuthTrue = false;
+              			$('.loginTrue-area').addClass('_visuallyhidden_');
+              			$('.-form--login, .app__main--form-compliment').removeClass('_visuallyhidden_');
+		              }
+								});
+							}
+						}
+					})
+      		.catch( err => {
+            customErrMsg.trigger('Something went wrong! Please try again.');
+      		});
 			},
 
 			testCtrl: function() {
@@ -737,14 +778,6 @@ localforage.config({
                 			self.enableControls();
                       customErrMsg.trigger('Something went wrong! Please try again.');
                 		});
-                  // localforage.setItem('dataSet', { token: token }, function(err) {
-                  //   if( err === null ) {
-                  //     window.location.replace('/dashboard');
-                  //   } else {
-                  //     self.enableControls();
-                  //     customErrMsg.trigger('Something went wrong! Please try again.');
-                  //   }
-                  // });
 
                 } else {
                   self.enableControls();

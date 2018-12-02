@@ -2,7 +2,7 @@ const UserModel = require('../model/user');
 const localforage = require('localforage');
 
 let auth = (req, res, next) => {
-	const token = req.header('x-auth');console.log('token', token);
+	const token = req.header('x-auth');
 
 	UserModel.findByToken(token)
 		.then(user => {

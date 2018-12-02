@@ -151,6 +151,32 @@ module.exports = {
 
 	isAuth(req, res, next) {
 		
+	},
+
+	userLoginPage(req, res, next) {
+		UserModel.findByToken(req.header('x-auth'))
+			.then(user => {
+				if( user ) {
+					res.status(200).send({ status: true, message: 'Valid token' });
+				} else {
+					res.status(401).send({ status: false, message: 'Invalid token' });
+				}
+			})
+			.catch(next);
+	},
+
+	profileReolve(req, res, next) {
+		UserModel.findByToken(req.header('x-auth'))
+			.then(user => {
+				if( user ) {
+					res.status(200).send({ data: user, message: 'user data has been loaded' });
+				} else {
+					res.statusMessage = UtilityFn.rippleErr('User not found');
+					res.status(401).send({ message: 'User not found' });
+				}
+			})
+			.catch(next);
+
 	}
 
 };

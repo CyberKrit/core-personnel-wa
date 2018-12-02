@@ -18,6 +18,11 @@ const AppRoute: Routes = [
 		canActivate: [ AppAuthCanctivate ]
 	},
 	{ 
+		path: 'account',
+		loadChildren: './modules/user/profile/profile.module#ProfileModule',
+		canActivate: [ AppAuthCanctivate ]
+	},
+	{ 
 		path: 'login',
 		component: LoginComp
 	},

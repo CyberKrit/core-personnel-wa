@@ -626,6 +626,14 @@ body:not(:-moz-handler-blocked) fieldset {
 }
 
 
+._visuallyhidden_ { 
+  position: absolute; 
+  overflow: hidden; 
+  clip: rect(0 0 0 0); 
+  height: 1px; width: 1px; 
+  margin: -1px; padding: 0; border: 0; 
+}
+
 /* ============================
    APP
    ============================ */
@@ -1796,3 +1804,16 @@ body:not(:-moz-handler-blocked) fieldset {
 }
 
 
+.loginTrue-area p {
+	font-size: 1.8rem;
+	line-height: 1.4;
+	font-weight: 3400;
+	color: #fff;
+}
+.loginTrue-area [type="button"] {
+	display: inline-block;
+	width: auto;
+}
+.loginTrue-area [type="button"]:after {
+	display: none;
+}

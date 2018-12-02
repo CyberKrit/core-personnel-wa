@@ -1197,3 +1197,13 @@ button._dropdown_ {
 	}
 
 }
+
+.mat-menu-panel button {
+	height: 3.4rem;
+	line-height: 3.4rem;
+	font-weight: 500;
+	color: $palette-text;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
