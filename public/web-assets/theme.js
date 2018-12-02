@@ -724,7 +724,7 @@ localforage.config({
                 	localforage.clear()
                 		.then(() => {
 		                  localforage.setItem('dataSet', { token: token })
-		                  	.then(() => {console.log(token);
+		                  	.then(() => {
 		                  		window.location.replace('/dashboard');
 		                  	})
 		                		.catch( err => {

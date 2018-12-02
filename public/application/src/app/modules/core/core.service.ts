@@ -3,7 +3,8 @@ import { Subject, throwError, Observable } from 'rxjs';
 
 @Injectable()
 export class CoreService {
-	// public HOST: string = 'http://localhost:3000/';
+	//public HOST: string = 'http://localhost:3000/';
+	// public HOST: string = 'http://inducttrain.com/';
 	public HOST: string = 'https://evening-shelf-25137.herokuapp.com/';
 
 	private token: string | null = null;

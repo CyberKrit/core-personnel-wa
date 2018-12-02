@@ -3,16 +3,16 @@ import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import { Observable } from 'rxjs';
 import * as localForage from "localforage";
 
-/////////////////////////////////////
+///////////////////////////////////
 // localForage.config({
 //   name : 'CorePersonnelWA',
 //   version : 1.0,
 //   description : 'Local database solution for the Core Personnel WA web application'
 // });
 // localForage.setItem('dataSet', {
-// 	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXV0aCIsIl9pZCI6IjViZmJjNWZjYjQ1MzUzMWZjODk3MWM0NSIsImlhdCI6MTU0MzU2OTk0M30.g9t2hIXR2ipriWzjKvrVXDgCwLnS8xZvo7qEds9I45I'
+// 	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXV0aCIsIl9pZCI6IjViZmJjNWZjYjQ1MzUzMWZjODk3MWM0NSIsImlhdCI6MTU0MzcyODUyNX0.1Zz7UPw4KvnX0QO16zIZc1UxJXAP8daqHUoRy4-0yIc'
 // });
-////////////////////////////////////
+//////////////////////////////////
 
 let localStore = localForage.createInstance({
   name: "CorePersonnelWA"
@@ -33,14 +33,14 @@ export class AppAuthCanctivate implements CanActivate {
 			// if token exist it's okay then
 			// x-auth header will get attached inside interceptor
 			let token = this.$core.getToken();
-			if( token ) {
+			if( token ) {console.log('token exists', token);
 				return true;
 			}
 
 			return localStore.getItem('dataSet')
 				.then((data: { token: string }) => {
 					if( data && data.hasOwnProperty('token') ) {
-						if( typeof data.token === 'string' ) {
+						if( typeof data.token === 'string' ) {console.log('token local', token);
 							this.$core.setToken(data.token);
 							return true;
 						}
