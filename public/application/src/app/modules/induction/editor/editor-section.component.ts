@@ -159,7 +159,7 @@ export class EditorSectionComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private emitEvent(value: IEditorSectionFormData): Observable<IGenEditorPostAction> {
-		let slideId:string = '';console.log(value);
+		let slideId:string = '';
 		try {
 			slideId = this.slide._id;
 		} catch (err) {}
