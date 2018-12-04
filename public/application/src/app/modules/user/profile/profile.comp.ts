@@ -5,13 +5,14 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 // custom imports
 import { FormService } from '../../../shared/service/form.service';
 import { CoreService } from '../../core/core.service';
+import { ProfileService } from './profile.service';
 
 @Component({
 	templateUrl: './profile.comp.html',
 	styleUrls: ['./profile.comp.scss']
 })
 export class ProfileComponent implements OnInit {
-	private isPreloaded: boolean = false;
+	public isPreloaded: boolean = false;
 	private userData: any;
 
 	// form
@@ -30,7 +31,8 @@ export class ProfileComponent implements OnInit {
 		private router: Router,
 		private $core: CoreService,
 		private fb: FormBuilder,
-		private $form: FormService) {}
+		private $form: FormService,
+		private $profile: ProfileService) {}
 
 	ngOnInit(): void {
 		// for same page
@@ -77,7 +79,14 @@ export class ProfileComponent implements OnInit {
 		this.profileForm.get('currentPwd').valueChanges
 			.subscribe(
 				(value: string) => {
-					console.log(value);
+					if( value ) {
+						this.formCurrentPwdRequired = false;
+
+						if( value.length >= 8 ) {
+							this.errOldPwdMinLen = false;
+						}
+					}
+					
 				}
 			);
 
@@ -99,17 +108,13 @@ export class ProfileComponent implements OnInit {
 						if( this.profileForm.get('currentPwd').value.length < 8 ) {
 							this.errOldPwdMinLen = true;
 						} else {
-							this.profileForm.disable();
-							this.isLazy = true;
-							let formData = this.$form.whiteSpaceControl(value);
+							this.sendData(value);
 						}
 
 					}
 				}
 			} else {
-				this.profileForm.disable();
-				this.isLazy = true;
-				let formData = this.$form.whiteSpaceControl(value);
+				this.sendData(value);
 			}
 
 		} else {
@@ -120,5 +125,29 @@ export class ProfileComponent implements OnInit {
 			this.profileForm.get('lastName').markAsTouched();
 			this.profileForm.get('email').markAsTouched();
 		}
+	}
+
+	private sendData(value): void {
+		this.profileForm.disable();
+		this.isLazy = true;
+		let formData = this.$form.whiteSpaceControl(value);
+
+		// submit form
+		this.$profile.updateUser(formData)
+			.subscribe(
+				(res: any) => {
+					this.userData = res.data;
+					this.profileForm.enable();
+					this.isLazy = false;
+
+					if( res.status === true ) {
+						// reset form input accroding to updated data
+						this.profileForm.get('companyName').setValue(this.userData.company[0].name);
+						this.profileForm.get('firstName').setValue(this.userData.personal[0].firstname);
+						this.profileForm.get('lastName').setValue(this.userData.personal[0].lastname);
+						this.profileForm.get('email').setValue(this.userData.email);
+					}
+				}
+			);
 	}
 }

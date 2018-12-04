@@ -16,5 +16,7 @@ module.exports = (app) => {
 
 	// profile resolve
 	app.get('/api/user/profile', auth, failMsg('User data has failed to load'), UserController.profileReolve);
+	// login
+	app.put('/api/user/update', auth,  failMsg('User data has failed to save'),UserController.updateUser);
 
 };

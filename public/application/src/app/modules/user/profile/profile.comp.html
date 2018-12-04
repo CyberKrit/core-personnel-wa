@@ -60,7 +60,7 @@
 				<div class="control-wrapper">
 					<label for="currentPwd">Current password</label>
 					<input type="password" id="currentPwd" formControlName="currentPwd">
-					<ul class="err-list" *ngIf="profileForm.get('currentPwd').focus">
+					<ul class="err-list">
 						<li 
 							class="err-item"
 							*ngIf="errOldPwdMinLen && !errNewPwdMinLen && !formCurrentPwdRequired">

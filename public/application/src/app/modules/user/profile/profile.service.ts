@@ -28,6 +28,18 @@ export class ProfileService {
 			);
 	}
 
+	public updateUser(formData): Observable<any> {
+		let url: string = this.baseURL + 'api/user/update';
+
+		return this.http
+			.put(url, formData)
+			.pipe(
+				map(res => res),
+				catchError(err => throwError(err))
+			);
+
+	}
+
 
 	/* ==[ handleError ]== */
 	private handleError(error: HttpErrorResponse) {

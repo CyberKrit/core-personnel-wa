@@ -2,7 +2,9 @@ const UserModel = require('../model/user');
 const config = require('../config/config');
 const stripe = require('stripe')(config.stripeSecretkey);
 const nodemailer = require('nodemailer');
+const MediaModel = require('../model/media');
 const fs = require('fs');
+const UtilityFn = require('../utility');
 
 const _ = require('underscore');
 _.templateSettings = {
@@ -177,6 +179,124 @@ module.exports = {
 			})
 			.catch(next);
 
+	},
+
+	updateUser(req, res, next) {
+		let oldPwd = req.body.currentPwd;
+		console.log(req.header('x-auth'));
+		if( oldPwd ) {
+			UserModel.findByToken(req.header('x-auth'))
+				.then(user => {
+					UserModel.validatePwd(user._id, req.body.currentPwd)
+						.then(verifiedUser => {
+							if( verifiedUser ) {
+
+								// save user along with password
+								UserModel.findByIdAndUpdate(verifiedUser._id, {
+									$set: {
+										email: req.body.email,
+										company: [{
+											name: req.body.companyName
+										}],
+										personal: [{
+											firstname: req.body.firstName,
+											lastname: req.body.lastName
+										}],
+										updatedAt: new Date()
+									}
+								}, { new: true })
+								.then(updatedUser => {
+									if( updatedUser ) {
+										// encrypt then update password
+										updatedUser.password = req.body.newPwd;
+										updatedUser.save()
+											.then(pwdRestUser => {
+												if( pwdRestUser ) {
+													// build user response
+													let buildRes = {
+														email: pwdRestUser.email,
+														personal: [{
+															firstname: pwdRestUser.personal[0].firstname,
+															lastname: pwdRestUser.personal[0].lastname
+														}],
+														company: [{
+															name: pwdRestUser.company[0].name
+														}]
+													};
+													res.statusMessage = UtilityFn.ripple(true, 'success', 'User has been updated');
+													res.status(200).send({ status: true, message: 'User has been successfully updated', data: buildRes });
+												} else {
+													res.statusMessage = UtilityFn.rippleErr('Password update has failed');
+													res.status(422).send({ message: 'Password update has failed' });
+												}
+											})
+											.catch(next);
+
+									} else {
+										res.statusMessage = UtilityFn.rippleErr('User data has failed to save');
+										res.status(401).send({ message: 'User data has failed to save' });
+									}
+								})
+								.catch(next);
+
+							} else {
+								res.send({ status: false, message: 'password doesn\'t match' });
+							}
+							
+						})
+						.catch(err => {
+							res.send({ status: false, message: 'password doesn\'t match' });
+						});
+				})
+				.catch(next);
+		} else {
+			UserModel.findByToken(req.header('x-auth'))
+				.then(user => {
+					if( user ) {
+						UserModel.findByIdAndUpdate(user._id, {
+							$set: {
+								email: req.body.email,
+								company: [{
+									name: req.body.companyName
+								}],
+								personal: [{
+									firstname: req.body.firstName,
+									lastname: req.body.lastName
+								}],
+								updatedAt: new Date()
+							}
+						}, { new: true })
+						.then(updatedUser => {
+							if( updatedUser ) {
+								// build user response
+								let buildRes = {
+									email: updatedUser.email,
+									personal: [{
+										firstname: updatedUser.personal[0].firstname,
+										lastname: updatedUser.personal[0].lastname
+									}],
+									company: [{
+										name: updatedUser.company[0].name
+									}]
+								};
+
+								res.statusMessage = UtilityFn.ripple(true, 'success', 'User has been updated');
+								res.status(200).send({ status: true, message: 'User has been successfully updated', data: buildRes });
+							} else {
+								res.statusMessage = UtilityFn.rippleErr('User data has failed to save');
+								res.status(401).send({ message: 'User data has failed to save' });
+							}
+						})
+						.catch(next);
+
+					} else {
+						res.statusMessage = UtilityFn.rippleErr('User Anauthenticated');
+						res.status(401).send({ message: 'User Anauthenticated' });
+					}
+				})
+				.catch(next);
+			
+		}
 	}
 
 };

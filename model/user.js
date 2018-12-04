@@ -159,12 +159,30 @@ UserSchema.methods.generateEmailToken = function() {
 			return { token }
 		});
 
-}
+};
 
 UserSchema.statics.findByCredentials = function(email, pwd) {
 	let User = this;
 
 	return User.findOne({ email })
+		.then(user => {
+			if( !user ) return Promise.reject();
+
+			return new Promise((resolve, reject) => {
+				bcrypt.compare(pwd, user.password, (err, res) => {
+					if( !res ) reject();
+					resolve(user);
+				});
+			});
+
+		});
+
+};
+
+UserSchema.statics.validatePwd = function(id, pwd) {
+	let User = this;
+
+	return User.findById(id)
 		.then(user => {
 			if( !user ) return Promise.reject();
 
