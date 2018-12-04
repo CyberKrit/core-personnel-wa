@@ -642,7 +642,9 @@ localforage.config({
 						}
 					})
       		.catch( err => {
-            customErrMsg.trigger('Something went wrong! Please try again.');
+      			self.isAuthTrue = false;
+      			$('.loginTrue-area').addClass('_visuallyhidden_');
+      			$('.-form--login, .app__main--form-compliment').removeClass('_visuallyhidden_');
       		});
 			},
 

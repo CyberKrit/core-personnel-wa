@@ -4,14 +4,15 @@ import { Observable } from 'rxjs';
 import * as localForage from "localforage";
 
 /////////////////////////////////
-// localForage.config({
-//   name : 'CorePersonnelWA',
-//   version : 1.0,
-//   description : 'Local database solution for the Core Personnel WA web application'
-// });
-// localForage.setItem('dataSet', {
-// 	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXV0aCIsIl9pZCI6IjViZmJjNWZjYjQ1MzUzMWZjODk3MWM0NSIsImlhdCI6MTU0Mzc1NjAxNn0.qPpek8VwgSa7M7zfulTAoQPhmLlVZt7UtMG3EdkclHQ'
-// });
+localForage.config({
+  name : 'CorePersonnelWA',
+  version : 1.0,
+  description : 'Local database solution for the Core Personnel WA web application'
+});
+
+localForage.setItem('dataSet', {
+	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXV0aCIsIl9pZCI6IjViZmJjNWZjYjQ1MzUzMWZjODk3MWM0NSIsImlhdCI6MTU0MzkxMzU3Nn0.Kk4aKoSC-TYjLtwdRQ-VfQyTTY9burDTUiJv_MK0unU'
+});
 ////////////////////////////////
 
 let localStore = localForage.createInstance({

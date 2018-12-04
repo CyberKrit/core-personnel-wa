@@ -1,1 +1,101 @@
-profile
+<div class="profile-shell" *ngIf="isPreloaded">
+	<div class="profile-form-wrapper">
+		<form 
+			[formGroup]="profileForm" 
+			(ngSubmit)="formSubmit(profileForm)"
+			autocomplete="false" novalidate>
+			<fieldset class="fieldset-company-details">
+				<div class="control-wrapper">
+					<label for="companyName">Company name</label>
+					<input type="text" id="companyName" formControlName="companyName">
+					<ul class="err-list" *ngIf="profileForm.get('companyName').touched">
+						<li 
+							class="err-item"
+							*ngIf="profileForm.get('companyName').errors?.required">
+							This field is required
+						</li>
+					</ul>
+				</div>
+			</fieldset>
+
+			<fieldset class="fieldset-user-details">
+				<div class="column-2">
+					<div class="control-wrapper">
+						<label for="firstName">First name</label>
+						<input type="text" id="firstName" formControlName="firstName">
+						<ul class="err-list" *ngIf="profileForm.get('firstName').touched">
+							<li 
+								class="err-item"
+								*ngIf="profileForm.get('firstName').errors?.required">
+								This field is required
+							</li>
+						</ul>
+					</div>
+					<div class="control-wrapper">
+						<label for="lastName">Last name</label>
+						<input type="text" id="lastName" formControlName="lastName">
+						<ul class="err-list" *ngIf="profileForm.get('lastName').touched">
+							<li 
+								class="err-item"
+								*ngIf="profileForm.get('lastName').errors?.required">
+								This field is required
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="control-wrapper">
+					<label for="email">Email address</label>
+					<input type="text" id="email" formControlName="email">
+					<ul class="err-list" *ngIf="profileForm.get('email').touched">
+						<li 
+							class="err-item"
+							*ngIf="profileForm.get('email').errors?.required">
+							This field is required
+						</li>
+					</ul>
+				</div>
+			</fieldset>
+
+			<fieldset class="fieldset-pwd-details">
+				<div class="control-wrapper">
+					<label for="currentPwd">Current password</label>
+					<input type="password" id="currentPwd" formControlName="currentPwd">
+					<ul class="err-list" *ngIf="profileForm.get('currentPwd').focus">
+						<li 
+							class="err-item"
+							*ngIf="errOldPwdMinLen && !errNewPwdMinLen && !formCurrentPwdRequired">
+							Password should be at least 8 characters long
+						</li>
+						<li class="err-item" *ngIf="formCurrentPwdRequired">
+							Enter your old password
+						</li>
+					</ul>
+				</div>
+
+				<div class="control-wrapper">
+					<label for="newPwd">New password</label>
+					<input type="password" id="newPwd" formControlName="newPwd">
+					<ul class="err-list" *ngIf="profileForm.get('newPwd').touched">
+						<li 
+							class="err-item"
+							*ngIf="errNewPwdMinLen">
+							Password should be at least 8 characters long
+						</li>
+					</ul>
+				</div>
+			</fieldset>
+
+			<div class="form-interaction">
+				<button class="btn-submit" type="submit" [disabled]="isLazy">
+					<div class="idle" *ngIf="!isLazy">
+						<span>Save</span>
+					</div>
+
+					<span class="lazy" *ngIf="isLazy">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-dual-ring" style="animation-play-state:running;animation-delay:0s;background:0 0"><circle cx="50" cy="50" fill="none" stroke-linecap="round" r="40" stroke-width="8" stroke="#fff" stroke-dasharray="62.83185307179586 62.83185307179586" transform="rotate(288.79 50 50)" style="animation-play-state:running;animation-delay:0s"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+					</span>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

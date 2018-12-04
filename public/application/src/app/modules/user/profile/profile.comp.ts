@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { Router, ActivatedRoute, Data, RouterEvent, NavigationEnd } from '@angular/router';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 // custom imports
+import { FormService } from '../../../shared/service/form.service';
 import { CoreService } from '../../core/core.service';
 
 @Component({
@@ -9,20 +11,114 @@ import { CoreService } from '../../core/core.service';
 	styleUrls: ['./profile.comp.scss']
 })
 export class ProfileComponent implements OnInit {
+	private isPreloaded: boolean = false;
 	private userData: any;
+
+	// form
+	private isLazy: boolean = false;
+	private profileForm: FormGroup;
+	private formValCompany: string | null = null;
+	private formValFirstname: string | null = null;
+	private formValLastname: string | null = null;
+	private formValEmail: string | null = null;
+	private formCurrentPwdRequired: boolean = false;
+	private errOldPwdMinLen: boolean = false;
+	private errNewPwdMinLen: boolean = false;
 
 	constructor(
 		private route: ActivatedRoute,
-		private $core: CoreService) {}
+		private router: Router,
+		private $core: CoreService,
+		private fb: FormBuilder,
+		private $form: FormService) {}
 
-	ngOnInit(): void {console.log('ProfileComponent');
+	ngOnInit(): void {
+		// for same page
+		this.router.events
+			.subscribe(
+				(event: RouterEvent) => {
+					if( event instanceof NavigationEnd ) {
+						this.$core.removeProgressbar();
+					}
+				}
+			);
+
+		// load data
 		this.route.data
 			.subscribe(
 				(res: Data) => {
-					this.userData = res.data;
+					this.userData = res.data.data;
 					this.$core.removeProgressbar();
+					this.isPreloaded = true;
+
+					// fill formdata
+					try {
+						this.formValCompany = this.userData.company[0].name;
+						if( this.userData.personal.length ) {
+							this.formValFirstname = this.userData.personal[0].firstname;
+							this.formValLastname = this.userData.personal[0].lastname;
+						}
+						this.formValEmail = this.userData.email;
+					} catch (err) {}
 					console.log(this.userData);
 				}
 			);
+
+		// create form
+		this.profileForm = this.fb.group({
+			companyName: [this.formValCompany, [Validators.required]],
+			firstName: [this.formValFirstname, [Validators.required]],
+			lastName: [this.formValLastname, [Validators.required]],
+			email: [this.formValEmail, [Validators.required]],
+			currentPwd: [null],
+			newPwd: [null]
+		});
+
+		this.profileForm.get('currentPwd').valueChanges
+			.subscribe(
+				(value: string) => {
+					console.log(value);
+				}
+			);
+
+	}
+
+	private formSubmit({ value, valid }: { value: any, valid: boolean }): void {
+		if( valid ) {
+			if( this.profileForm.get('newPwd').value ) {
+				if( this.profileForm.get('newPwd').value.length < 8 ) {
+					this.errNewPwdMinLen = true;
+				} else {
+					this.errNewPwdMinLen = false;
+					let currentPwd: string = this.profileForm.get('currentPwd').value;
+
+					if( !currentPwd ) {
+						this.formCurrentPwdRequired = true;
+					} else {
+						this.formCurrentPwdRequired = false;
+						if( this.profileForm.get('currentPwd').value.length < 8 ) {
+							this.errOldPwdMinLen = true;
+						} else {
+							this.profileForm.disable();
+							this.isLazy = true;
+							let formData = this.$form.whiteSpaceControl(value);
+						}
+
+					}
+				}
+			} else {
+				this.profileForm.disable();
+				this.isLazy = true;
+				let formData = this.$form.whiteSpaceControl(value);
+			}
+
+		} else {
+			this.isLazy = false;
+			this.profileForm.enable();
+			this.profileForm.get('companyName').markAsTouched();
+			this.profileForm.get('firstName').markAsTouched();
+			this.profileForm.get('lastName').markAsTouched();
+			this.profileForm.get('email').markAsTouched();
+		}
 	}
 }
