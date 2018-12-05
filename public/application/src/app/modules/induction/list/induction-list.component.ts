@@ -116,7 +116,6 @@ export class InductionListComp implements OnInit, OnDestroy {
 		this.loadingSub = this.coreService.fullScreenLoading$
 			.subscribe(
 				(data: boolean) => {
-					console.log('changed', data);
 					this.$induction.listInduction()
 						.subscribe(
 							(data: any) => {
@@ -130,7 +129,9 @@ export class InductionListComp implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.loadingSub.unsubscribe();
+		try {
+			this.loadingSub.unsubscribe();
+		} catch(err) {}
 	}
 
 	abc() {
