@@ -47,29 +47,30 @@
 				</ul>
 				<ul class="induction-nav">
 					<li>
-						<button mat-icon-button [matMenuTriggerFor]="menu">
-						  <mat-icon>more_vert</mat-icon>
-						</button>
+						<a class="btn-edit" [routerLink]="['/induction/edit/' + induction?._id]">Edit</a>
+					</li>
+					<li>
+						<a class="btn-view" [routerLink]="['/induction/' + induction?._id]">View</a>
+					</li>
+					<li>
+						<a class="btn-more" [matMenuTriggerFor]="menu">
+						  <span class="textnode">More</span> 
+						  <mat-icon>more_horiz</mat-icon>
+						</a>
 						<mat-menu #menu="matMenu">
-							<button mat-menu-item>
+							<button mat-menu-item (click)="cloneInduction(induction?._id)">
 						    <mat-icon>file_copy</mat-icon>
 						    <span>Clone Induction</span>
 						  </button>
-						  <button mat-menu-item>
+						  <!-- <button mat-menu-item>
 						    <mat-icon>person_add</mat-icon>
 						    <span>Invite</span>
 						  </button>
 						  <button mat-menu-item>
 						    <mat-icon>import_export</mat-icon>
 						    <span>Export CSV</span>
-						  </button>
+						  </button> -->
 						</mat-menu>
-					</li>
-					<li>
-						<a class="btn-view" [routerLink]="['/induction/' + induction?._id]">View</a>
-					</li>
-					<li>
-						<a class="btn-edit" [routerLink]="['/induction/edit/' + induction?._id]">Edit</a>
 					</li>
 				</ul>
 			</div>

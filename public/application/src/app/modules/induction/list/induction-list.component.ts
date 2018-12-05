@@ -1,19 +1,25 @@
-import { Component, ViewChild, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, Data, NavigationEnd, NavigationStart, RouterEvent } from '@angular/router';
  import * as html2canvas from 'html2canvas';
+ import { MatDialog } from '@angular/material';
+ import { Subscription } from 'rxjs';
 
 // custom imports
 import { CoreService } from '../../core/core.service';
+import { InductionService } from '../induction.service';
 import { IListInduction } from '../../../shared/interface/induction.interface';
+import { FullScreenLoading } from '../../../shared/component/modal/loading';
 
 @Component({
 	selector: 'induction-list',
 	templateUrl: './induction-list.component.html',
 	styleUrls: ['./induction-list.component.scss']
 })
-export class InductionListComp implements OnInit {
+export class InductionListComp implements OnInit, OnDestroy {
 	private startURL: string;
 	private endURL: string;
+	private locDialog;
+	private loadingSub: Subscription;
 
 	@ViewChild('btnDropDown') btnDropDown: ElementRef;
 	@ViewChild('btnDropDownList') btnDropDownList: ElementRef;
@@ -26,7 +32,9 @@ export class InductionListComp implements OnInit {
 	constructor(
 		private route: ActivatedRoute,
 		private coreService: CoreService,
-		private router: Router) {}
+		private router: Router,
+		private $induction: InductionService,
+		private dialog: MatDialog) {}
 
 	ngOnInit() {
 
@@ -89,6 +97,40 @@ export class InductionListComp implements OnInit {
 			// hide list
 			this.btnDropDownList.nativeElement.classList.remove('_show_');
 	  }
+	}
+
+	private cloneInduction(id): void {
+		let cloneFn = () => {
+			return this.$induction.cloneInduction(id);
+		}
+
+		this.locDialog = this.dialog.open(FullScreenLoading, {
+			data: {
+				fn: cloneFn
+			}
+		});
+
+		this.locDialog.afterClosed()
+			.subscribe(res => {});
+
+		this.loadingSub = this.coreService.fullScreenLoading$
+			.subscribe(
+				(data: boolean) => {
+					console.log('changed', data);
+					this.$induction.listInduction()
+						.subscribe(
+							(data: any) => {
+								this.inductionList = data;
+								this.coreService.removeProgressbar();
+								this.dialog.closeAll();
+							}
+						);
+				}
+			);
+	}
+
+	ngOnDestroy(): void {
+		this.loadingSub.unsubscribe();
 	}
 
 	abc() {

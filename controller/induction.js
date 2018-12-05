@@ -1025,6 +1025,40 @@ module.exports = {
 	// create a quiz
 	createQuiz(req, res, next) {
 		res.send(req.body);
+	},
+
+	cloneInduction(req, res, next) {
+		const inductionId = req.query.inductionId;
+
+		InductionModel.findById(inductionId)
+			.lean()
+			.then(trgtInduction => {
+				if( trgtInduction ) {
+					// build induction
+					let buildInd = {
+						user: mongoose.Types.ObjectId(trgtInduction.user),
+						name: trgtInduction.name + ' - Clone',
+						category: mongoose.Types.ObjectId(trgtInduction.category),
+						slides: trgtInduction.slides
+					};
+
+					InductionModel.create(buildInd)
+						.then(newInduction => {
+							if( newInduction ) {
+								res.send({ status: true });
+							} else {
+								res.statusMessage = UtilityFn.rippleErr('Cloning induction has failed');
+								res.status(422).send({ message: 'Cloning induction has failed'});
+							}
+						})
+						.catch(next);
+
+				} else {
+					res.statusMessage = UtilityFn.rippleErr('Induction not found');
+					res.status(422).send({ message: 'Induction not found'});
+				}
+			})
+			.catch(next);
 	}
 
 };

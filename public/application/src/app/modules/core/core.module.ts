@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 // custom imports
+import { FullScreenLoading } from '../../shared/component/modal/loading';
 import { LoginComp } from '../user/login/login.comp';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -26,6 +27,7 @@ import { ResponseHeaderInterceptor } from '../../shared/interceptor/response-hea
 		ConsentBox,
 		ConsentSheet,
 		PromptBox,
+		FullScreenLoading,
 		LoginComp
 	],
 	imports: [
@@ -38,7 +40,8 @@ import { ResponseHeaderInterceptor } from '../../shared/interceptor/response-hea
 	entryComponents: [
 		ConsentBox,
 		ConsentSheet,
-		PromptBox
+		PromptBox,
+		FullScreenLoading
   ],
 	exports: [
 		HeaderComponent,

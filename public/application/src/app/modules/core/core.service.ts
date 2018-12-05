@@ -7,6 +7,15 @@ export class CoreService {
 	public HOST: string = 'http://inducttrain.com/';
 	// public HOST: string = 'https://evening-shelf-25137.herokuapp.com/';
 
+	// fullScreenLoading Subject
+	public fullScreenLoadingVar: boolean = false;
+	public fullScreenLoadingSub: Subject<boolean> = new Subject<boolean>();
+	public fullScreenLoading$ = this.fullScreenLoadingSub.asObservable();
+	public fullScreenLoadingSubFn() {
+		this.fullScreenLoadingVar = !this.fullScreenLoadingVar;
+		this.fullScreenLoadingSub.next(this.fullScreenLoadingVar);
+	}
+
 	private token: string | null = null;
 
 	public setToken(token) {

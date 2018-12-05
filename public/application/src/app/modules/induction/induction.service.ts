@@ -75,7 +75,6 @@ export class InductionService {
 		this.imageOnlyEditorChanges.next(this.singleTempData.imageOnlySrc);
 	}
 
-
 	constructor(
 		private http: HttpClient,
 		private route: ActivatedRoute,
@@ -358,6 +357,16 @@ export class InductionService {
 
 		return this.http
 			.post<IGenEditorPostAction>(baseUrl, formData)
+			.pipe(
+				catchError(this.handleError)
+			);
+	}
+
+	public cloneInduction(inductionId): Observable<any> {
+		const baseUrl = this.baseURL + 'api/induction/clone?inductionId=' + inductionId;
+
+		return this.http
+			.get<any>(baseUrl)
 			.pipe(
 				catchError(this.handleError)
 			);

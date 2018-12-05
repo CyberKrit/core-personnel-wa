@@ -12,9 +12,7 @@ module.exports = (app) => {
 
 
 	// view an induction
-	app.get('/api/induction/:id', InductionController.singleView);
-
-
+	app.get('/api/induction/clone', auth,  failMsg('Unable to clone this induction'),InductionController.cloneInduction);
 
 	// *** [[ EDITOR ]] *** //
 
@@ -43,6 +41,7 @@ module.exports = (app) => {
 
 	// edit resolve data
 	app.get('/api/induction/edit/:id', auth, failMsg('Induction edit data has failed to load'), InductionController.editResolve);
+	app.get('/api/induction/:id', InductionController.singleView);
 
 
 };

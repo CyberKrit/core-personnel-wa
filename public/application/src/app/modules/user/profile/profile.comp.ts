@@ -67,7 +67,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						}
 						this.formValEmail = this.userData.email;
 					} catch (err) {}
-					console.log(this.userData);
+
 				}
 			);
 

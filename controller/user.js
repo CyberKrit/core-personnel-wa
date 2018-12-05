@@ -171,7 +171,19 @@ module.exports = {
 		UserModel.findByToken(req.header('x-auth'))
 			.then(user => {
 				if( user ) {
-					res.status(200).send({ data: user, message: 'user data has been loaded' });
+					// build user response
+					let buildRes = {
+						email: user.email,
+						personal: [{
+							firstname: user.personal[0].firstname,
+							lastname: user.personal[0].lastname
+						}],
+						company: [{
+							name: user.company[0].name
+						}]
+					};
+					
+					res.status(200).send({ data: buildRes, message: 'user data has been loaded' });
 				} else {
 					res.statusMessage = UtilityFn.rippleErr('User not found');
 					res.status(401).send({ message: 'User not found' });

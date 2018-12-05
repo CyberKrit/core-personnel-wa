@@ -27,7 +27,7 @@
 	float: left;
 	width: 50%;
 	max-width: 360px;
-	height: 22rem;
+	height: 23.2rem;
 	padding: 0;
 	margin: 0;
 	background-color: $palette-xgray;
@@ -148,16 +148,11 @@
 .induction-nav li {
 	position: relative;
 	display: inline-block;
-	width: 40%;
-	max-width: 8rem;
 	margin-left: -1rem;
 	vertical-align: top;
 }
 .induction-nav li + li {
 	margin-left: .5rem;
-}
-.induction-nav li:first-child {
-	width: auto;
 }
 .induction-nav li:first-child .mat-icon-button {
 	width: 3rem;
@@ -169,6 +164,8 @@
 }
 .induction-nav a {
 	display: block;
+	width: 8rem;
+	height: 3.2rem;
 	font-size: 1.5rem;
 	line-height: 3.2rem;
 	font-weight: 500;
@@ -193,4 +190,23 @@
 .induction-nav .btn-edit:hover {
 	background-color: $palette-green-light;
 	color: $palette-green;
+}
+// btn-more
+.induction-nav .btn-more {
+	width: 9rem;
+	color: $palette-text-light;
+	border: .1rem solid $palette-gray;
+	cursor: pointer;
+}
+.induction-nav .btn-more:hover {
+	color: $palette-text;
+	border: .1rem solid $palette-text-light;
+}
+.induction-nav .btn-more .textnode {
+	display: inline-block;
+	vertical-align: middle;
+}
+.induction-nav .btn-more mat-icon {
+	display: inline-block;
+	vertical-align: middle;
 }
