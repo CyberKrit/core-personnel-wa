@@ -68,44 +68,42 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						this.formValEmail = this.userData.email;
 					} catch (err) {}
 
+					// create form
+					this.profileForm = this.fb.group({
+						companyName: [this.formValCompany, [Validators.required]],
+						firstName: [this.formValFirstname, [Validators.required]],
+						lastName: [this.formValLastname, [Validators.required]],
+						email: [this.formValEmail, [Validators.required]],
+						currentPwd: [null],
+						newPwd: [null]
+					});
+
+					this.subOldPwd = this.profileForm.get('currentPwd').valueChanges
+						.subscribe(
+							(value: string) => {
+								if( value ) {
+									this.formCurrentPwdRequired = false;
+									this.oldPwdIsNotValid = false;
+
+									if( value.length >= 8 ) {
+										this.errOldPwdMinLen = false;
+									}
+								}
+								
+							}
+						);
+
+					this.subNewPwd = this.profileForm.get('newPwd').valueChanges
+						.subscribe(
+							(value: string) => {
+								if( value ) {
+									this.errNewPwdMinLen = false;
+								}
+								
+							}
+						);
 				}
 			);
-
-		// create form
-		this.profileForm = this.fb.group({
-			companyName: [this.formValCompany, [Validators.required]],
-			firstName: [this.formValFirstname, [Validators.required]],
-			lastName: [this.formValLastname, [Validators.required]],
-			email: [this.formValEmail, [Validators.required]],
-			currentPwd: [null],
-			newPwd: [null]
-		});
-
-		this.subOldPwd = this.profileForm.get('currentPwd').valueChanges
-			.subscribe(
-				(value: string) => {
-					if( value ) {
-						this.formCurrentPwdRequired = false;
-						this.oldPwdIsNotValid = false;
-
-						if( value.length >= 8 ) {
-							this.errOldPwdMinLen = false;
-						}
-					}
-					
-				}
-			);
-
-		this.subNewPwd = this.profileForm.get('newPwd').valueChanges
-			.subscribe(
-				(value: string) => {
-					if( value ) {
-						this.errNewPwdMinLen = false;
-					}
-					
-				}
-			);
-
 	}
 
 	private formSubmit({ value, valid }: { value: any, valid: boolean }): void {
@@ -180,7 +178,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.subOldPwd.unsubscribe();
-		this.subNewPwd.unsubscribe();
+		try {
+			this.subOldPwd.unsubscribe();
+			this.subNewPwd.unsubscribe();
+		} catch(err) {}
 	}
 }
