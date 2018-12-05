@@ -9,19 +9,39 @@
 		<div class="sidebar_nav">
 			<ul class="sidebar_nav-list">
 				<li class="sidebar_nav-item">
-					<a class="sidebar_nav-item-link" [routerLink]="['/induction']">
+					<a 
+						class="sidebar_nav-item-link link-induction" 
+						[routerLink]="['/induction']"
+						routerLinkActive="active">
 						<span class="title">Induction</span>
-						<i class="symbol __lock">
-							<svg viewBox="0 0 41 56" xmlns="http://www.w3.org/2000/svg"><g class="_tweening_" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" fill-rule="evenodd"><path d="M8.529 14.902l2.659-5.931c3.038-6.776 11.066-9.834 17.841-6.796 6.776 3.038 9.834 11.066 6.796 17.842l-2.659 5.931M33 55H8a7 7 0 0 1-7-7V26h39v22a7 7 0 0 1-7 7z"/><path d="M33 55H8a7 7 0 0 1-7-7h39a7 7 0 0 1-7 7zM9 31h5v12H9V31zm0 4h5m-5 4h5m4-8h5v12h-5V31zm0 4h5m-5 4h5m4-8h5v12h-5V31zm0 4h5m-5 4h5"/></g></svg>
-						</i>
+						<i class="symbol __induction"></i>
 					</a>
 				</li>
 				<li class="sidebar_nav-item">
-					<a class="sidebar_nav-item-link" [routerLink]="['/account']">
+					<a 
+						class="sidebar_nav-item-link link-acct" 
+						[routerLink]="['/account']"
+						routerLinkActive="active">
 						<span class="title">Account</span>
-						<i class="symbol __lock">
-							<svg viewBox="0 0 41 56" xmlns="http://www.w3.org/2000/svg"><g class="_tweening_" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" fill-rule="evenodd"><path d="M8.529 14.902l2.659-5.931c3.038-6.776 11.066-9.834 17.841-6.796 6.776 3.038 9.834 11.066 6.796 17.842l-2.659 5.931M33 55H8a7 7 0 0 1-7-7V26h39v22a7 7 0 0 1-7 7z"/><path d="M33 55H8a7 7 0 0 1-7-7h39a7 7 0 0 1-7 7zM9 31h5v12H9V31zm0 4h5m-5 4h5m4-8h5v12h-5V31zm0 4h5m-5 4h5m4-8h5v12h-5V31zm0 4h5m-5 4h5"/></g></svg>
-						</i>
+						<i class="symbol __acct"></i>
+					</a>
+				</li>
+				<li class="sidebar_nav-item">
+					<a 
+						class="sidebar_nav-item-link link-invitee" 
+						[routerLink]="['/invitee']"
+						routerLinkActive="active">
+						<span class="title">Invitee</span>
+						<i class="symbol __invitee"></i>
+					</a>
+				</li>
+				<li class="sidebar_nav-item">
+					<a 
+						class="sidebar_nav-item-link link-company" 
+						[routerLink]="['/company']"
+						routerLinkActive="active">
+						<span class="title">Company</span>
+						<i class="symbol __company"></i>
 					</a>
 				</li>
 			</ul>

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, Data, RouterEvent, NavigationEnd } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 // custom imports
 import { FormService } from '../../../shared/service/form.service';
@@ -11,7 +12,7 @@ import { ProfileService } from './profile.service';
 	templateUrl: './profile.comp.html',
 	styleUrls: ['./profile.comp.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 	public isPreloaded: boolean = false;
 	private userData: any;
 
@@ -25,6 +26,10 @@ export class ProfileComponent implements OnInit {
 	private formCurrentPwdRequired: boolean = false;
 	private errOldPwdMinLen: boolean = false;
 	private errNewPwdMinLen: boolean = false;
+	private oldPwdIsNotValid: boolean = false;
+
+	private subOldPwd: Subscription;
+	private subNewPwd: Subscription;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -76,15 +81,26 @@ export class ProfileComponent implements OnInit {
 			newPwd: [null]
 		});
 
-		this.profileForm.get('currentPwd').valueChanges
+		this.subOldPwd = this.profileForm.get('currentPwd').valueChanges
 			.subscribe(
 				(value: string) => {
 					if( value ) {
 						this.formCurrentPwdRequired = false;
+						this.oldPwdIsNotValid = false;
 
 						if( value.length >= 8 ) {
 							this.errOldPwdMinLen = false;
 						}
+					}
+					
+				}
+			);
+
+		this.subNewPwd = this.profileForm.get('newPwd').valueChanges
+			.subscribe(
+				(value: string) => {
+					if( value ) {
+						this.errNewPwdMinLen = false;
 					}
 					
 				}
@@ -136,18 +152,35 @@ export class ProfileComponent implements OnInit {
 		this.$profile.updateUser(formData)
 			.subscribe(
 				(res: any) => {
-					this.userData = res.data;
 					this.profileForm.enable();
 					this.isLazy = false;
 
-					if( res.status === true ) {
-						// reset form input accroding to updated data
-						this.profileForm.get('companyName').setValue(this.userData.company[0].name);
-						this.profileForm.get('firstName').setValue(this.userData.personal[0].firstname);
-						this.profileForm.get('lastName').setValue(this.userData.personal[0].lastname);
-						this.profileForm.get('email').setValue(this.userData.email);
+					if( res.hasOwnProperty('pwd') ) {
+						this.oldPwdIsNotValid = true;
+
+						this.$core.startRippleCustomMsg('Your old password was entered incorrectly. Please enter it again');
+					} else {
+						this.userData = res.data;
+						this.oldPwdIsNotValid = false;
+
+						if( res.status === true ) {
+							// reset form input accroding to updated data
+							this.profileForm.get('companyName').setValue(this.userData.company[0].name);
+							this.profileForm.get('firstName').setValue(this.userData.personal[0].firstname);
+							this.profileForm.get('lastName').setValue(this.userData.personal[0].lastname);
+							this.profileForm.get('email').setValue(this.userData.email);
+
+							// reset password field
+							this.profileForm.get('currentPwd').setValue(null);
+							this.profileForm.get('newPwd').setValue(null);
+						}
 					}
 				}
 			);
+	}
+
+	ngOnDestroy(): void {
+		this.subOldPwd.unsubscribe();
+		this.subNewPwd.unsubscribe();
 	}
 }

@@ -23,6 +23,16 @@ const AppRoute: Routes = [
 		canActivate: [ AppAuthCanctivate ]
 	},
 	{ 
+		path: 'invitee',
+		loadChildren: './modules/user/invitee/invitee.module#InviteeModule',
+		canActivate: [ AppAuthCanctivate ]
+	},
+	{ 
+		path: 'company',
+		loadChildren: './modules/company/company.module#CompanyModule',
+		canActivate: [ AppAuthCanctivate ]
+	},
+	{ 
 		path: 'login',
 		component: LoginComp
 	},

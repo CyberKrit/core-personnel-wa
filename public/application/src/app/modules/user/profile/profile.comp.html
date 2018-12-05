@@ -69,6 +69,9 @@
 						<li class="err-item" *ngIf="formCurrentPwdRequired">
 							Enter your old password
 						</li>
+						<li class="err-item" *ngIf="oldPwdIsNotValid">
+							This password is not valid
+						</li>
 					</ul>
 				</div>
 

@@ -11,7 +11,7 @@ import * as localForage from "localforage";
 // });
 
 // localForage.setItem('dataSet', {
-// 	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXV0aCIsIl9pZCI6IjViZmJjNWZjYjQ1MzUzMWZjODk3MWM0NSIsImlhdCI6MTU0MzkzMzM2MX0.o0bdDhYD9fxiva6KsR7NMmi0ueBR5THMImBHRYdomkE'
+// 	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXV0aCIsIl9pZCI6IjViZmJjNWZjYjQ1MzUzMWZjODk3MWM0NSIsImlhdCI6MTU0Mzk0NDE0OX0._8Bjm6mIN7b6J2EFb_96WMoADe2Zhb-1xJcD2EHksiI'
 // });
 ////////////////////////////////
 

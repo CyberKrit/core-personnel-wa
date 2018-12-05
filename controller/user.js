@@ -240,12 +240,12 @@ module.exports = {
 								.catch(next);
 
 							} else {
-								res.send({ status: false, message: 'password doesn\'t match' });
+								res.status(200).send({ status: false, pwd: false, message: 'password doesn\'t match' });
 							}
 							
 						})
 						.catch(err => {
-							res.send({ status: false, message: 'password doesn\'t match' });
+							res.status(200).send({ status: false, pwd: false, message: 'password doesn\'t match' });
 						});
 				})
 				.catch(next);
